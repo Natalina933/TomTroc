@@ -13,14 +13,12 @@
  * Déclaration des couleurs.
  */
 :root {
-    --backgroundColor: #f1f0eb;
-    --headerColor: #d79922;
-    --headerPaleColor: #efe1ba;
-    --titleColor: #f13c1f;
-    --dateColor: #3f56a4;
-    --quoteColor: #c5cbe4;
-    --commentPaleColor: #99a140;
-    --commentColor: #255E33;
+    --backgroundColor: #F5F3EF;
+    --titleColor: #000000;
+    --buttonVariant2Color: #006D41;
+    --buttonVariant3Color: #F5F3EF;
+    --buttonDefaultColor: #00AC66;
+    ;
 }
 
 /**
@@ -76,6 +74,7 @@ form h2 {
     margin: 0 0 20px 0;
     color: white;
 }
+
 form label {
     font-weight: bold;
     font-size: 14px;
@@ -95,13 +94,17 @@ form textarea {
 
 form .formGrid {
     display: grid;
-    grid-template-columns: 100px minmax(0, 1fr); /* Une colonne de 100px et une autre de largeur automatique */
-    gap: 10px; /* Espace entre les éléments de la grille */
+    grid-template-columns: 100px minmax(0, 1fr);
+    /* Une colonne de 100px et une autre de largeur automatique */
+    gap: 10px;
+    /* Espace entre les éléments de la grille */
 }
 
 form .formGrid .submit {
-    grid-column: 2; /* Place l'élément dans la deuxième colonne (la dernière) */
-    grid-row: 3; /* Place l'élément dans la troisième rangée (la dernière) */
+    grid-column: 2;
+    /* Place l'élément dans la deuxième colonne (la dernière) */
+    grid-row: 3;
+    /* Place l'élément dans la troisième rangée (la dernière) */
 }
 
 .submit {
@@ -118,7 +121,7 @@ form .formGrid .submit {
 .foldedCorner {
     position: relative;
     overflow: hidden;
-} 
+}
 
 .foldedCorner::before {
     content: "";
@@ -140,16 +143,16 @@ header {
     flex-direction: column;
     width: 100%;
     margin-bottom: 30px;
-    background-color: var(--headerPaleColor); 
+    background-color: var(--headerPaleColor);
 }
 
-header > nav {
+header>nav {
     display: flex;
     justify-content: flex-end;
     background-color: var(--headerColor);
 }
 
-header > nav > a {
+header>nav>a {
     padding: 20px;
     text-transform: uppercase;
     font-size: 16px;
@@ -168,33 +171,33 @@ main {
     margin: 0 50px 100px 50px;
 }
 
-/* Affichage des articles */
+/* Affichage des books */
 
-.articleList {
+.bookList {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
 }
 
-.articleList > article {
+.bookList>book {
     width: 30%;
 }
 
-article {
+book {
     margin-bottom: 30px;
     text-align: justify;
 }
 
-article > h2 {
+book>h2 {
     color: var(--headerColor);
 }
 
-.articleList > article:hover h2 {
+.bookList>book:hover h2 {
     color: var(--titleColor);
 }
 
-article > .quotation {
+book>.quotation {
     /* Placement du guillemet initial de manière à ce que le texte s'affiche "autour" */
     float: left;
     height: 51px;
@@ -206,17 +209,17 @@ article > .quotation {
     color: var(--quoteColor);
 }
 
-.articleList > article:hover .quotation {
+.bookList>book:hover .quotation {
     color: var(--commentPaleColor);
 }
 
-article > p {
+book>p {
     margin-bottom: 10px;
     font-style: italic;
     font-size: 15px;
 }
 
-article > .footer {
+book>.footer {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -229,7 +232,7 @@ article > .footer {
     color: var(--dateColor);
 }
 
-.articleList > article:hover .info {
+.bookList>book:hover .info {
     color: var(--commentPaleColor);
 }
 
@@ -238,9 +241,9 @@ a.info {
 }
 
 
-/* Page de détail d'un article */
+/* Page de détail d'un book */
 
-.mainArticle .footer {
+.mainbook .footer {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -305,34 +308,34 @@ a.info {
 
 /**
  * Partie admin
- */ 
+ */
 
-.adminArticle {
+.adminbook {
     margin-bottom: 20px;
     background-color: var(--commentPaleColor);
     color: white;
 }
 
-.articleLine {
-    display: flex; 
+.bookLine {
+    display: flex;
 }
 
-.articleLine div {
+.bookLine div {
     display: flex;
     align-items: center;
 }
 
-.articleLine .title {
+.bookLine .title {
     font-weight: bold;
     min-width: 200px;
     width: 200px;
 }
 
-.articleLine .content {
+.bookLine .content {
     flex-grow: 1;
 }
 
-.articleLine > div {
+.bookLine>div {
     padding: 20px;
     border: 1px solid var(--backgroundColor);
 }
@@ -345,7 +348,8 @@ footer {
     bottom: 0;
     display: flex;
     justify-content: center;
-    width: 100%;;
+    width: 100%;
+    ;
     padding: 20px;
     color: white;
     background-color: var(--headerColor);

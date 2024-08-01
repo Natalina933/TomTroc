@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * Entité Book, un livre est défini par les champs
+ * id, user_id, title, author, image, description, available, created_at, updated_at
+ */
+class Book extends AbstractEntity
+{
+    private int $userId;
+    private string $title = "";
+    private string $author = "";
+    private ?string $image = null;
+    private string $description = "";
+    private bool $available = true;
+    private ?DateTime $createdAt = null;
+    private ?DateTime $updatedAt = null;
+
+    // Setter et Getter pour userId
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    // Setter et Getter pour title
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    // Setter et Getter pour author
+    public function setAuthor(string $author): void
+    {
+        $this->author = $author;
+    }
+
+    public function getAuthor(): string
+    {
+        return $this->author;
+    }
+
+    // Setter et Getter pour image
+    public function setImage(?string $image): void
+    {
+        $this->image = $image;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    // Setter et Getter pour description
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription(int $length = -1): string
+    {
+        if ($length > 0) {
+            $content = mb_substr($this->description, 0, $length);
+            if (strlen($this->description) > $length) {
+                $content .= "...";
+            }
+            return $content;
+        }
+        return $this->description;
+    }
+
+    // Setter et Getter pour available
+    public function setAvailable(bool $available): void
+    {
+        $this->available = $available;
+    }
+
+    public function isAvailable(): bool
+    {
+        return $this->available;
+    }
+
+    // Setter et Getter pour createdAt
+    public function setCreatedAt(string|DateTime $createdAt, string $format = 'Y-m-d H:i:s'): void
+    {
+        if (is_string($createdAt)) {
+            $createdAt = DateTime::createFromFormat($format, $createdAt);
+        }
+        $this->createdAt = $createdAt;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    // Setter et Getter pour updatedAt
+    public function setUpdatedAt($updatedAt): void
+    {
+        if ($updatedAt === null) {
+            $this->updatedAt = null;
+        } elseif (is_string($updatedAt)) {
+            $this->updatedAt = new DateTime($updatedAt);
+        } elseif ($updatedAt instanceof DateTime) {
+            $this->updatedAt = $updatedAt;
+        } else {
+            throw new InvalidArgumentException('Invalid date format provided.');
+        }
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+}

@@ -1,6 +1,6 @@
 <?php
 require_once 'config/config.php';
-require_once 'config/autoloader.php';
+require_once 'config/autoload.php';
 
 // On récupère l'action demandée par l'utilisateur.
 // Si aucune action n'est demandée, on affiche la page d'accueil.
@@ -12,81 +12,81 @@ try {
     switch ($action) {
             // Pages accessibles à tous.
         case 'home':
-            $articleController = new ArticleController();
-            $articleController->showHome();
+            $bookController = new bookController();
+            $bookController->showHome();
             break;
 
-        // case 'apropos':
-        //     $articleController = new ArticleController();
-        //     $articleController->showApropos();
-        //     break;
-        //     /**
-        //      * Affichage d'un article spécifique.
-        //      * Récupère l'ID de l'article depuis la requête, instancie le contrôleur de l'article,
-        //      * et appelle la méthode showArticle avec l'ID pour afficher les détails de l'article.
-        //      */
-        // case 'showArticle':
-        //     $idArticle = Utils::request('id');
-        //     error_log("Action: showArticle, ID: $idArticle");
-        //     $articleController = new ArticleController();
-        //     $articleController->showArticle(true);
-        //     break;
+            // case 'apropos':
+            //     $bookController = new bookController();
+            //     $bookController->showApropos();
+            //     break;
+            //     /**
+            //      * Affichage d'un book spécifique.
+            //      * Récupère l'ID de l'book depuis la requête, instancie le contrôleur de l'book,
+            //      * et appelle la méthode showbook avec l'ID pour afficher les détails de l'book.
+            //      */
+            // case 'showbook':
+            //     $idbook = Utils::request('id');
+            //     error_log("Action: showbook, ID: $idbook");
+            //     $bookController = new bookController();
+            //     $bookController->showbook(true);
+            //     break;
 
-        // case 'addArticle':
-        //     $articleController = new ArticleController();
-        //     $articleController->addArticle();
-        //     break;
+            // case 'addbook':
+            //     $bookController = new bookController();
+            //     $bookController->addbook();
+            //     break;
 
-        // case 'addComment':
-        //     $commentController = new CommentController();
-        //     $commentController->addComment();
-        //     break;
+            // case 'addComment':
+            //     $commentController = new CommentController();
+            //     $commentController->addComment();
+            //     break;
 
 
-        //     // Section admin & connexion. 
-        // case 'admin':
-        //     $adminController = new AdminController();
-        //     $adminController->showAdmin();
-        //     break;
+            //     // Section admin & connexion. 
+            // case 'admin':
+            //     $adminController = new AdminController();
+            //     $adminController->showAdmin();
+            //     break;
 
-        // case 'connectionForm':
-        //     $adminController = new AdminController();
-        //     $adminController->displayConnectionForm();
-        //     break;
+            // case 'connectionForm':
+            //     $adminController = new AdminController();
+            //     $adminController->displayConnectionForm();
+            //     break;
 
-        // case 'connectUser':
-        //     $adminController = new AdminController();
-        //     $adminController->connectUser();
-        //     break;
+            // case 'connectUser':
+            //     $adminController = new AdminController();
+            //     $adminController->connectUser();
+            //     break;
 
-        // case 'disconnectUser':
-        //     $adminController = new AdminController();
-        //     $adminController->disconnectUser();
-        //     break;
+            // case 'disconnectUser':
+            //     $adminController = new AdminController();
+            //     $adminController->disconnectUser();
+            //     break;
 
-        // case 'showUpdateArticleForm':
-        //     $adminController = new AdminController();
-        //     $adminController->showUpdateArticleForm();
-        //     break;
+            // case 'showUpdatebookForm':
+            //     $adminController = new AdminController();
+            //     $adminController->showUpdatebookForm();
+            //     break;
 
-        // case 'updateArticle':
-        //     $adminController = new AdminController();
-        //     $adminController->updateArticle();
-        //     break;
+            // case 'updatebook':
+            //     $adminController = new AdminController();
+            //     $adminController->updatebook();
+            //     break;
 
-        // case 'deleteArticle':
-        //     $adminController = new AdminController();
-        //     $adminController->deleteArticle();
-        //     break;
-        //     //création du controller articles
-        // case 'showMonitoring':
-        //     $monitoringController = new MonitoringController();
-        //     $monitoringController->showMonitoring();
-        //     break;
-        //     //création du controller delete commentaire
-        // case 'deleteComment':
-        //     $monitoringController = new MonitoringController();
-        //     $monitoringController->deleteComment();
+            // case 'deletebook':
+            //     $adminController = new AdminController();
+            //     $adminController->deletebook();
+            //     break;
+            //     //création du controller books
+            // case 'showMonitoring':
+            //     $monitoringController = new MonitoringController();
+            //     $monitoringController->showMonitoring();
+            //     break;
+            //     //création du controller delete commentaire
+            // case 'deleteComment':
+            //     $monitoringController = new MonitoringController();
+            //     $monitoringController->deleteComment();
 
 
             break;
