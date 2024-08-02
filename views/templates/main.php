@@ -20,35 +20,13 @@
 </head>
 
 <body>
-    <header>
-        <nav>
-            <a href="index.php">Accueil</a>
-            <a href="index.php?action=books">Nos livres à l'échange</a>
-            <a href="index.php?action=messages">Messagerie</a>
-            <a href="index.php?action=profile">Mon compte</a>
-            <?php
-            // Si on est connecté, on affiche le bouton de déconnexion, sinon, on affiche le bouton de connexion : 
-            if (isset($_SESSION['user'])) {
-                echo '<a href="index.php?action=disconnectUser">Déconnexion</a>';
-            } else {
-                echo '<a href="index.php?action=login">Connexion</a>';
-            }
-            ?>
-        </nav>
-        <h1>Tom Troc</h1>
-    </header>
+    <?php include 'header.php'; ?>
 
     <main>
         <?= $content /* Ici est affiché le contenu réel de la page. */ ?>
     </main>
 
-    <footer>
-        <a href="index.php?action=privacy">Politique de confidentialité</a>
-        <a href="index.php?action=legal">Mentions légales</a>
-        <a href="index.php">Tom Troc©</a>
-        <img src="./img/logo_tom_troc.png" alt="logo_tom_troc">
-    </footer>
-
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>

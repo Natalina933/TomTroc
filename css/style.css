@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Qwitcher+Grypen:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 
 /**
- * Reset css.
+ * Reset CSS
  */
 * {
     margin: 0;
@@ -10,33 +10,39 @@
 }
 
 /**
- * Déclaration des couleurs.
+ * Déclaration des couleurs
  */
 :root {
     --backgroundColor: #F5F3EF;
     --titleColor: #000000;
-    --buttonVariant2Color: #006D41;
-    --buttonVariant3Color: #F5F3EF;
+    --textColor: #000000;
     --buttonDefaultColor: #00AC66;
-    ;
+    --headerColor: #000;
+    --headerPaleColor: #ccc;
+    --commentColor: #ddd;
+    --commentPaleColor: #eee;
+    --quoteColor: #aaa;
+    --dateColor: #888;
 }
 
 /**
- * Valeur par défaut pour les balises.
+ * Valeur par défaut pour le body
  */
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-family: 'arial', sans-serif;
+    font-family: 'Playfair Display', serif;
     background-color: var(--backgroundColor);
 }
 
+/**
+ * Styles pour les titres
+ */
 h1 {
     display: flex;
     justify-content: center;
     padding: 30px;
-    font-family: 'Qwitcher Grypen', cursive;
     font-style: italic;
     font-size: 80px;
     color: var(--titleColor);
@@ -50,6 +56,9 @@ h2 {
     color: var(--headerColor);
 }
 
+/**
+ * Styles généraux
+ */
 ul {
     list-style: none;
 }
@@ -60,7 +69,110 @@ a {
 }
 
 /**
- * Styles des formulaires.
+ * Styles pour l'en-tête (header)
+ */
+header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: var(--backgroundColor);
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nav-wrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.logo-image {
+    width: 155px;
+    height: 51px;
+}
+
+.navigation {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.nav-group {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-group--left {
+    margin-right: auto;
+    /* pousse le groupe à gauche */
+}
+
+.nav-group--right {
+    margin-left: auto;
+    /* pousse le groupe à droite */
+}
+
+.nav-link {
+    text-transform: uppercase;
+    font-size: 16px;
+    color: var(--textColor);
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+/**
+ * Styles pour le titre du site
+ */
+.site-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 48px;
+    color: #00AC66;
+    /* Couleur verte */
+    text-align: center;
+    margin: 10px 0;
+}
+
+/**
+ * Styles pour le titre du site
+ */
+.site-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: #00AC66;
+    text-align: center;
+    margin: 10px 0;
+}
+
+/**
+ * Styles pour le corps principal de la page
+ */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 1000px;
+    margin: 0 50px 100px 50px;
+}
+
+/**
+ * Styles des formulaires
  */
 form {
     width: 100%;
@@ -72,7 +184,6 @@ form {
 
 form h2 {
     margin: 0 0 20px 0;
-    color: white;
 }
 
 form label {
@@ -80,31 +191,26 @@ form label {
     font-size: 14px;
 }
 
-form input {
+form input,
+form textarea {
     padding: 5px;
     border: none;
 }
 
 form textarea {
     height: 150px;
-    padding: 5px;
     font-family: Arial, Helvetica, sans-serif;
-    border: none;
 }
 
 form .formGrid {
     display: grid;
     grid-template-columns: 100px minmax(0, 1fr);
-    /* Une colonne de 100px et une autre de largeur automatique */
     gap: 10px;
-    /* Espace entre les éléments de la grille */
 }
 
 form .formGrid .submit {
     grid-column: 2;
-    /* Place l'élément dans la deuxième colonne (la dernière) */
     grid-row: 3;
-    /* Place l'élément dans la troisième rangée (la dernière) */
 }
 
 .submit {
@@ -116,7 +222,7 @@ form .formGrid .submit {
 }
 
 /**
- * Coin replié des formulaires
+ * Styles pour le coin replié des formulaires
  */
 .foldedCorner {
     position: relative;
@@ -136,43 +242,8 @@ form .formGrid .submit {
 }
 
 /**
- * Header
+ * Styles pour la liste des livres
  */
-header {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 30px;
-    background-color: var(--headerPaleColor);
-}
-
-header>nav {
-    display: flex;
-    justify-content: flex-end;
-    background-color: var(--headerColor);
-}
-
-header>nav>a {
-    padding: 20px;
-    text-transform: uppercase;
-    font-size: 16px;
-    color: white;
-}
-
-/**
- * Coeur de page.
- */
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    max-width: 1000px;
-    margin: 0 50px 100px 50px;
-}
-
-/* Affichage des books */
-
 .bookList {
     display: flex;
     flex-direction: row;
@@ -180,46 +251,47 @@ main {
     justify-content: space-between;
 }
 
-.bookList>book {
+.bookList book {
     width: 30%;
 }
 
 book {
     margin-bottom: 30px;
     text-align: justify;
+    font-size: 18px;
+    line-height: 1.5;
 }
 
-book>h2 {
+book h2 {
     color: var(--headerColor);
+    font-size: 24px;
 }
 
-.bookList>book:hover h2 {
+.bookList book:hover h2 {
     color: var(--titleColor);
 }
 
-book>.quotation {
-    /* Placement du guillemet initial de manière à ce que le texte s'affiche "autour" */
+book .quotation {
     float: left;
     height: 51px;
     margin-left: -10px;
     line-height: 0.35;
-    font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: 103px;
     color: var(--quoteColor);
 }
 
-.bookList>book:hover .quotation {
+.bookList book:hover .quotation {
     color: var(--commentPaleColor);
 }
 
-book>p {
+book p {
     margin-bottom: 10px;
     font-style: italic;
     font-size: 15px;
 }
 
-book>.footer {
+book .footer {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -232,7 +304,7 @@ book>.footer {
     color: var(--dateColor);
 }
 
-.bookList>book:hover .info {
+.bookList book:hover .info {
     color: var(--commentPaleColor);
 }
 
@@ -240,54 +312,18 @@ a.info {
     font-style: normal;
 }
 
-
-/* Page de détail d'un book */
-
+/**
+ * Styles pour la page de détail d'un livre
+ */
 .mainbook .footer {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
 
-/* Affichage des commentaires */
-.comments {
-    width: 100%;
-    margin-top: 30px;
-}
-
-.commentsTitle {
-    color: var(--titleColor);
-}
-
-.comments ul {
-    margin-bottom: 30px;
-}
-
-.comments li {
-    display: flex;
-    margin-bottom: 20px;
-}
-
-.comments .smiley {
-    display: flex;
-    align-items: flex-start;
-    line-height: 0.7;
-    font-size: 60px;
-    color: var(--quoteColor);
-}
-
-/* On redéfinit certaines parties du "info" pour l'affichage dans les commentaires */
-.detailComment .info {
-    margin: 5px 0 5px 0;
-    font-style: normal;
-}
-
-.detailComment .content {
-    margin: 5px 0 5px 0;
-}
-
-/* Page d'erreur */
-
+/**
+ * Styles pour la page d'erreur
+ */
 .error {
     display: flex;
     flex-direction: column;
@@ -297,7 +333,7 @@ a.info {
 }
 
 .error h2 {
-    color: var(--titleColor)
+    color: var(--titleColor);
 }
 
 .error a {
@@ -307,9 +343,8 @@ a.info {
 }
 
 /**
- * Partie admin
+ * Styles pour la partie administration
  */
-
 .adminbook {
     margin-bottom: 20px;
     background-color: var(--commentPaleColor);
@@ -340,8 +375,8 @@ a.info {
     border: 1px solid var(--backgroundColor);
 }
 
-/** 
- * Footer global de la page.
+/**
+ * Footer global de la page
  */
 footer {
     position: fixed;
@@ -349,7 +384,6 @@ footer {
     display: flex;
     justify-content: center;
     width: 100%;
-    ;
     padding: 20px;
     color: white;
     background-color: var(--headerColor);
