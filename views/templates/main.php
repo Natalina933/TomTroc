@@ -16,17 +16,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title) ?></title>
+    <link rel="icon" type="image/x-icon" href="./img/mini_logo.svg">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
-    <?php include 'header.php'; ?>
+    <?php include 'includes/header.php'; ?>
 
     <main>
         <?= $content /* Ici est affiché le contenu réel de la page. */ ?>
     </main>
 
-    <?php include 'footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
 </body>
 
 </html>

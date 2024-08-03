@@ -52,7 +52,6 @@ h2 {
     width: 100%;
     margin: 20px 0;
     font-size: 25px;
-    font-family: 'Times New Roman', Times, serif;
     color: var(--headerColor);
 }
 
@@ -79,11 +78,14 @@ header {
     background-color: var(--backgroundColor);
 }
 
+/* Styles généraux pour la navigation */
 .main-nav {
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    background-color: var(--backgroundColor);
+    padding: 0 20px;
 }
 
 .nav-wrapper {
@@ -114,8 +116,7 @@ header {
 }
 
 .nav-group--left {
-    margin-right: auto;
-    /* pousse le groupe à gauche */
+    margin-left: 48px;
 }
 
 .nav-group--right {
@@ -124,10 +125,10 @@ header {
 }
 
 .nav-link {
-    text-transform: uppercase;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--textColor);
     text-decoration: none;
+    font-family: 'inter';
 }
 
 .nav-link:hover {
