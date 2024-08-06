@@ -4,23 +4,29 @@
     <p class="intro-text">
         Donnez une nouvelle vie à vos livres en les échangeant avec d'autres amoureux de la lecture. Nous croyons en la magie du partage de connaissances et d'histoires à travers les livres.
     </p>
+    <button class="btn">Découvrir</button>
 </section>
 
-<!-- <div class="bookList">
-    <?php if (!empty($books)) { ?>
-        <?php foreach ($books as $book) { ?>
-            <article class="article">
-                <h2><?= htmlspecialchars($book->getTitle()) ?></h2>
-                <span class="quotation">«</span>
-                <p><?= htmlspecialchars($book->getContent(400)) ?></p>
-
-                <div class="footer">
-                    <span class="info"><?= ucfirst(Utils::convertDateToFrenchFormat($book->getDateCreation())) ?></span>
+<section class="book-list">
+    <h2 class="section-title">Les derniers livres ajoutés</h2>
+    <div class="books">
+        <?php if (!empty($books)) { ?>
+            <?php foreach ($books as $book) { ?>
+                <div class="book-card">
+                    <h3><?= htmlspecialchars($book->getTitle()) ?></h3>
+                    <p><strong>Auteur:</strong> <?= htmlspecialchars($book->getAuthor()) ?></p>
+                    <?php if ($book->getImage()) { ?>
+                        <img src="<?= htmlspecialchars($book->getImage()) ?>" alt="Image de <?= htmlspecialchars($book->getTitle()) ?>">
+                    <?php } ?>
+                    <p><?= htmlspecialchars($book->getDescription(400)) ?></p>
+                    <p><strong>Disponible:</strong> <?= $book->isAvailable() ? 'Oui' : 'Non' ?></p>
+                    <p><strong>Date d'ajout:</strong> <?= htmlspecialchars($book->getCreatedAt()->format('Y-m-d H:i:s')) ?></p>
                     <a class="info" href="index.php?action=showBook&id=<?= $book->getId() ?>">Lire +</a>
                 </div>
-            </article>
+            <?php } ?>
+        <?php } else { ?>
+            <p>Aucun livre disponible pour le moment.</p>
         <?php } ?>
-    <?php } else { ?>
-        <p>Aucun livre disponible pour le moment.</p>
-    <?php } ?>
-</div> -->
+    </div>
+
+</section>

@@ -68,11 +68,11 @@ class Book extends AbstractEntity
     public function getDescription(int $length = -1): string
     {
         if ($length > 0) {
-            $content = mb_substr($this->description, 0, $length);
+            $description = mb_substr($this->description, 0, $length);
             if (strlen($this->description) > $length) {
-                $content .= "...";
+                $description .= "...";
             }
-            return $content;
+            return $description;
         }
         return $this->description;
     }

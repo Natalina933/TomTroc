@@ -30,7 +30,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMdescriptionLoaded', function() {
         const hamburger = document.querySelector('.hamburger');
         const menu = document.querySelector('.menu');
 

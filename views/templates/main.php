@@ -5,7 +5,7 @@
  * 
  * Les variables qui doivent impérativement être définies sont : 
  *      $title string : le titre de la page.
- *      $content string : le contenu de la page. 
+ *      $description string : le contenu de la page. 
  */
 
 ?>
@@ -14,7 +14,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" description="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title) ?></title>
     <link rel="icon" type="image/x-icon" href="./img/mini_logo.svg">
     <link rel="stylesheet" href="./css/style.css">
@@ -24,7 +24,7 @@
     <?php include 'includes/header.php'; ?>
 
     <main>
-        <?= $content /* Ici est affiché le contenu réel de la page. */ ?>
+        <?= $description /* Ici est affiché le contenu réel de la page. */ ?>
     </main>
 
     <?php include 'includes/footer.php'; ?>

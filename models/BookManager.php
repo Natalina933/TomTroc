@@ -80,11 +80,11 @@ class bookManager extends AbstractEntityManager
      */
     public function addbook(book $book): void
     {
-        $sql = "INSERT INTO book (id_user, title, content, date_creation) VALUES (:id_user, :title, :content, NOW())";
+        $sql = "INSERT INTO book (id_user, title, description, date_creation) VALUES (:id_user, :title, :description, NOW())";
         $this->db->query($sql, [
             'id_user' => $book->getUserId(),
             'title' => $book->getTitle(),
-            // 'content' => $book->getContent()
+            'description' => $book->getDescription()
         ]);
     }
 
@@ -95,10 +95,10 @@ class bookManager extends AbstractEntityManager
      */
     public function updatebook(book $book): void
     {
-        $sql = "UPDATE book SET title = :title, content = :content, date_update = NOW() WHERE id = :id";
+        $sql = "UPDATE book SET title = :title, description = :description, date_update = NOW() WHERE id = :id";
         $this->db->query($sql, [
             'title' => $book->getTitle(),
-            // 'content' => $book->getContent(),
+            // 'description' => $book->getdet(),
             'id' => $book->getId()
         ]);
     }
