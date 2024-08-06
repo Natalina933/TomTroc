@@ -32,7 +32,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair Display';
     background-color: var(--backgroundColor);
 }
 
@@ -51,7 +51,9 @@ h1 {
 h2 {
     width: 100%;
     margin: 20px 0;
-    font-size: 25px;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 39.99px;
     color: var(--headerColor);
 }
 
@@ -67,6 +69,9 @@ a {
     color: inherit;
 }
 
+/****************************************************************
+*styles header
+ ***********/
 header {
     display: flex;
     flex-direction: column;
@@ -75,14 +80,26 @@ header {
     background-color: var(--backgroundColor);
 }
 
-/* Styles généraux pour la navigation */
+/**
+ * Styles pour le corps principal de la page
+ ***********/
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 1000px;
+    margin: 0 50px 100px 50px;
+}
+
+/* Styles navigation */
 .main-nav {
     height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: var(--backgroundColor);
-    padding: 0 20px;
+    position: relative;
 }
 
 .nav-wrapper {
@@ -90,8 +107,10 @@ header {
     width: 100%;
     align-items: center;
     justify-content: space-between;
+    position: relative;
 }
 
+/*style logo*/
 .logo-link {
     display: flex;
     align-items: center;
@@ -102,6 +121,8 @@ header {
     height: 51px;
 }
 
+/* styles menu 
+*********/
 .hamburger {
     display: flex;
     background: none;
@@ -109,16 +130,13 @@ header {
     cursor: pointer;
     font-size: 40px;
     color: var(--hamburgerColor);
-
+    right: 20px;
 }
-
 .menu {
     display: none;
     flex-direction: column;
-    width: 100%;
-    background-color: var(--backgroundColor);
+    background-color: var(--buttonDefaultColor);
 }
-
 .menu.active {
     display: flex;
 }
@@ -129,13 +147,9 @@ header {
 }
 
 .nav-link {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter';
     font-size: 14px;
-    font-weight: 600;
-    line-height: 16.94px;
-    letter-spacing: 0.02em;
     text-align: left;
-    text-decoration: none;
     color: var(--textColor);
     padding: 10px 20px;
     border-bottom: 1px solid #ddd;
@@ -156,19 +170,10 @@ header {
     margin: 10px 0;
 }
 
-/**
- * Styles pour le corps principal de la page
- */
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    max-width: 1000px;
-    margin: 0 50px 100px 50px;
-}
 
-/**
+
+
+/****************************************************************
  * Styles des formulaires
  */
 form {
@@ -238,7 +243,7 @@ form .formGrid .submit {
     border-color: var(--backgroundColor) var(--backgroundColor) var(--commentColor) var (--commentColor);
 }
 
-/**
+/****************************************************************
  * Styles pour la liste des livres
  */
 .bookList {
@@ -309,7 +314,7 @@ a.info {
     font-style: normal;
 }
 
-/**
+/****************************************************************
  * Styles pour la page de détail d'un livre
  */
 .mainbook .footer {
@@ -318,7 +323,7 @@ a.info {
     align-items: flex-end;
 }
 
-/**
+/****************************************************************
  * Styles pour la page d'erreur
  */
 .error {
@@ -339,7 +344,7 @@ a.info {
     font-weight: bold;
 }
 
-/**
+/****************************************************************
  * Styles pour la partie administration
  */
 .adminbook {
@@ -372,7 +377,7 @@ a.info {
     border: 1px solid var(--backgroundColor);
 }
 
-/**
+/****************************************************************
  * Footer global de la page
  */
 footer {
@@ -386,7 +391,9 @@ footer {
     background-color: var(--headerColor);
 }
 
-/* Styles pour les écrans plus larges */
+/****************************************************************
+ *Styles pour les écrans plus larges
+/*  Menu de navigation  */
 @media (min-width: 768px) {
     .hamburger {
         display: none;
@@ -396,6 +403,7 @@ footer {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        background-color: var(--backgroundColor);
     }
 
     .nav-group {
@@ -414,6 +422,29 @@ footer {
 
     .nav-link {
         font-size: 14px;
+    }
+
+    .nav-link:hover {
+        font-weight: bolder;
+    }
+
+    /****************************************************************
+ * Styles pour la page de détail d'un livre
+ */
+    .mainbook {
+        margin-bottom: 40px;
+    }
+
+    .mainbook h2 {
+        font-size: 30px;
+    }
+
+    .mainbook p {
+        font-size: 18px;
+    }
+
+    .mainbook.footer {
+        margin-top: 40px;
     }
 
     .bookList book {
