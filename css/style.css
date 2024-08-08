@@ -91,15 +91,15 @@ main {
     width: 80%;
 }
 
-/* Styles navigation
+/* Styles navigation */
 .main-nav {
     height: 80px;
     display: flex;
     align-items: center;
-    justify-description: space-between;
+    justify-content: space-between;
     background-color: var(--backgroundColor);
     position: relative;
-} */
+}
 
 .section {
     display: flex;
@@ -137,6 +137,7 @@ main {
     font-size: 40px;
     color: var(--hamburgerColor);
     right: 20px;
+    z-index: 11;
 }
 
 .menu {
@@ -192,90 +193,13 @@ main {
     border: none;
     cursor: pointer;
     transition: opacity 0.3s;
-    margin: 20px auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .btn:hover {
     opacity: 0.8;
 }
 
-/****************************************************************
-*style lastest book
- ***********/
-/* Styles pour les titres */
-.section-title {
-    margin: 40px 0;
-    font-size: 30px;
-    color: var(--headerColor);
-    text-align: center;
-}
 
-.latest-books {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    margin: 0 auto;
-}
-
-.book-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-
-.book-card {
-    background-color: var(--commentPaleColor);
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    text-align: center;
-}
-
-.book-card h3 {
-    font-size: 24px;
-    color: var(--headerColor);
-}
-
-.book-card .quotation {
-    font-size: 36px;
-    color: var(--quoteColor);
-}
-
-.book-card p {
-    font-size: 16px;
-    color: var(--textColor);
-    margin: 20px 0;
-}
-
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.card-footer .info {
-    font-size: 14px;
-    color: var(--dateColor);
-}
-
-.card-footer .info:hover {
-    color: var(--headerColor);
-}
-
-.card-footer a.info {
-    text-decoration: none;
-    font-weight: bold;
-    color: var(--buttonDefaultColor);
-}
-
-.card-footer a.info:hover {
-    color: var(--headerColor);
-}
 
 /****************************************************************
  * Styles des formulaires
@@ -472,7 +396,7 @@ a.info {
     width: 200px;
 }
 
-.bookLine .description {
+.bookLine .content {
     flex-grow: 1;
 }
 

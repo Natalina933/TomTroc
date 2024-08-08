@@ -9,7 +9,7 @@ class Book extends AbstractEntity
     private int $userId;
     private string $title = "";
     private string $author = "";
-    private ?string $image = null;
+    private ?string $img = null;
     private string $description = "";
     private bool $available = true;
     private ?DateTime $createdAt = null;
@@ -49,14 +49,14 @@ class Book extends AbstractEntity
     }
 
     // Setter et Getter pour image
-    public function setImage(?string $image): void
+    public function setImg(?string $img): void
     {
-        $this->image = $image;
+        $this->img = $img;
     }
 
-    public function getImage(): ?string
+    public function getImg(): ?string
     {
-        return $this->image;
+        return $this->img;
     }
 
     // Setter et Getter pour description
