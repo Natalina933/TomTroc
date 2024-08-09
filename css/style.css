@@ -20,7 +20,7 @@
     --headerColor: #000;
     --headerPaleColor: #ccc;
     --hamburgerColor: #A6A6A6;
-    --commentPaleColor: #eee;
+    --PaleColor: white;
     --quoteColor: #aaa;
     --dateColor: #888;
 }
@@ -29,9 +29,6 @@
  * Valeur par défaut pour le body
  */
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     font-family: 'Playfair Display';
     background-color: var(--backgroundColor);
 }
@@ -39,21 +36,12 @@ body {
 /**
  * Styles pour les titres
  */
-h1 {
-    display: flex;
-    justify-content: center;
-    padding: 30px;
-    font-style: italic;
-    font-size: 80px;
-    color: var(--titleColor);
-}
 
 h2 {
-    width: 100%;
     margin: 20px 0;
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 400;
-    line-height: 39.99px;
+    line-height: 42.66px;
     color: var(--headerColor);
 }
 
@@ -86,27 +74,16 @@ header {
 main {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 80%;
 }
 
 /* Styles navigation */
 .main-nav {
     height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     background-color: var(--backgroundColor);
     position: relative;
 }
 
-.section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-wrap: wrap;
-}
+
 
 .nav-wrapper {
     display: flex;
@@ -157,42 +134,44 @@ main {
 
 .nav-link {
     font-family: 'Inter';
-    font-size: 14px;
+    font-size: 12px;
     text-align: left;
     color: var(--textColor);
     padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
 }
 
 .nav-link:hover {
     font-weight: 400;
 }
 
-/* Styles pour le titre du site */
-.site-title {
-    font-family: 'Playfair Display';
-    font-size: 36px;
-    font-weight: 400;
-    line-height: 48px;
-    text-align: center;
-    margin: 10px 0;
+/**
+ * Styles pour la section d'introduction
+ */
+.intro-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    margin: 20px 0;
 }
 
+/**
+ * Styles pour le bouton
+ */
 .btn {
     width: 335px;
     padding: 22px 38px;
     border-radius: 10px;
-    opacity: 1;
-    background-color: #00AC66;
-    font-family: 'Inter', sans-serif;
+    background-color: var(--buttonDefaultColor);
+    font-family: 'Playfair Display', serif;
     font-size: 16px;
     font-weight: 600;
-    line-height: 19.36px;
     text-align: center;
     color: white;
     border: none;
     cursor: pointer;
     transition: opacity 0.3s;
+    margin: 20px auto;
 }
 
 .btn:hover {
@@ -204,152 +183,27 @@ main {
 /****************************************************************
  * Styles des formulaires
  */
-form {
-    width: 100%;
-    margin-top: 30px;
-    padding: 20px;
-    color: white;
-    background-color: var(--commentPaleColor);
-}
 
-form h2 {
-    margin: 0 0 20px 0;
-}
-
-form label {
-    font-weight: bold;
-    font-size: 14px;
-}
-
-form input,
-form textarea {
-    padding: 5px;
-    border: none;
-}
-
-form textarea {
-    height: 150px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-form .formGrid {
-    display: grid;
-    grid-template-columns: 100px minmax(0, 1fr);
-    gap: 10px;
-}
-
-form .formGrid .submit {
-    grid-column: 2;
-    grid-row: 3;
-}
-
-.submit {
-    padding: 5px 10px;
-    font-weight: bold;
-    color: white;
-    background-color: var(--commentColor);
-    border: none;
-}
 
 /**
  * Styles pour le coin replié des formulaires
  */
-.foldedCorner {
-    position: relative;
-    overflow: hidden;
-}
 
-.foldedCorner::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 0;
-    height: 0;
-    border-width: 30px;
-    border-style: solid;
-    border-color: var(--backgroundColor) var(--backgroundColor) var(--commentColor) var (--commentColor);
-}
+/****************************************************************
+*style lastest book
+ ***********/
+/**
+ * Styles pour la liste des livres
+ */
+
 
 /****************************************************************
  * Styles pour la liste des livres
  */
-.bookList {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.bookList book {
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-book {
-    text-align: justify;
-    font-size: 18px;
-    line-height: 1.5;
-}
-
-book h2 {
-    color: var(--headerColor);
-    font-size: 24px;
-}
-
-.bookList book:hover h2 {
-    color: var(--titleColor);
-}
-
-book .quotation {
-    float: left;
-    height: 51px;
-    margin-left: -10px;
-    line-height: 0.35;
-    font-weight: bold;
-    font-size: 103px;
-    color: var(--quoteColor);
-}
-
-.bookList book:hover .quotation {
-    color: var(--commentPaleColor);
-}
-
-book p {
-    margin-bottom: 10px;
-    font-style: italic;
-    font-size: 15px;
-}
-
-book .footer {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.info {
-    font-size: 14px;
-    font-style: italic;
-    font-weight: bold;
-    color: var(--dateColor);
-}
-
-.bookList book:hover .info {
-    color: var (--commentPaleColor);
-}
-
-a.info {
-    font-style: normal;
-}
-
 /****************************************************************
  * Styles pour la page de détail d'un livre
  */
-.mainbook .footer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
+
 
 /****************************************************************
  * Styles pour la page d'erreur
@@ -375,35 +229,7 @@ a.info {
 /****************************************************************
  * Styles pour la partie administration
  */
-.adminbook {
-    margin-bottom: 20px;
-    background-color: var(--commentPaleColor);
-    color: white;
-}
 
-.bookLine {
-    display: flex;
-}
-
-.bookLine div {
-    display: flex;
-    align-items: center;
-}
-
-.bookLine .title {
-    font-weight: bold;
-    min-width: 200px;
-    width: 200px;
-}
-
-.bookLine .content {
-    flex-grow: 1;
-}
-
-.bookLine>div {
-    padding: 20px;
-    border: 1px solid var(--backgroundColor);
-}
 
 /****************************************************************
  * Footer global de la page
@@ -434,14 +260,18 @@ footer {
         background-color: var(--backgroundColor);
     }
 
+    .btn {
+        width: 152px;
+        margin: 0;
+    }
+
     .nav-group {
         flex-direction: row;
-        gap: 20px;
         padding: 0;
     }
 
     .nav-group--left {
-        margin-left: 48px;
+        margin-left: 4px;
     }
 
     .nav-group--right {
@@ -450,32 +280,100 @@ footer {
 
     .nav-link {
         font-size: 14px;
+        margin-left: 20px;
     }
 
     .nav-link:hover {
         font-weight: bolder;
     }
 
-    /****************************************************************
- * Styles pour la page de détail d'un livre
+    /**
+ * Styles pour la section d'introduction
  */
-    .mainbook {
-        margin-bottom: 40px;
+    .intro-container {
+        display: flex;
+        flex-direction: row-reverse;
+        margin: auto 0;
     }
 
-    .mainbook h2 {
-        font-size: 30px;
+    .intro-wrapper {
+        max-width: 329px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 20px;
     }
 
-    .mainbook p {
-        font-size: 18px;
+    .intro-text {
+        padding-bottom: 30px;
     }
 
-    .mainbook.footer {
-        margin-top: 40px;
-    }
+}
+/****************************************************************
+ * Styles pour la liste des livres
+ */
+.book-list {
+    background-color: #FFFFFF;
+    padding: 40px 20px;
+}
 
-    .bookList book {
-        width: 30%;
-    }
+.section-title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: var(--headerColor);
+}
+
+.books {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.book-card {
+    width: 200px;
+    height: 324px;
+    background-color: var(--PaleColor);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    transition: transform 0.3s ease;
+}
+
+.book-card:hover {
+    transform: translateY(-10px);
+}
+
+.book-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--headerColor);
+}
+
+.book-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.book-card p {
+    font-size: 14px;
+    color: var(--textColor);
+    margin-bottom: 8px;
+}
+
+.book-card .info {
+    font-weight: bold;
+    color: var(--buttonDefaultColor);
+    text-align: center;
+    margin-top: auto;
+    padding-top: 10px;
+    display: block;
 }
