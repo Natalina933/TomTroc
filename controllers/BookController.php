@@ -9,7 +9,7 @@ class bookController
     public function showHome(): void
     {
         $bookManager = new bookManager();
-        $books = $bookManager->getAllbooks();
+        $books = $bookManager->getBooks([], ['id'=>'DESC'], 4);
 
         $view = new View("Accueil");
         $view->render("home", ['books' => $books]);

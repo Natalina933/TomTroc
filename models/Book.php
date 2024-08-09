@@ -29,6 +29,9 @@ class Book extends AbstractEntity
     // Setter et Getter pour title
     public function setTitle(string $title): void
     {
+        if (empty($title)) {
+            throw new InvalidArgumentException('Le titre ne peut pas être vide.');
+        }
         $this->title = $title;
     }
 
@@ -40,6 +43,9 @@ class Book extends AbstractEntity
     // Setter et Getter pour author
     public function setAuthor(string $author): void
     {
+        if (empty($author)) {
+            throw new InvalidArgumentException('L\'auteur ne peut pas être vide.');
+        }
         $this->author = $author;
     }
 
@@ -69,7 +75,7 @@ class Book extends AbstractEntity
     {
         if ($length > 0) {
             $description = mb_substr($this->description, 0, $length);
-            if (strlen($this->description) > $length) {
+            if (mb_strlen($this->description) > $length) {
                 $description .= "...";
             }
             return $description;
@@ -93,6 +99,9 @@ class Book extends AbstractEntity
     {
         if (is_string($createdAt)) {
             $createdAt = DateTime::createFromFormat($format, $createdAt);
+            if (!$createdAt) {
+                throw new InvalidArgumentException('Format de date invalide pour createdAt.');
+            }
         }
         $this->createdAt = $createdAt;
     }
@@ -103,16 +112,17 @@ class Book extends AbstractEntity
     }
 
     // Setter et Getter pour updatedAt
-    public function setUpdatedAt($updatedAt): void
+    public function setUpdatedAt(string|DateTime|null $updatedAt): void
     {
         if ($updatedAt === null) {
             $this->updatedAt = null;
         } elseif (is_string($updatedAt)) {
-            $this->updatedAt = new DateTime($updatedAt);
+            $this->updatedAt = DateTime::createFromFormat('Y-m-d H:i:s', $updatedAt);
+            if (!$this->updatedAt) {
+                throw new InvalidArgumentException('Format de date invalide pour updatedAt.');
+            }
         } elseif ($updatedAt instanceof DateTime) {
             $this->updatedAt = $updatedAt;
-        } else {
-            throw new InvalidArgumentException('Invalid date format provided.');
         }
     }
 

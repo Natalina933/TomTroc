@@ -20,7 +20,28 @@ class bookManager extends AbstractEntityManager
         }
         return $books;
     }
-
+    public function getBooks(array $criteria=[], array $orders = [], int $limit = 0): array
+    {
+        $sql = "SELECT * FROM book";
+        foreach ($criteria as $key => $value) {
+            $sql .= " WHERE $key = :$value";
+            if (count($criteria) > 1) {
+                $sql .= " AND ";
+            }
+        }
+        foreach ($orders as $key => $value) {
+            $sql .= " ORDER BY $key $value";
+        }
+        if ($limit > 0) {
+            $sql .= " LIMIT $limit";
+        }
+        $result = $this->db->query($sql, $criteria);
+        $books = [];
+        while ($book = $result->fetch()) {
+            $books[] = new Book($book);
+        }
+        return $books;
+    }
     /**
      * Récupère un book par son id.
      * @param int $id : l'id de l'book.
