@@ -9,8 +9,8 @@
             </button>
             <div class="menu">
                 <div class="nav-group nav-group--left">
-                    <a href="#home" class="nav-link">Accueil</a>
-                    <a href="#books" class="nav-link">Nos livres</a>
+                    <a href="index.php?action=home" class="nav-link">Accueil</a>
+                    <a href="index.php?action=books" class="nav-link">Nos livres à l'échange</a>
                 </div>
                 <div class="nav-group nav-group--right">
                     <a href="#messages" class="nav-link">Messagerie</a>
@@ -29,22 +29,22 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const menu = document.querySelector('.menu');
+        const hamburger = document.querySelector('.hamburger');
+        const menu = document.querySelector('.menu');
 
-    if (hamburger && menu) {
-        hamburger.addEventListener('click', function() {
-            menu.classList.toggle('active');
-            hamburger.classList.toggle('is-active');
-        });
-
-        const navLinks = menu.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                menu.classList.remove('active');
-                hamburger.classList.remove('is-active');
+        if (hamburger && menu) {
+            hamburger.addEventListener('click', function() {
+                menu.classList.toggle('active');
+                hamburger.classList.toggle('is-active');
             });
-        });
-    }
-});
+
+            const navLinks = menu.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    menu.classList.remove('active');
+                    hamburger.classList.remove('is-active');
+                });
+            });
+        }
+    });
 </script>

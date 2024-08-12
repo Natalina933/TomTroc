@@ -9,7 +9,7 @@ class bookController
     public function showHome(): void
     {
         $bookManager = new bookManager();
-        $books = $bookManager->getBooks([], ['id'=>'DESC'], 4);
+        $books = $bookManager->getBooks([], ['id' => 'DESC'], 4);
 
         $view = new View("Accueil");
         $view->render("home", ['books' => $books]);
@@ -20,23 +20,22 @@ class bookController
      * Affiche le détail d'un book.
      * @return void
      */
-    public function showbook($shouldIncrementViews = false): void
+    public function showBooksList(): void
     {
-        $id = Utils::request("id", -1);
-        error_log("showbook called with ID: $id, shouldIncrementViews: " . ($shouldIncrementViews ? 'true' : 'false'));
+        // Pas besoin de récupérer un ID spécifique ici.
+        error_log("showBooksList called to display all books");
 
-        $bookManager = new bookManager();
-        $book = $bookManager->getbookById($id, $shouldIncrementViews);
+        // On récupère tous les livres
+        $bookManager = new BookManager();
+        $books = $bookManager->getAllBooks();
 
-        // $commentManager = new CommentManager();
-        // $comments = $commentManager->getAllCommentsBybookId($id);
-
-        if (!$book) {
-            throw new Exception("Le livre demandé n'existe pas. ID: $id");
+        if (empty($books)) {
+            throw new Exception("Aucun livre disponible.");
         }
 
-        $view = new View($book->getTitle());
-        $view->render("detailbook", ['book' => $book]);
+        // On passe la liste des livres à la vue
+        $view = new View("Nos Livres");
+        $view->render("books-list", ['books' => $books]);
     }
 
     /**
