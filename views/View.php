@@ -56,7 +56,11 @@ class View
             throw new Exception("La vue '$viewPath' est introuvable.");
         }
     }
-
+    public function renderPartial(string $viewName, array $params = []): void
+    {
+        $viewPath = $this->buildViewPath($viewName);
+        echo $this->_renderViewFromTemplate($viewPath, $params);
+    }
     /**
      * Cette méthode construit le chemin vers la vue demandée.
      * @param string $viewName : le nom de la vue demandée.
