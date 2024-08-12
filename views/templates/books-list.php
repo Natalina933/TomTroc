@@ -10,8 +10,8 @@
             </div>
             <input type="text" name="query" placeholder="Rechercher un livre ou un auteur...">
         </div>
+    </form>
 </div>
-</form>
 
 <section class="book-list">
     <div class="books">
@@ -31,12 +31,37 @@
                         <p class="author"><?= htmlspecialchars($book->getAuthor() ?? 'Auteur non disponible') ?></p>
                         <p class="seller">Vendu par : <?= htmlspecialchars($book->getUserId() ?? 'Utilisateur inconnu') ?></p>
                     </div>
-
                 </div>
             <?php } ?>
         <?php } else { ?>
             <p>Aucun livre disponible pour le moment.</p>
         <?php } ?>
+
     </div>
 </section>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('input[name="query"]');
+        const booksContainer = document.querySelector('.book-list .books');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = searchInput.value;
+
+                if (query.length >= 2) {
+                    fetch(`index.php?action=books&query=${encodeURIComponent(query)}&ajax=true`)
+                        .then(response => response.text())
+                        .then(data => {
+                            booksContainer.innerHTML = data;
+                        })
+                        .catch(error => console.error('Error fetching books:', error));
+                } else {
+                    // Afficher un message d'absence de livres si la requête est trop courte
+                    booksContainer.innerHTML = '<p>Aucun livre disponible pour le moment.</p>';
+                }
+            });
+        }
+    });
+</script>

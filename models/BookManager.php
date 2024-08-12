@@ -68,17 +68,13 @@ class bookManager extends AbstractEntityManager
      */
     public function searchBooks(string $query): array
     {
-        // Préparer la requête SQL avec des paramètres
         $sql = "SELECT * FROM book WHERE title LIKE :query OR author LIKE :query";
-        $params = ['query' => "%$query%"];
-
-        $result = $this->db->query($sql, $params);
+        $result = $this->db->query($sql, ['query' => '%' . $query . '%']);
         $books = [];
 
         while ($book = $result->fetch()) {
             $books[] = new Book($book);
         }
-
         return $books;
     }
     /**

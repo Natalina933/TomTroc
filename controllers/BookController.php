@@ -22,27 +22,25 @@ class bookController
      */
     public function showBooksList(): void
     {
-        // Récupérer le terme de recherche
         $query = Utils::request('query', '');
         // Nettoyer la requête pour éviter les injections SQL
         $query = trim($query);
-
-        // Instancier le BookManager
         $bookManager = new BookManager();
-
-        // Récupérer les livres en fonction de la requête de recherche
-        if ($query) {
-            // Effectuer la recherche avec la requête
+        // Filtrer les livres si la requête de recherche a au moins 2 caractères
+        if (strlen($query) >= 2) {
             $books = $bookManager->searchBooks($query);
         } else {
-            // Récupérer tous les livres si aucune recherche n'est effectuée
             $books = $bookManager->getAllBooks();
         }
 
-        // Passer les livres à la vue
+        if (empty($books)) {
+            throw new Exception("Aucun livre disponible.");
+        }
+
         $view = new View("Nos Livres");
-        $view->render("books-list", ['books' => $books, 'query' => $query]);
+        $view->render("books-list", ['books' => $books]);
     }
+
     public function addbook(): void
     {
         $view = new View("Ajouter un book");
@@ -53,9 +51,4 @@ class bookController
      * Affiche la page "à propos".
      * @return void
      */
-    public function showApropos()
-    {
-        $view = new View("A propos");
-        $view->render("apropos");
-    }
 }
