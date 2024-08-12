@@ -61,7 +61,26 @@ class bookManager extends AbstractEntityManager
         }
         return $books;
     }
+    /**
+     * Recherche des livres par titre ou auteur.
+     * @param string $query : terme de recherche.
+     * @return array : un tableau d'objets Book.
+     */
+    public function searchBooks(string $query): array
+    {
+        // Préparer la requête SQL avec des paramètres
+        $sql = "SELECT * FROM book WHERE title LIKE :query OR author LIKE :query";
+        $params = ['query' => "%$query%"];
 
+        $result = $this->db->query($sql, $params);
+        $books = [];
+
+        while ($book = $result->fetch()) {
+            $books[] = new Book($book);
+        }
+
+        return $books;
+    }
     /**
      * Récupère un book par son id.
      * @param int $id : l'id du book.
@@ -119,7 +138,7 @@ class bookManager extends AbstractEntityManager
             'id' => $book->getId(),
         ]);
     }
-    
+
 
     /**
      * Supprime un book.
@@ -131,5 +150,4 @@ class bookManager extends AbstractEntityManager
         $sql = "DELETE FROM book WHERE id = :id";
         $this->db->query($sql, ['id' => $id]);
     }
-    
 }

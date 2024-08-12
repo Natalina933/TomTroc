@@ -22,26 +22,27 @@ class bookController
      */
     public function showBooksList(): void
     {
-        // Pas besoin de récupérer un ID spécifique ici.
-        error_log("showBooksList called to display all books");
+        // Récupérer le terme de recherche
+        $query = Utils::request('query', '');
+        // Nettoyer la requête pour éviter les injections SQL
+        $query = trim($query);
 
-        // On récupère tous les livres
+        // Instancier le BookManager
         $bookManager = new BookManager();
-        $books = $bookManager->getAllBooks();
 
-        if (empty($books)) {
-            throw new Exception("Aucun livre disponible.");
+        // Récupérer les livres en fonction de la requête de recherche
+        if ($query) {
+            // Effectuer la recherche avec la requête
+            $books = $bookManager->searchBooks($query);
+        } else {
+            // Récupérer tous les livres si aucune recherche n'est effectuée
+            $books = $bookManager->getAllBooks();
         }
 
-        // On passe la liste des livres à la vue
+        // Passer les livres à la vue
         $view = new View("Nos Livres");
-        $view->render("books-list", ['books' => $books]);
+        $view->render("books-list", ['books' => $books, 'query' => $query]);
     }
-
-    /**
-     * Affiche le formulaire d'ajout d'un book.
-     * @return void
-     */
     public function addbook(): void
     {
         $view = new View("Ajouter un book");

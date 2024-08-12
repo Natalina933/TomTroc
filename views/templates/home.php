@@ -24,9 +24,11 @@
                     <?php } else { ?>
                         <p>Image non disponible</p>
                     <?php } ?>
-                    <h3><?= htmlspecialchars($book->getTitle() ?? 'Titre non disponible') ?></h3>
-                    <p class="author"><?= htmlspecialchars($book->getAuthor() ?? 'Auteur non disponible') ?></p>
-                    <p class="seller">Vendu par : <?= htmlspecialchars($book->getUserId() ?? 'Utilisateur inconnu') ?></p>
+                    <div class="text-book-card">
+                        <h3><?= htmlspecialchars($book->getTitle() ?? 'Titre non disponible') ?></h3>
+                        <p class="author"><?= htmlspecialchars($book->getAuthor() ?? 'Auteur non disponible') ?></p>
+                        <p class="seller">Vendu par : <?= htmlspecialchars($book->getUserId() ?? 'Utilisateur inconnu') ?></p>
+                    </div>
                 </div>
             <?php } ?>
         <?php } else { ?>
