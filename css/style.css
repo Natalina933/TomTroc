@@ -476,6 +476,91 @@ main {
     font-style: italic;
 }
 
+/*****************************************************************
+ * Styles pour la section book-detail
+ */
+ .book-detail {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.book-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.book-author {
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.book-description {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.book-owner-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.owner-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.owner-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.owner-photo.placeholder {
+    background-color: #ccc;
+}
+
+.owner-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.message-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.message-button:hover {
+    background-color: #0056b3;
+}
 
 
 

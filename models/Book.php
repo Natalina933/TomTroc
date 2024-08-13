@@ -7,6 +7,7 @@
 class Book extends AbstractEntity
 {
     private int $userId;
+    protected int $id;
     private string $title = "";
     private string $author = "";
     private ?string $img = null;
@@ -15,6 +16,16 @@ class Book extends AbstractEntity
     private ?DateTime $createdAt = null;
     private ?DateTime $updatedAt = null;
 
+    // Getter et Setter pour id
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
     // Setter et Getter pour userId
     public function setUserId(int $userId): void
     {

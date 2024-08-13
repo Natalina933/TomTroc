@@ -4,33 +4,38 @@ require_once 'config/autoload.php';
 
 // On récupère l'action demandée par l'utilisateur. Si aucune action n'est demandée, on affiche la page d'accueil.
 $action = Utils::request('action', 'home');
-error_log("Action requested: " . $action);
+$bookId = Utils::request('id', 0); // Récupérer l'ID du livre depuis la requête
+error_log("Action requested: " . $action . ", Book ID: " . $bookId);
 
-// Try catch global pour gérer les erreurs
 try {
+    // Instancier les contrôleurs
+    $bookController = new BookController();
+
     // Pour chaque action, on appelle le bon contrôleur et la bonne méthode.
     switch ($action) {
             // Pages accessibles à tous.
         case 'home':
-            $bookController = new BookController();
             $bookController->showHome();
             break;
 
         case 'books':
-            $bookController = new BookController();
             $bookController->showBooksList();
             break;
 
+        case 'book-detail':
+            if ($bookId > 0) {
+                $bookController->showBookDetail($bookId);
+            } else {
+                throw new Exception("ID du livre invalide.");
+            }
+            break;
+
         case 'addbook':
-            $bookController = new BookController();
             $bookController->addBook();
             break;
 
-            // case 'addComment':
-            //     $commentController = new CommentController();
-            //     $commentController->addComment();
-            //     break;
-
+            // Les cas commentés pour les fonctionnalités d'administration
+            // Vous pouvez décommenter et compléter ces sections si nécessaire
             // case 'admin':
             //     $adminController = new AdminController();
             //     $adminController->showAdmin();

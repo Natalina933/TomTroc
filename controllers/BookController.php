@@ -1,6 +1,6 @@
 <?php
 
-class bookController
+class BookController
 {
     /**
      * Affiche la page d'accueil.
@@ -8,16 +8,15 @@ class bookController
      */
     public function showHome(): void
     {
-        $bookManager = new bookManager();
+        $bookManager = new BookManager();
         $books = $bookManager->getBooks([], ['id' => 'DESC'], 4);
 
         $view = new View("Accueil");
         $view->render("home", ['books' => $books]);
     }
 
-
     /**
-     * Affiche le détail d'un book.
+     * Affiche la liste des livres, avec une recherche si nécessaire.
      * @return void
      */
     public function showBooksList(): void
@@ -26,6 +25,7 @@ class bookController
         // Nettoyer la requête pour éviter les injections SQL
         $query = trim($query);
         $bookManager = new BookManager();
+
         // Filtrer les livres si la requête de recherche a au moins 2 caractères
         if (strlen($query) >= 2) {
             $books = $bookManager->searchBooks($query);
@@ -33,22 +33,38 @@ class bookController
             $books = $bookManager->getAllBooks();
         }
 
-        if (empty($books)) {
-            throw new Exception("Aucun livre disponible.");
-        }
-
         $view = new View("Nos Livres");
         $view->render("books-list", ['books' => $books]);
     }
 
-    public function addbook(): void
+    /**
+     * Affiche les détails d'un livre.
+     * @param int $id Identifiant du livre
+     * @return void
+     */
+    public function showBookDetail(int $id): void
     {
-        $view = new View("Ajouter un book");
-        $view->render("addbook");
+        $bookManager = new BookManager();
+        $book = $bookManager->getBookById($id);
+    
+        if ($book) {
+            $userManager = new UserManager();
+            $owner = $userManager->getUserById($book->getUserId());
+        } else {
+            $owner = null;
+        }
+    
+        $view = new View('Book Detail');
+        $view->render('book-detail', ['book' => $book, 'owner' => $owner]);
     }
 
     /**
-     * Affiche la page "à propos".
+     * Affiche la page pour ajouter un livre.
      * @return void
      */
+    public function addBook(): void
+    {
+        $view = new View("Ajouter un livre");
+        $view->render("addbook");
+    }
 }
