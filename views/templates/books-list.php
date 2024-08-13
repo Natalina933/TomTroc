@@ -18,14 +18,20 @@
         <?php if (!empty($books)) { ?>
             <?php foreach ($books as $book) { ?>
                 <div class="book-card">
-                    <?php
-                    $imgSrc = $book->getImg() ?? '';
-                    if (!empty($imgSrc) && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $imgSrc)) {
-                    ?>
-                        <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Image de <?= htmlspecialchars($book->getTitle()) ?>">
-                    <?php } else { ?>
-                        <p>Image non disponible</p>
-                    <?php } ?>
+                    <div class="image-container">
+                        <?php
+                        $imgSrc = $book->getImg() ?? '';
+                        if (!empty($imgSrc) && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $imgSrc)) {
+                        ?>
+                            <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Image de <?= htmlspecialchars($book->getTitle()) ?>">
+                        <?php } else { ?>
+                            <p>Image non disponible</p>
+                        <?php } ?>
+
+                        <?php if (!$book->isAvailable()) { ?>
+                            <div class="availability-badge">Non dispo.</div>
+                        <?php } ?>
+                    </div>
                     <div class="text-book-card">
                         <h3><?= htmlspecialchars($book->getTitle() ?? 'Titre non disponible') ?></h3>
                         <p class="author"><?= htmlspecialchars($book->getAuthor() ?? 'Auteur non disponible') ?></p>

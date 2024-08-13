@@ -231,6 +231,7 @@ main {
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease;
+    position: relative;
 }
 
 .text-book-card {
@@ -268,6 +269,41 @@ main {
     text-align: center;
     margin-top: auto;
     padding-top: 10px;
+    display: block;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.availability-badge {
+    position: absolute;
+    top: 12.7px;
+    left: 119px;
+    padding: 3.96px;
+    border-radius: 23.67px;
+    background: #C56D6D;
+    color: #fff;
+    opacity: 1;
+    width: 68.3px;
+    height: 14.92px;
+    font-family: 'Inter', sans-serif;
+    font-size: 7.1px;
+    font-weight: 500;
+    line-height: 8.59px;
+    text-align: center;
+}
+
+.image-container .availability-badge {
+    /* Ce badge sera affiché uniquement si le livre n'est pas disponible */
     display: block;
 }
 
