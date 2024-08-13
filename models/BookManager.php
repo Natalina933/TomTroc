@@ -77,18 +77,29 @@ class bookManager extends AbstractEntityManager
         }
         return $books;
     }
+    public function getBookById(int $id): ?Book
+    {
+        $sql = "SELECT * FROM book WHERE id = ?";
+        $stmt = $this->db->query($sql);
+        $stmt->execute([$id]); // Bind param for ? placeholder
+        $bookData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $bookData ? new Book($bookData) : null;
+    }
     /**
      * Récupère un book par son id.
      * @param int $id : l'id du book.
      * @return book|null : un objet book ou null si le book n'existe pas.
      */
-    public function getBookById(int $id): ?Book
+    public function getUserById(int $id): ?User
     {
-        $sql = "SELECT * FROM book WHERE id = :id";
-        $result = $this->db->query($sql, ['id' => $id]);
-        $book = $result->fetch();
+        $sql = "SELECT * FROM user WHERE id = :id";
+        $stmt = $this->db->query($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $book ? new Book($book) : null;
+        return $user ? new User($user) : null;
     }
 
     /**

@@ -9,12 +9,12 @@ class UserManager extends AbstractEntityManager
      */
     public function getUserById(int $id): ?User
     {
-        $sql = "SELECT * FROM user WHERE id = :id";
+        $sql = "SELECT * FROM user WHERE id = ?";
         $stmt = $this->db->query($sql);
-        $stmt->execute(['id' => $id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute([$id]); // Bind param for ? placeholder
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $user ? new User($user) : null;
+        return $userData ? new User($userData) : null;
     }
 
     /**
