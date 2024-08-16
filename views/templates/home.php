@@ -14,27 +14,11 @@
     <div class="books">
         <?php if (!empty($books)) { ?>
             <?php foreach ($books as $book) { ?>
-                <div class="book-card">
-                    <?php
-                    $imgSrc = $book->getImg() ?? '';
-                    // Si l'image est définie et accessible
-                    if (!empty($imgSrc) && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $imgSrc)) {
-                    ?>
-                        <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Image de <?= htmlspecialchars($book->getTitle()) ?>">
-                    <?php } else { ?>
-                        <p>Image non disponible</p>
-                    <?php } ?>
-                    <div class="text-book-card">
-                        <h3><?= htmlspecialchars($book->getTitle() ?? 'Titre non disponible') ?></h3>
-                        <p class="author"><?= htmlspecialchars($book->getAuthor() ?? 'Auteur non disponible') ?></p>
-                        <p class="seller">Vendu par : <?= htmlspecialchars($book->getUserId() ?? 'Utilisateur inconnu') ?></p>
-                    </div>
-                </div>
+                <?php include 'includes/book-card.php'; ?>
             <?php } ?>
         <?php } else { ?>
             <p>Aucun livre disponible pour le moment.</p>
         <?php } ?>
-        <button class="btn">Voir tous les livres</button>
     </div>
 </section>
 <section class="how-it-works">
