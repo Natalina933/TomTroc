@@ -42,7 +42,7 @@
                 const title = card.dataset.title.toLowerCase();
                 const author = card.dataset.author.toLowerCase();
 
-                if (title.include(query) || author.include(query)) {
+                if (title.includes(query) || author.includes(query)) {
                     card.style.display = 'block'; // Affiche la carte
                 } else {
                     card.style.display = 'none'; // Cache la carte
