@@ -2,7 +2,7 @@
     <nav class="main-nav">
         <div class="nav-wrapper">
             <a href="index.php" class="logo-link">
-                <img src="/img/logo_tom_troc.png" alt="logo_tom_troc" class="logo-image">
+                <img src="../../../assets/img/logo_tom_troc.png" alt="logo_tom_troc" class="logo-image">
             </a>
             <button class="hamburger" aria-label="Toggle navigation">
                 &#9776;

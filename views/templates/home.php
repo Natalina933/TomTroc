@@ -1,5 +1,5 @@
 <section class="intro-container">
-    <img src="./img/hero.png" alt="Hero image">
+    <img src="../../assets/img/hero.png" alt="Hero image">
     <div class="intro-wrapper">
         <h2 class="title">Rejoignez nos lecteurs passionnés</h2>
         <p class="intro-text">
@@ -44,7 +44,7 @@
 </section>
 <section class="values-section">
     <div class="banner-image">
-        <img src="./img/banner.png" alt="Bandeau Tom Troc">
+        <img src="../../assets/img/banner.png" alt="Bandeau Tom Troc">
     </div>
     <div class="values-content">
         <h2 class="values-title">Nos valeurs</h2>
@@ -61,6 +61,6 @@
             <div class="values-signature">
                 L’équipe Tom Troc.
             </div>
-            <img class="vector-image" src="/img/Vector 2.svg" alt="Décoration Vector 2">
+            <img class="vector-image" src="/assets/img/Vector 2.svg" alt="Décoration Vector 2">
         </div>
 </section>
