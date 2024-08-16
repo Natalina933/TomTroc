@@ -45,17 +45,18 @@ class BookController
     public function showBookDetail(int $id): void
     {
         $bookManager = new BookManager();
+
         $book = $bookManager->getBookById($id);
-    
+        
         if ($book) {
             $userManager = new UserManager();
             $owner = $userManager->getUserById($book->getUserId());
         } else {
             $owner = null;
         }
-    
+
         $view = new View('Book Detail');
-        $view->render('book-detail', ['book' => $book, 'owner' => $owner]);
+        $view->render('book-detail', ['book' => $book, 'user' => $owner]);
     }
 
     /**

@@ -1,144 +1,87 @@
 <?php
-
 class UserManager extends AbstractEntityManager
 {
+
     /**
-     * Récupère un utilisateur par son ID.
-     * 
-     * @param int $id
-     * @return User|null
-     * */
-
-
-    public function getUserById(int $id): ?User
+     * Récupère un utilisateur par son login.
+     * @param string $login Le login de l'utilisateur.
+     * @return ?User Retourne un objet User si trouvé, sinon null.
+     */
+    public function getUserByUsername(string $username): ?User
     {
-        $sql = "SELECT * FROM user WHERE id = ?";
+        $sql = "SELECT * FROM user WHERE username = :username";
         $stmt = $this->db->query($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         $stmt->execute();
-        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-        $params = [':id' => $id];
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        error_log("SQL Query: " . $sql);
-        error_log("Parameters: " . print_r($params, true));
-        return $userData ? new User($userData) : null;
+        if ($user) {
+            return new User($user);
+        }
+        return null;
     }
 
     /**
-     * Récupère tous les utilisateurs.
-     * 
-     * @return User[]
+     * Inscrit un nouvel utilisateur.
+     * @param User $user L'utilisateur à inscrire.
+     * @return bool Retourne vrai si l'inscription est réussie, sinon faux.
      */
-    public function getAllUsers(): array
+    public function registerUser(User $user): bool
     {
-        $sql = "SELECT * FROM user";
-        $stmt = $this->db->query($sql);
-        $usersData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "INSERT INTO user (username, email, password, first_name, last_name, profile_picture, birthdate, phone_number, address, role) 
+                VALUES (:username, :email, :password, :first_name, :last_name, :profile_picture, :birthdate, :phone_number, :address, :role)";
 
-        return array_map([$this, 'mapToUser'], $usersData);
+        $stmt = $this->db->query($sql);
+        $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
+        $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
+        $stmt->bindParam(':first_name', $user->getFirstName(), PDO::PARAM_STR);
+        $stmt->bindParam(':last_name', $user->getLastName(), PDO::PARAM_STR);
+        $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
+        $stmt->bindParam(':birthdate', $user->getBirthdate(), PDO::PARAM_STR);
+        $stmt->bindParam(':phone_number', $user->getPhoneNumber(), PDO::PARAM_STR);
+        $stmt->bindParam(':address', $user->getAddress(), PDO::PARAM_STR);
+        $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
     /**
-     * Crée un nouvel utilisateur.
-     * 
-     * @param User $user
-     * @return bool
-     */
-    public function createUser(User $user): bool
-    {
-        $sql = "INSERT INTO user (username, email, password, first_name, last_name, profile_picture, birthdate, phone_number, address, role, is_active, created_at, updated_at, last_login, activation_token, reset_token) 
-                VALUES (:username, :email, :password, :first_name, :last_name, :profile_picture, :birthdate, :phone_number, :address, :role, :is_active, :created_at, :updated_at, :last_login, :activation_token, :reset_token)";
-        $stmt = $this->db->query($sql);
-        return $stmt->execute([
-            'username' => $user->getUsername(),
-            'email' => $user->getEmail(),
-            'password' => password_hash($user->getPassword(), PASSWORD_BCRYPT),
-            'first_name' => $user->getFirstName(),
-            'last_name' => $user->getLastName(),
-            'profile_picture' => $user->getProfilePicture(),
-            'birthdate' => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-            'phone_number' => $user->getPhoneNumber(),
-            'address' => $user->getAddress(),
-            'role' => $user->getRole(),
-            'is_active' => $user->getIsActive(),
-            'created_at' => $user->getCreatedAt() ? $user->getCreatedAt()->format('Y-m-d H:i:s') : null,
-            'updated_at' => $user->getUpdatedAt() ? $user->getUpdatedAt()->format('Y-m-d H:i:s') : null,
-            'last_login' => $user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d H:i:s') : null,
-            'activation_token' => $user->getActivationToken(),
-            'reset_token' => $user->getResetToken()
-        ]);
-    }
-
-    /**
-     * Met à jour un utilisateur.
-     * 
-     * @param User $user
-     * @return bool
+     * Met à jour les informations d'un utilisateur.
+     * @param User $user L'utilisateur avec les nouvelles informations.
+     * @return bool Retourne vrai si la mise à jour est réussie, sinon faux.
      */
     public function updateUser(User $user): bool
     {
-        $sql = "UPDATE user 
-                SET username = :username, email = :email, first_name = :first_name, last_name = :last_name, profile_picture = :profile_picture, birthdate = :birthdate, phone_number = :phone_number, address = :address, role = :role, is_active = :is_active, updated_at = :updated_at, last_login = :last_login, activation_token = :activation_token, reset_token = :reset_token 
-                WHERE id = :id";
+        $sql = "UPDATE user SET 
+                email = :email,
+                first_name = :first_name,
+                last_name = :last_name,
+                profile_picture = :profile_picture,
+                birthdate = :birthdate,
+                phone_number = :phone_number,
+                address = :address
+                WHERE username = :username";
+
         $stmt = $this->db->query($sql);
-        return $stmt->execute([
-            'id' => $user->getId(),
-            'username' => $user->getUsername(),
-            'email' => $user->getEmail(),
-            'first_name' => $user->getFirstName(),
-            'last_name' => $user->getLastName(),
-            'profile_picture' => $user->getProfilePicture(),
-            'birthdate' => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-            'phone_number' => $user->getPhoneNumber(),
-            'address' => $user->getAddress(),
-            'role' => $user->getRole(),
-            'is_active' => $user->getIsActive(),
-            'updated_at' => (new DateTime())->format('Y-m-d H:i:s'), // Mise à jour automatique du champ updated_at
-            'last_login' => $user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d H:i:s') : null,
-            'activation_token' => $user->getActivationToken(),
-            'reset_token' => $user->getResetToken()
-        ]);
+        $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR); // Assurez-vous que vous avez l'identifiant unique pour mettre à jour
+        $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindParam(':first_name', $user->getFirstName(), PDO::PARAM_STR);
+        $stmt->bindParam(':last_name', $user->getLastName(), PDO::PARAM_STR);
+        $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
+        $stmt->bindParam(':birthdate', $user->getBirthdate(), PDO::PARAM_STR);
+        $stmt->bindParam(':phone_number', $user->getPhoneNumber(), PDO::PARAM_STR);
+        $stmt->bindParam(':address', $user->getAddress(), PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
-    /**
-     * Supprime un utilisateur par son ID.
-     * 
-     * @param int $id
-     * @return bool
-     */
-    public function deleteUser(int $id): bool
+    public function getUserById(int $id): ?User
     {
-        $sql = "DELETE FROM user WHERE id = :id";
-        $stmt = $this->db->query($sql);
-        return $stmt->execute(['id' => $id]);
-    }
+        $sql = "SELECT * FROM user WHERE id = :id";
+        $stmt = $this->db->query($sql, ['id' => $id]);
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    /**
-     * Mappe un tableau de données utilisateur en objet User.
-     * 
-     * @param array $userData
-     * @return User
-     */
-    private function mapToUser(array $userData): User
-    {
-        $user = new User();
-        $user->setId($userData['id']);
-        $user->setUsername($userData['username']);
-        $user->setEmail($userData['email']);
-        $user->setPassword($userData['password']); // Généralement, vous ne récupérerez pas le mot de passe en clair
-        $user->setFirstName($userData['first_name']);
-        $user->setLastName($userData['last_name']);
-        $user->setProfilePicture($userData['profile_picture']);
-        $user->setBirthdate($userData['birthdate'] ? new DateTime($userData['birthdate']) : null);
-        $user->setPhoneNumber($userData['phone_number']);
-        $user->setAddress($userData['address']);
-        $user->setRole($userData['role']);
-        $user->setIsActive((bool)$userData['is_active']);
-        $user->setCreatedAt(new DateTime($userData['created_at']));
-        $user->setUpdatedAt(new DateTime($userData['updated_at']));
-        $user->setLastLogin($userData['last_login'] ? new DateTime($userData['last_login']) : null);
-        $user->setActivationToken($userData['activation_token']);
-        $user->setResetToken($userData['reset_token']);
-
-        return $user;
+        return $userData ? new User($userData) : null;
     }
 }

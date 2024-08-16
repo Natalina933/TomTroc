@@ -10,7 +10,7 @@ error_log("Action requested: " . $action . ", Book ID: " . $bookId);
 try {
     // Instancier les contrôleurs
     $bookController = new BookController();
-
+    $adminController = new AdminController();
     // Pour chaque action, on appelle le bon contrôleur et la bonne méthode.
     switch ($action) {
             // Pages accessibles à tous.
@@ -34,52 +34,41 @@ try {
             $bookController->addBook();
             break;
 
-            // Les cas commentés pour les fonctionnalités d'administration
-            // Vous pouvez décommenter et compléter ces sections si nécessaire
-            // case 'admin':
-            //     $adminController = new AdminController();
-            //     $adminController->showAdmin();
-            //     break;
+        case 'admin':
+            $adminController = new AdminController();
+            $adminController->showAdmin();
+            break;
 
-            // case 'connectionForm':
-            //     $adminController = new AdminController();
-            //     $adminController->displayConnectionForm();
-            //     break;
+        case 'connectionForm':
+            $adminController = new AdminController();
+            $adminController->displayConnectionForm();
+            break;
 
-            // case 'connectUser':
-            //     $adminController = new AdminController();
-            //     $adminController->connectUser();
-            //     break;
+        case 'connectUser':
+            $adminController = new AdminController();
+            $adminController->connectUser();
+            break;
 
-            // case 'disconnectUser':
-            //     $adminController = new AdminController();
-            //     $adminController->disconnectUser();
-            //     break;
+        case 'disconnectUser':
+            $adminController = new AdminController();
+            $adminController->disconnectUser();
+            break;
 
-            // case 'showUpdateBookForm':
-            //     $adminController = new AdminController();
-            //     $adminController->showUpdateBookForm();
-            //     break;
+        // case 'showUpdateBookForm':
+        //     $adminController = new AdminController();
+        //     $adminController->showUpdateBookForm();
+        //     break;
 
-            // case 'updateBook':
-            //     $adminController = new AdminController();
-            //     $adminController->updateBook();
-            //     break;
+        // case 'updateBook':
+        //     $adminController = new AdminController();
+        //     $adminController->updateBook();
+        //     break;
 
-            // case 'deleteBook':
-            //     $adminController = new AdminController();
-            //     $adminController->deleteBook();
-            //     break;
+        // case 'deleteBook':
+        //     $adminController = new AdminController();
+        //     $adminController->deleteBook();
+        //     break;
 
-            // case 'showMonitoring':
-            //     $monitoringController = new MonitoringController();
-            //     $monitoringController->showMonitoring();
-            //     break;
-
-            // case 'deleteComment':
-            //     $monitoringController = new MonitoringController();
-            //     $monitoringController->deleteComment();
-            //     break;
 
         default:
             throw new Exception("La page demandée n'existe pas.");
