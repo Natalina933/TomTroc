@@ -17,7 +17,7 @@
     <div class="books">
         <?php if (!empty($books)) { ?>
             <?php foreach ($books as $book) { ?>
-                <?php include 'includes/book-card.php'; ?>
+                <?php include 'include/book-card.php'; ?>
             <?php } ?>
         <?php } else { ?>
             <p>Aucun livre disponible pour le moment.</p>
@@ -42,7 +42,7 @@
                 const title = card.dataset.title.toLowerCase();
                 const author = card.dataset.author.toLowerCase();
 
-                if (title.includes(query) || author.includes(query)) {
+                if (title.include(query) || author.include(query)) {
                     card.style.display = 'block'; // Affiche la carte
                 } else {
                     card.style.display = 'none'; // Cache la carte
