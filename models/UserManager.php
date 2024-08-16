@@ -84,4 +84,21 @@ class UserManager extends AbstractEntityManager
 
         return $userData ? new User($userData) : null;
     }
+    public function findExistingUser(array $criteria): bool
+    {
+        $sql = "SELECT * FROM user";
+        $params = [];
+
+        if (!empty($criteria)) {
+            $conditions = [];
+            foreach ($criteria as $key => $value) {
+                $conditions[] = "$key = :$key";
+                $params[$key] = $value;
+            }
+            $sql .= " WHERE " . implode(" OR ", $conditions);
+        }
+        $result = $this->db->query($sql, $params);
+
+        return $result->rowCount() > 0;
+    }
 }

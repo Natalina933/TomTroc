@@ -104,7 +104,7 @@ class AdminController
         }
 
         $userManager = new UserManager();
-        $existingUser = $userManager->getUserByUsername($username);
+        $existingUser = $userManager->findExistingUser(['username' => $username, 'email' => $email]);
         if ($existingUser) {
             throw new Exception("Un utilisateur avec ce nom d'utilisateur existe déjà.");
         }
