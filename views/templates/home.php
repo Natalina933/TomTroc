@@ -14,7 +14,7 @@
     <div class="books">
         <?php if (!empty($books)) { ?>
             <?php foreach ($books as $book) { ?>
-                <?php include 'includes/book-card.php'; ?>
+                <?php include 'include/book-card.php'; ?>
             <?php } ?>
         <?php } else { ?>
             <p>Aucun livre disponible pour le moment.</p>

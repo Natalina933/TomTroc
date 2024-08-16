@@ -21,13 +21,13 @@
 </head>
 
 <body>
-    <?php include 'includes/header.php'; ?>
+    <?php include 'include/header.php'; ?>
 
     <main>
         <?= $description /* Ici est affiché le contenu réel de la page. */ ?>
     </main>
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include 'include/footer.php'; ?>
 </body>
 
 </html>
