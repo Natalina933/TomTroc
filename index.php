@@ -34,9 +34,9 @@ try {
             $bookController->addBook();
             break;
 
-        case 'admin':
+        case 'registrationForm':
             $adminController = new AdminController();
-            $adminController->showAdmin();
+            $adminController->displayRegistrationForm();
             break;
 
         case 'connectionForm':
@@ -54,20 +54,20 @@ try {
             $adminController->disconnectUser();
             break;
 
-        // case 'showUpdateBookForm':
-        //     $adminController = new AdminController();
-        //     $adminController->showUpdateBookForm();
-        //     break;
+            // case 'showUpdateBookForm':
+            //     $adminController = new AdminController();
+            //     $adminController->showUpdateBookForm();
+            //     break;
 
-        // case 'updateBook':
-        //     $adminController = new AdminController();
-        //     $adminController->updateBook();
-        //     break;
+            // case 'updateBook':
+            //     $adminController = new AdminController();
+            //     $adminController->updateBook();
+            //     break;
 
-        // case 'deleteBook':
-        //     $adminController = new AdminController();
-        //     $adminController->deleteBook();
-        //     break;
+            // case 'deleteBook':
+            //     $adminController = new AdminController();
+            //     $adminController->deleteBook();
+            //     break;
 
 
         default:
