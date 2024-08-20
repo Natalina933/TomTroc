@@ -188,8 +188,148 @@ main {
 
 
 /****************************************************************
- * Styles des formulaires
+ * Styles mon compte
  */
+/* Container for the account section */
+.account-container {
+    background-color: grey;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* Section styles for account info and personal information */
+.account-sections {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* Individual card styles */
+.account-card {
+    width: 547px;
+    height: 508px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Profile image styles */
+.account-card img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 15px;
+}
+
+/* Button styles */
+.account-card button {
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+.account-card button:hover {
+    background-color: #0056b3;
+}
+
+/* Text styles within the account card */
+.account-card p {
+    margin: 5px 0;
+    color: #333;
+}
+
+/* Form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+form label {
+    font-weight: bold;
+    color: #555;
+}
+
+form input[type="email"], 
+form input[type="password"], 
+form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+form button {
+    align-self: center;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+form button:hover {
+    background-color: #218838;
+}
+
+/* Table styling */
+.table-books {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.table-books th, .table-books td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table-books th {
+    background-color: #007bff;
+    color: white;
+    text-transform: uppercase;
+}
+
+.table-books td {
+    color: #333;
+}
+
+.table-books img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.table-books a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.table-books a:hover {
+    color: #0056b3;
+}
 
 
 /**

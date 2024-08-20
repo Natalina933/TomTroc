@@ -1,7 +1,39 @@
 <?php
 class UserManager extends AbstractEntityManager
 {
+    public function createUser(string $username, string $email, string $password): User
+    {
+        // Ajouter le code pour insérer un utilisateur dans la base de données
+        // Par exemple :
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $created_at = date('Y-m-d H:i:s');
 
+        $sql = "INSERT INTO user (username, email, password, created_at) 
+            VALUES (:username, :email, :password, :created_at)";
+
+        $stmt = $this->db->query($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(':created_at', $created_at);
+
+        // Exécute la requête d'insertion
+        $stmt->execute();
+
+        // // Obtenir l'ID de la dernière insertion
+        // $lastInsertId = $this->db->lastInsertId();
+
+        // Créer un nouvel utilisateur avec l'ID généré
+        $user = new User([
+            'pseudo' => $username,
+            'username' => $username,
+            'email' => $email,
+            'password' => $hashedPassword,
+            'created_at' => $created_at,
+        ]);
+
+        return $user;
+    }
     /**
      * Récupère un utilisateur par son login.
      * @param string $login Le login de l'utilisateur.
@@ -35,12 +67,7 @@ class UserManager extends AbstractEntityManager
         $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
         $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
-        $stmt->bindParam(':first_name', $user->getFirstName(), PDO::PARAM_STR);
-        $stmt->bindParam(':last_name', $user->getLastName(), PDO::PARAM_STR);
         $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
-        $stmt->bindParam(':birthdate', $user->getBirthdate(), PDO::PARAM_STR);
-        $stmt->bindParam(':phone_number', $user->getPhoneNumber(), PDO::PARAM_STR);
-        $stmt->bindParam(':address', $user->getAddress(), PDO::PARAM_STR);
         $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
 
         return $stmt->execute();
@@ -66,12 +93,7 @@ class UserManager extends AbstractEntityManager
         $stmt = $this->db->query($sql);
         $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR); // Assurez-vous que vous avez l'identifiant unique pour mettre à jour
         $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
-        $stmt->bindParam(':first_name', $user->getFirstName(), PDO::PARAM_STR);
-        $stmt->bindParam(':last_name', $user->getLastName(), PDO::PARAM_STR);
         $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
-        $stmt->bindParam(':birthdate', $user->getBirthdate(), PDO::PARAM_STR);
-        $stmt->bindParam(':phone_number', $user->getPhoneNumber(), PDO::PARAM_STR);
-        $stmt->bindParam(':address', $user->getAddress(), PDO::PARAM_STR);
 
         return $stmt->execute();
     }

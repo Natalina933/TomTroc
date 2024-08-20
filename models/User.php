@@ -10,12 +10,8 @@ class User extends AbstractEntity
     private string $username;
     private string $email;
     private string $password;
-    private ?string $firstName;
-    private ?string $lastName;
     private ?string $profilePicture;
-    private ?string $birthdate;
-    private ?string $phoneNumber;
-    private ?string $address;
+    private bool $isAvailable;
     private string $role;
     private bool $isActive;
     private string $createdAt;
@@ -35,12 +31,8 @@ class User extends AbstractEntity
         $this->username = $data['username'];
         $this->email = $data['email'];
         $this->password = $data['password'];
-        $this->firstName = $data['first_name'] ?? null;
-        $this->lastName = $data['last_name'] ?? null;
         $this->profilePicture = $data['profile_picture'] ?? null;
-        $this->birthdate = $data['birthdate'] ?? null;
-        $this->phoneNumber = $data['phone_number'] ?? null;
-        $this->address = $data['address'] ?? null;
+        $this->isAvailable = $data['is_available'] ?? true;
         $this->role = $data['role'];
         $this->isActive = (bool) $data['is_active'];
         $this->createdAt = $data['created_at'];
@@ -67,30 +59,14 @@ class User extends AbstractEntity
     {
         return $this->password;
     }
-    public function getFirstName(): ?string
-    {
-        return $this->firstName;
-    }
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
+
     public function getProfilePicture(): ?string
     {
         return $this->profilePicture;
     }
-    public function getBirthdate(): ?string
-    {
-        return $this->birthdate;
-    }
-    public function getPhoneNumber(): ?string
-    {
-        return $this->phoneNumber;
-    }
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
+
+
+
     public function getRole(): string
     {
         return $this->role;
@@ -119,6 +95,11 @@ class User extends AbstractEntity
     {
         return $this->resetToken;
     }
+    public function getIsAvailable(): bool
+    {
+        return $this->isAvailable;
+    }
+
 
     // Setters pour chaque propriété
     public function setId(int $id): void
@@ -137,30 +118,18 @@ class User extends AbstractEntity
     {
         $this->password = $password;
     }
-    public function setFirstName(?string $firstName): void
-    {
-        $this->firstName = $firstName;
-    }
-    public function setLastName(?string $lastName): void
-    {
-        $this->lastName = $lastName;
-    }
+
+
     public function setProfilePicture(?string $profilePicture): void
     {
         $this->profilePicture = $profilePicture;
     }
-    public function setBirthdate(?string $birthdate): void
+    public function setIsAvailable(bool $isAvailable): void
     {
-        $this->birthdate = $birthdate;
+        $this->isAvailable = $isAvailable;
     }
-    public function setPhoneNumber(?string $phoneNumber): void
-    {
-        $this->phoneNumber = $phoneNumber;
-    }
-    public function setAddress(?string $address): void
-    {
-        $this->address = $address;
-    }
+
+
     public function setRole(string $role): void
     {
         $this->role = $role;
