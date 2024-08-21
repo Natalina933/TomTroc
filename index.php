@@ -35,37 +35,30 @@ try {
             break;
 
         case 'registerUser':
-            $userController = new userController();
             $userController->registerUser();
-            break;
-
-        case 'myAccount':
-            $userController = new userController();
-            $userController->showMyAccount();
             break;
 
         case 'connectUser':
-            $userController = new userController();
             $userController->connectUser();
             break;
 
+        case 'myAccount':
+            $userController->showMyAccount();
+            break;
+
+
         case 'disconnectUser':
-            $userController = new userController();
             $userController->disconnectUser();
             break;
 
-        case 'registerUser':
-            $userController = new userController();
-            $userController->registerUser();
-            break;
         case 'connectionForm':
-            $userController = new UserController();
             $userController->displayConnectionForm();
             break;
         case 'registrationForm':
-            $userController = new UserController();
             $userController->displayRegistrationForm();
             break;
+
+
             // case 'showUpdateBookForm':
             //     $userController = new userController();
             //     $userController->showUpdateBookForm();

@@ -9,9 +9,7 @@
     box-sizing: border-box;
 }
 
-/**
- * Déclaration des couleurs
- */
+/* Variables globales */
 :root {
     --backgroundColor: #F5F3EF;
     --titleColor: #000000;
@@ -25,17 +23,12 @@
     --dateColor: #888;
 }
 
-/**
- * Valeur par défaut pour le body
- */
+/* Styles généraux */
 body {
     font-family: 'Playfair Display';
     background-color: var(--backgroundColor);
 }
 
-/**
- * Styles pour les titres
- */
 h1 {
     margin: 20px;
     font-size: 36px;
@@ -52,9 +45,6 @@ h2 {
     color: var(--headerColor);
 }
 
-/**
- * Styles généraux
- */
 ul {
     list-style: none;
 }
@@ -64,9 +54,7 @@ a {
     color: inherit;
 }
 
-/****************************************************************
-*styles header
- ***********/
+/* Styles du header */
 header {
     display: flex;
     flex-direction: column;
@@ -185,6 +173,61 @@ main {
     opacity: 0.8;
 }
 
+/*****************************************************************
+ * Styles info user
+ ***********/
+.owner-info {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 114px;
+    max-width: 157px;
+    margin: 20px 0;
+}
+
+.owner-info .book-owner-title {
+    font-size: 1.2em;
+    /* Taille de la police légèrement plus grande */
+    font-weight: bold;
+    /* Texte en gras */
+    margin-bottom: 10px;
+    /* Espacement sous le titre */
+    color: #333;
+    /* Couleur du texte */
+}
+
+.owner-photo {
+    width: 80px;
+    /* Largeur de la photo */
+    height: 80px;
+    /* Hauteur de la photo */
+    border-radius: 50%;
+    /* Rond pour la photo */
+    object-fit: cover;
+    /* Recadrage de l'image pour couvrir l'espace */
+    margin-bottom: 10px;
+    /* Espacement sous la photo */
+}
+
+.owner-photo.placeholder {
+    background-color: #ddd;
+    /* Couleur de fond grise pour le placeholder */
+    display: inline-block;
+    /* Permet de le placer à côté d'autres éléments */
+}
+
+.owner-name {
+    font-size: 1em;
+    /* Taille de police normale */
+    color: #555;
+    /* Couleur grise du texte */
+    margin-top: 5px;
+    /* Espacement au-dessus du nom */
+    font-weight: 600;
+    /* Légèrement en gras */
+}
+
+
 
 
 /****************************************************************
@@ -262,8 +305,8 @@ form label {
     color: #555;
 }
 
-form input[type="email"], 
-form input[type="password"], 
+form input[type="email"],
+form input[type="password"],
 form input[type="text"] {
     width: 100%;
     padding: 10px;
@@ -298,7 +341,8 @@ form button:hover {
     border-radius: 10px;
 }
 
-.table-books th, .table-books td {
+.table-books th,
+.table-books td {
     padding: 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
