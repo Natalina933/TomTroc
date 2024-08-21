@@ -38,19 +38,33 @@ class UserController
      */
     public function connectUser(): void
     {
+        // On récupère les données du formulaire.
         $login = Utils::request("email");
         $password = Utils::request("password");
 
-        $this->validateRequiredFields([$login, $password]);
-
-        $userManager = new UserManager();
-        $user = $userManager->getUserByUsername($login);
-
-        if (!$user || !password_verify($password, $user->getPassword())) {
-            throw new Exception("Identifiants incorrects.");
+        // On vérifie que les données sont valides.
+        if (empty($login) || empty($password)) {
+            throw new Exception("Tous les champs sont obligatoires.");
         }
 
-        $this->setUserSession($user);
+        // On vérifie que l'utilisateur existe.
+        $userManager = new UserManager();
+        $user = $userManager->getUserByLogin($login);
+        if (!$user) {
+            throw new Exception("L'utilisateur demandé n'existe pas.");
+        }
+
+        // On vérifie que le mot de passe est correct.
+        if (!password_verify($password, $user->getPassword())) {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            throw new Exception("Le mot de passe est incorrect : $hash");
+        }
+
+        // On connecte l'utilisateur.
+        $_SESSION['user'] = $user;
+        $_SESSION['idUser'] = $user->getId();
+
+        // On redirige vers la page d'administration.
         Utils::redirect("myAccount");
     }
 
@@ -60,7 +74,10 @@ class UserController
      */
     public function disconnectUser(): void
     {
-        $this->clearUserSession();
+        // On déconnecte l'utilisateur.
+        unset($_SESSION['user']);
+
+        // On redirige vers la page d'accueil.
         Utils::redirect("home");
     }
 
@@ -87,8 +104,7 @@ class UserController
         $this->validateRequiredFields([$username, $email, $password]);
 
         $userManager = new UserManager();
-        $this->ensureUsernameAndEmailAreUnique($userManager, $username, $email);
-        
+
         $user = $userManager->createUser($username, $email, $password);
 
         $_SESSION['user'] = $user;
@@ -288,12 +304,7 @@ class UserController
             'username' => $username,
             'email' => $email,
             'password' => password_hash($password, PASSWORD_DEFAULT),
-            'first_name' => null,
-            'last_name' => null,
             'profile_picture' => null,
-            'birthdate' => null,
-            'phone_number' => null,
-            'address' => null,
             'role' => self::ROLE_USER,
             'is_active' => true,
             'created_at' => date('Y-m-d H:i:s')
