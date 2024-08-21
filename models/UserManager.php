@@ -1,71 +1,88 @@
 <?php
+
 class UserManager extends AbstractEntityManager
 {
     /**
-     * Récupère un user par son login.
+     * Récupère un utilisateur par son login.
      * @param string $login
      * @return ?User
      */
     public function getUserByLogin(string $login): ?User
     {
         $sql = "SELECT * FROM user WHERE login = :login";
-        $result = $this->db->query($sql, ['login' => $login]);
-        $user = $result->fetch();
-        if ($user) {
-            return new User($user);
-        }
-        return null;
-    }
-    public function createUser(string $username, string $email, string $password): User
-    {
-        // Ajouter le code pour insérer un utilisateur dans la base de données
-        // Par exemple :
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $created_at = date('Y-m-d H:i:s');
-
-        $sql = "INSERT INTO user (username, email, password, created_at) 
-            VALUES (:username, :email, :password, :created_at)";
-
         $stmt = $this->db->query($sql);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashedPassword);
-        $stmt->bindParam(':created_at', $created_at);
+        $stmt->execute([':login' => $login]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Exécute la requête d'insertion
-        $stmt->execute();
-
-        // // Obtenir l'ID de la dernière insertion
-        // $lastInsertId = $this->db->lastInsertId();
-
-        // Créer un nouvel utilisateur avec l'ID généré
-        $user = new User([
-            'pseudo' => $username,
-            'username' => $username,
-            'email' => $email,
-            'password' => $hashedPassword,
-            'created_at' => $created_at,
-        ]);
-
-        return $user;
+        return $user ? new User($user) : null;
     }
+
     /**
-     * Récupère un utilisateur par son login.
-     * @param string $login Le login de l'utilisateur.
-     * @return ?User Retourne un objet User si trouvé, sinon null.
+     * Crée un nouvel utilisateur.
+     * @param string $username
+     * @param string $login
+     * @param string $password
+     * @return ?User
+     * @throws Exception
+     */
+    public function createUser(string $username, string $login, string $password): ?User
+    {
+        try {
+            // Vérification si l'utilisateur avec le login existe déjà
+            if ($this->findExistingUser(['login' => $login])) {
+                throw new Exception("Un utilisateur avec ce login existe déjà.");
+            }
+
+            // Inscription de l'utilisateur
+            $sql = "INSERT INTO user (username, login, password, profile_picture, is_available, role, is_active, created_at)
+                    VALUES (:username, :login, :password, :profile_picture, :is_available, :role, :is_active, :created_at)";
+            $stmt = $this->db->query($sql);
+            $stmt->execute([
+                ':username' => $username,
+                ':login' => $login,
+                ':password' => password_hash($password, PASSWORD_DEFAULT),
+                ':profile_picture' => null,
+                ':is_available' => 1,
+                ':role' => 'user',
+                ':is_active' => 1,
+                ':created_at' => date('Y-m-d H:i:s')
+            ]);
+
+            // Récupérer l'utilisateur créé après insertion
+            return $this->getUserByLogin($login);
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de l'inscription: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère un utilisateur par son ID.
+     * @param int $id
+     * @return ?User
+     */
+    public function getUserById(int $id): ?User
+    {
+        $sql = "SELECT * FROM user WHERE id = :id";
+        $stmt = $this->db->query($sql);
+        $stmt->execute([':id' => $id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $data ? new User($data) : null;
+    }
+
+    /**
+     * Récupère un utilisateur par son nom d'utilisateur.
+     * @param string $username
+     * @return ?User
      */
     public function getUserByUsername(string $username): ?User
     {
         $sql = "SELECT * FROM user WHERE username = :username";
         $stmt = $this->db->query($sql);
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        $stmt->execute();
+        $stmt->execute([':username' => $username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user) {
-            return new User($user);
-        }
-        return null;
+        return $user ? new User($user) : null;
     }
 
     /**
@@ -75,14 +92,14 @@ class UserManager extends AbstractEntityManager
      */
     public function registerUser(User $user): bool
     {
-        $sql = "INSERT INTO user (username, email, password, profile_picture, role) 
-                VALUES (:username, :email, :password,  :profile_picture, :role)";
-
+        $sql = "INSERT INTO user (username, login, password, profile_picture, role) 
+                VALUES (:username, :login, :password, :profile_picture, :role)";
         $stmt = $this->db->query($sql);
         $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
-        $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindParam(':login', $user->getLogin(), PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
         $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
+        $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
 
         return $stmt->execute();
     }
@@ -95,30 +112,35 @@ class UserManager extends AbstractEntityManager
     public function updateUser(User $user): bool
     {
         $sql = "UPDATE user SET 
-                email = :email,
-                user
+                username = :username,
+                login = :login,
+                password = :password,
                 profile_picture = :profile_picture,
-                WHERE username = :username";
-
+                is_available = :is_available,
+                role = :role,
+                is_active = :is_active
+                WHERE id = :id";
         $stmt = $this->db->query($sql);
-        $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR); // Assurez-vous que vous avez l'identifiant unique pour mettre à jour
-        $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindParam(':id', $user->getId(), PDO::PARAM_INT);
+        $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
+        $stmt->bindParam(':login', $user->getLogin(), PDO::PARAM_STR);
+        $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
         $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
+        $stmt->bindParam(':is_available', $user->getIsAvailable(), PDO::PARAM_INT);
+        $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
+        $stmt->bindParam(':is_active', $user->getIsActive(), PDO::PARAM_INT);
 
         return $stmt->execute();
     }
 
-    public function getUserById(int $id): ?User
-    {
-        $sql = "SELECT * FROM user WHERE id = :id";
-        $stmt = $this->db->query($sql, ['id' => $id]);
-        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $userData ? new User($userData) : null;
-    }
+    /**
+     * Recherche un utilisateur existant par un critère.
+     * @param array $criteria Les critères de recherche (clé-valeur).
+     * @return bool Retourne vrai si un utilisateur est trouvé, sinon faux.
+     */
     public function findExistingUser(array $criteria): bool
     {
-        $sql = "SELECT * FROM user";
+        $sql = "SELECT 1 FROM user";
         $params = [];
 
         if (!empty($criteria)) {
@@ -129,8 +151,10 @@ class UserManager extends AbstractEntityManager
             }
             $sql .= " WHERE " . implode(" OR ", $conditions);
         }
-        $result = $this->db->query($sql, $params);
 
-        return $result->rowCount() > 0;
+        $stmt = $this->db->query($sql);
+        $stmt->execute($params);
+
+        return $stmt->rowCount() > 0;
     }
 }

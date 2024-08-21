@@ -2,13 +2,13 @@
 
 /**
  * Entité User : un utilisateur est défini par les champs
- * id, username, email, password, first_name, last_name, profile_picture, birthdate, phone_number, address, role, is_active, created_at, updated_at, last_login, activation_token, reset_token
+ * id, username, login, password, profile_picture, isAvailable, role, is_active, created_at, updated_at, last_login, activation_token, reset_token
  */
 class User extends AbstractEntity
 {
     protected int $id;
     private string $username;
-    private string $email;
+    private string $login;
     private string $password;
     private ?string $profilePicture;
     private bool $isAvailable;
@@ -20,27 +20,6 @@ class User extends AbstractEntity
     private ?string $activationToken;
     private ?string $resetToken;
 
-    /**
-     * Constructeur pour initialiser l'objet User avec les données fournies.
-     *
-     * @param array $data Données pour initialiser l'utilisateur.
-     */
-    public function __construct(array $data)
-    {
-        $this->id = $data['id'];
-        $this->username = $data['username'];
-        $this->email = $data['email'];
-        $this->password = $data['password'];
-        $this->profilePicture = $data['profile_picture'] ?? null;
-        $this->isAvailable = $data['is_available'] ?? true;
-        $this->role = $data['role'];
-        $this->isActive = (bool) $data['is_active'];
-        $this->createdAt = $data['created_at'];
-        $this->updatedAt = $data['updated_at'] ?? null;
-        $this->lastLogin = $data['last_login'] ?? null;
-        $this->activationToken = $data['activation_token'] ?? null;
-        $this->resetToken = $data['reset_token'] ?? null;
-    }
 
     // Getters pour chaque propriété
     public function getId(): int
@@ -51,27 +30,23 @@ class User extends AbstractEntity
     {
         return $this->username;
     }
-    public function getEmail(): string
+    public function getLogin(): string
     {
-        return $this->email;
+        return $this->login;
     }
     public function getPassword(): string
     {
         return $this->password;
     }
-
     public function getProfilePicture(): ?string
     {
         return $this->profilePicture;
     }
-
-
-
     public function getRole(): string
     {
         return $this->role;
     }
-    public function isActive(): bool
+    public function getIsActive(): bool
     {
         return $this->isActive;
     }
@@ -100,7 +75,6 @@ class User extends AbstractEntity
         return $this->isAvailable;
     }
 
-
     // Setters pour chaque propriété
     public function setId(int $id): void
     {
@@ -110,16 +84,14 @@ class User extends AbstractEntity
     {
         $this->username = $username;
     }
-    public function setEmail(string $email): void
+    public function setLogin(string $login): void
     {
-        $this->email = $email;
+        $this->login = $login;
     }
     public function setPassword(string $password): void
     {
         $this->password = $password;
     }
-
-
     public function setProfilePicture(?string $profilePicture): void
     {
         $this->profilePicture = $profilePicture;
@@ -128,8 +100,6 @@ class User extends AbstractEntity
     {
         $this->isAvailable = $isAvailable;
     }
-
-
     public function setRole(string $role): void
     {
         $this->role = $role;

@@ -14,7 +14,7 @@
         </form>
     </div>
     <p class="login-link">
-        Pas de compte ? <a href="registrationForm.php">Inscrivez-vous</a>
+        Pas de compte ? <a href="index.php?action=registrationForm">Inscrivez-vous</a>
     </p>
     <div class="home-image">
         <img src="../../assets/img/hero.png" alt="Image d'accueil">
