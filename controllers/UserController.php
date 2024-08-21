@@ -38,7 +38,7 @@ class UserController
      */
     public function connectUser(): void
     {
-        $login = Utils::request("login");
+        $login = Utils::request("email");
         $password = Utils::request("password");
 
         $this->validateRequiredFields([$login, $password]);
@@ -51,7 +51,7 @@ class UserController
         }
 
         $this->setUserSession($user);
-        Utils::redirect("admin");
+        Utils::redirect("myAccount");
     }
 
     /**
@@ -87,6 +87,8 @@ class UserController
         $this->validateRequiredFields([$username, $email, $password]);
 
         $userManager = new UserManager();
+        $this->ensureUsernameAndEmailAreUnique($userManager, $username, $email);
+        
         $user = $userManager->createUser($username, $email, $password);
 
         $_SESSION['user'] = $user;

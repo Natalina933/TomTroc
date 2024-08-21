@@ -54,25 +54,11 @@ try {
         case 'connectionForm':
             $userController->displayConnectionForm();
             break;
+            
         case 'registrationForm':
+            $userController = new UserController();
             $userController->displayRegistrationForm();
             break;
-
-
-            // case 'showUpdateBookForm':
-            //     $userController = new userController();
-            //     $userController->showUpdateBookForm();
-            //     break;
-
-            // case 'updateBook':
-            //     $userController = new userController();
-            //     $userController->updateBook();
-            //     break;
-
-            // case 'deleteBook':
-            //     $userController = new userController();
-            //     $userController->deleteBook();
-            //     break;
 
 
         default:

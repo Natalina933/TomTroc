@@ -1,6 +1,21 @@
 <?php
 class UserManager extends AbstractEntityManager
 {
+    /**
+     * Récupère un user par son login.
+     * @param string $login
+     * @return ?User
+     */
+    public function getUserByLogin(string $login): ?User
+    {
+        $sql = "SELECT * FROM user WHERE login = :login";
+        $result = $this->db->query($sql, ['login' => $login]);
+        $user = $result->fetch();
+        if ($user) {
+            return new User($user);
+        }
+        return null;
+    }
     public function createUser(string $username, string $email, string $password): User
     {
         // Ajouter le code pour insérer un utilisateur dans la base de données
@@ -60,15 +75,14 @@ class UserManager extends AbstractEntityManager
      */
     public function registerUser(User $user): bool
     {
-        $sql = "INSERT INTO user (username, email, password, first_name, last_name, profile_picture, birthdate, phone_number, address, role) 
-                VALUES (:username, :email, :password, :first_name, :last_name, :profile_picture, :birthdate, :phone_number, :address, :role)";
+        $sql = "INSERT INTO user (username, email, password, profile_picture, role) 
+                VALUES (:username, :email, :password,  :profile_picture, :role)";
 
         $stmt = $this->db->query($sql);
         $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
         $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
         $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
-        $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
 
         return $stmt->execute();
     }
@@ -82,12 +96,8 @@ class UserManager extends AbstractEntityManager
     {
         $sql = "UPDATE user SET 
                 email = :email,
-                first_name = :first_name,
-                last_name = :last_name,
+                user
                 profile_picture = :profile_picture,
-                birthdate = :birthdate,
-                phone_number = :phone_number,
-                address = :address
                 WHERE username = :username";
 
         $stmt = $this->db->query($sql);
