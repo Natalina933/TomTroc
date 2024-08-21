@@ -22,7 +22,7 @@
                 <p class="book-description-content"><?= nl2br(htmlspecialchars($book->getDescription())) ?></p>
             </div>
             <!-- Informations sur le propriétaire du livre -->
-            
+
             <!-- Titre de la section -->
             <p class="owner-title">PROPRIÉTAIRE</p>
             <div class="owner-info">
@@ -43,17 +43,8 @@
                 <?php } ?>
             </div>
 
-            <!-- Formulaire pour envoyer un message au propriétaire -->
-            <form action="index.php" method="post" class="message-form">
-                <input type="hidden" name="action" value="sendMessage">
-                <input type="hidden" name="bookId" value="<?= htmlspecialchars($book->getId(), ENT_QUOTES, 'UTF-8') ?>">
-                <input type="hidden" name="ownerId" value="<?= $user ? htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') : '' ?>">
 
-                <h2>Envoyer un message</h2>
-                <label for="message">Message</label>
-                <textarea name="message" id="message" required></textarea>
-
-                <button class="submit">Envoyer</button>
+            <a href="message" class="btn">Envoyer un message</a>
             </form>
         </article>
     <?php } else { ?>
