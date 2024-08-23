@@ -4,6 +4,9 @@
  * Entité User : un utilisateur est défini par les champs
  * id, username, login, password, profile_picture, isAvailable, role, is_active, created_at, updated_at, last_login, activation_token, reset_token
  */
+/**SUPPRIMER LIGNE NON UTILISEE 
+ * DANS LA BDD ET LA CLASS USER
+*/
 class User extends AbstractEntity
 {
     private int $id;
