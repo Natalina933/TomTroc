@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 21 août 2024 à 14:55
+-- Généré le : ven. 23 août 2024 à 14:50
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.3.6
 
@@ -82,29 +82,26 @@ CREATE TABLE IF NOT EXISTS `user` (
   `login` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `password` varchar(255) NOT NULL,
   `profile_picture` varchar(255) DEFAULT NULL,
-  `isAvailable` tinyint(1) NOT NULL,
   `role` enum('user','admin','moderator') DEFAULT 'user',
   `is_active` tinyint(1) DEFAULT '1',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `last_login` datetime DEFAULT NULL,
-  `activation_token` varchar(255) DEFAULT NULL,
-  `reset_token` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`login`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `login`, `password`, `profile_picture`, `isAvailable`, `role`, `is_active`, `created_at`, `updated_at`, `last_login`, `activation_token`, `reset_token`) VALUES
-(1, 'johndoe', 'john.doe@example.com', '482c811da5d5b4bc6d497ffa98491e38', '/assets/img/users/johndoe.jpg', 1, 'user', 1, '2024-08-13 16:01:14', '2024-08-21 11:16:00', NULL, NULL, NULL),
-(2, 'janedoe', 'jane.doe@example.com', '96b33694c4bb7dbd07391e0be54745fb', '/assets/img/users/janedoe.png', 0, 'admin', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00', NULL, NULL, NULL),
-(3, 'marksmith', 'mark.smith@example.com', '7d347cf0ee68174a3588f6cba31b8a67', '/assets/img/users/marksmith.png', 0, 'moderator', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00', NULL, NULL, NULL),
-(4, 'emilyjones', 'emily.jones@example.com', '34819d7beeabb9260a5c854bc85b3e44', '/assets/img/users/emilyjones.png', 0, 'user', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00', NULL, NULL, NULL),
-(5, 'davidsmith', 'david.smith@example.com', 'b0439fae31f8cbba6294af86234d5a28', '/assets/img/users/davidsmith.png', 0, 'user', 0, '2024-08-13 16:01:14', '2024-08-20 14:30:00', NULL, NULL, NULL);
+INSERT INTO `user` (`id`, `username`, `login`, `password`, `profile_picture`, `role`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'johndoe', 'john.doe@example.com', '482c811da5d5b4bc6d497ffa98491e38', '/assets/img/users/johndoe.jpg', 'user', 1, '2024-08-13 16:01:14', '2024-08-21 11:16:00'),
+(2, 'janedoe', 'jane.doe@example.com', '96b33694c4bb7dbd07391e0be54745fb', '/assets/img/users/janedoe.png', 'admin', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),
+(3, 'marksmith', 'mark.smith@example.com', '7d347cf0ee68174a3588f6cba31b8a67', '/assets/img/users/marksmith.png', 'moderator', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),
+(4, 'emilyjones', 'emily.jones@example.com', '34819d7beeabb9260a5c854bc85b3e44', '/assets/img/users/emilyjones.png', 'user', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),
+(5, 'davidsmith', 'david.smith@example.com', 'b0439fae31f8cbba6294af86234d5a28', '/assets/img/users/davidsmith.png', 'user', 0, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),
+(6, 'Emilie', 'Emilie@free.fr', '$2y$10$F7Hpb2Jvhuey4waGsAgUbeoSY3TXTO.Pne2RP9oovkAQwMbJqPYbO', NULL, 'user', 1, '2024-08-23 11:54:56', '2024-08-23 13:54:56');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
