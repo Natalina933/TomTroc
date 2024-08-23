@@ -6,19 +6,19 @@
  */
 class User extends AbstractEntity
 {
-    protected int $id;
+    private int $id;
     private string $username;
     private string $login;
     private string $password;
     private ?string $profilePicture;
-    private bool $isAvailable;
+    // private bool $isAvailable;
     private string $role;
     private bool $isActive;
     private string $createdAt;
     private ?string $updatedAt;
-    private ?string $lastLogin;
-    private ?string $activationToken;
-    private ?string $resetToken;
+    // private ?string $lastLogin;
+    // private ?string $activationToken;
+    // private ?string $resetToken;
 
 
     // Getters pour chaque propriété

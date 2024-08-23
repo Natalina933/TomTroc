@@ -61,7 +61,12 @@ class UserController
         }
 
         // On connecte l'utilisateur.
-        $_SESSION['user'] = $user;
+        $_SESSION['user'] = [
+            "id" => $user->getId(),
+            "role" => $user->getRole(),
+            "username" => $user->getUsername()
+
+        ];
         $_SESSION['idUser'] = $user->getId();
 
         // On redirige vers la page d'administration.
@@ -75,7 +80,7 @@ class UserController
     public function disconnectUser(): void
     {
         // On déconnecte l'utilisateur.
-        unset($_SESSION['user']);
+        unset($_SESSION);
 
         // On redirige vers la page d'accueil.
         Utils::redirect("home");

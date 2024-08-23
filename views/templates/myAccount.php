@@ -1,3 +1,10 @@
+<?php
+var_dump($_SESSION);
+
+?>
+
+
+
 <div class="account-container">
     <h1>Mon Compte</h1>
 
@@ -7,12 +14,12 @@
         <div class="account-card">
             <img src="path_to_user_image" alt="Photo de profil">
             <button>Modifier</button>
-            <p><?= htmlspecialchars($user->getUsername()) ?></p>
-            <p>Membre depuis : <?= htmlspecialchars($user->getCreatedAt()) ?></p>
+            <p><?= ($user['username']) ?></p>
+            <p>Membre depuis : <?= ($user['id']) ?></p>
             <p>BIBLIOTHÈQUE</p>
             <div style="display: flex; justify-content: center; align-items: center;">
                 <img src="icon_books.png" alt="Icone de livres" style="margin-right: 10px;">
-                <p><?= htmlspecialchars($user->getBookCount()) ?> livres</p>
+                <p><?= ($user['role']) ?> livres</p>
             </div>
         </div>
 
@@ -21,11 +28,11 @@
             <h2>Vos informations personnelles</h2>
             <form action="index.php?action=updateUser" method="post">
                 <label for="email">Adresse email</label>
-                <input type="email" id="email" name="email" value="<?= htmlspecialchars($user->getEmail()) ?>" required>
+                <input type="email" id="email" name="email" value="<?= 'email' ?>" required>
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password">
                 <label for="username">Pseudo</label>
-                <input type="text" id="username" name="username" value="<?= htmlspecialchars($user->getUsername()) ?>" required>
+                <input type="text" id="username" name="username" value="<?= $user['username'] ?>" required>
                 <button type="submit">Enregistrer</button>
             </form>
         </div>
