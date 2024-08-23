@@ -47,7 +47,7 @@ class BookController
         $bookManager = new BookManager();
 
         $book = $bookManager->getBookById($id);
-        
+
         if ($book) {
             $userManager = new UserManager();
             $owner = $userManager->getUserById($book->getUserId());

@@ -10,8 +10,7 @@ class UserManager extends AbstractEntityManager
     public function getUserByLogin(string $login): ?User
     {
         $sql = "SELECT * FROM user WHERE login = :login";
-        $stmt = $this->db->query($sql);
-        $stmt->execute([':login' => $login]);
+        $stmt = $this->db->query($sql, [':login' => $login]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $user ? new User($user) : null;
@@ -32,12 +31,11 @@ class UserManager extends AbstractEntityManager
             if ($this->findExistingUser(['login' => $login])) {
                 throw new Exception("Un utilisateur avec ce login existe déjà.");
             }
-
+            var_dump('toto');
             // Inscription de l'utilisateur
             $sql = "INSERT INTO user (username, login, password, profile_picture, is_available, role, is_active, created_at)
                     VALUES (:username, :login, :password, :profile_picture, :is_available, :role, :is_active, :created_at)";
-            $stmt = $this->db->query($sql);
-            $stmt->execute([
+            $stmt = $this->db->query($sql, [
                 ':username' => $username,
                 ':login' => $login,
                 ':password' => password_hash($password, PASSWORD_DEFAULT),
@@ -47,6 +45,9 @@ class UserManager extends AbstractEntityManager
                 ':is_active' => 1,
                 ':created_at' => date('Y-m-d H:i:s')
             ]);
+            $stmt->execute();
+            var_dump('toto');
+            die;
 
             // Récupérer l'utilisateur créé après insertion
             return $this->getUserByLogin($login);
@@ -62,12 +63,17 @@ class UserManager extends AbstractEntityManager
      */
     public function getUserById(int $id): ?User
     {
-        $sql = "SELECT * FROM user WHERE id = :id";
-        $stmt = $this->db->query($sql);
-        $stmt->execute([':id' => $id]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            // Récupérer l'utilisateur
+            $sql = "SELECT * FROM user WHERE id = :id";
+            $stmt = $this->db->query($sql, [':id' => $id]);
+            $stmt->execute();
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $data ? new User($data) : null;
+            return $data ? new User($data) : null;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la recherche de l'utilisateur: " . $e->getMessage());
+        }
     }
 
     /**
@@ -140,7 +146,7 @@ class UserManager extends AbstractEntityManager
      */
     public function findExistingUser(array $criteria): bool
     {
-        $sql = "SELECT 1 FROM user";
+        $sql = "SELECT * FROM user";
         $params = [];
 
         if (!empty($criteria)) {
@@ -151,9 +157,9 @@ class UserManager extends AbstractEntityManager
             }
             $sql .= " WHERE " . implode(" OR ", $conditions);
         }
-
-        $stmt = $this->db->query($sql);
-        $stmt->execute($params);
+        var_dump($params, $sql);
+        $stmt = $this->db->query($sql, $params);
+        $stmt->execute();
 
         return $stmt->rowCount() > 0;
     }
