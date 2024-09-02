@@ -6,22 +6,18 @@
  */
 /**SUPPRIMER LIGNE NON UTILISEE 
  * DANS LA BDD ET LA CLASS USER
-*/
+ */
 class User extends AbstractEntity
 {
-    private int $id;
+    protected int $id;
     private string $username;
     private string $login;
     private string $password;
     private ?string $profilePicture;
-    // private bool $isAvailable;
     private string $role;
     private bool $isActive;
     private string $createdAt;
     private ?string $updatedAt;
-    // private ?string $lastLogin;
-    // private ?string $activationToken;
-    // private ?string $resetToken;
 
 
     // Getters pour chaque propriété
@@ -61,22 +57,7 @@ class User extends AbstractEntity
     {
         return $this->updatedAt;
     }
-    public function getLastLogin(): ?string
-    {
-        return $this->lastLogin;
-    }
-    public function getActivationToken(): ?string
-    {
-        return $this->activationToken;
-    }
-    public function getResetToken(): ?string
-    {
-        return $this->resetToken;
-    }
-    public function getIsAvailable(): bool
-    {
-        return $this->isAvailable;
-    }
+
 
     // Setters pour chaque propriété
     public function setId(int $id): void
@@ -99,10 +80,6 @@ class User extends AbstractEntity
     {
         $this->profilePicture = $profilePicture;
     }
-    public function setIsAvailable(bool $isAvailable): void
-    {
-        $this->isAvailable = $isAvailable;
-    }
     public function setRole(string $role): void
     {
         $this->role = $role;
@@ -118,17 +95,5 @@ class User extends AbstractEntity
     public function setUpdatedAt(?string $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
-    }
-    public function setLastLogin(?string $lastLogin): void
-    {
-        $this->lastLogin = $lastLogin;
-    }
-    public function setActivationToken(?string $activationToken): void
-    {
-        $this->activationToken = $activationToken;
-    }
-    public function setResetToken(?string $resetToken): void
-    {
-        $this->resetToken = $resetToken;
     }
 }

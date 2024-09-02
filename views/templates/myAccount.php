@@ -1,5 +1,4 @@
 <?php
-var_dump($_SESSION);
 
 ?>
 
@@ -54,8 +53,9 @@ var_dump($_SESSION);
         <tbody>
             <?php foreach ($user->getBooks() as $book) : ?>
                 <tr>
+                    /**Modifier tous comme le title */
                     <td><img src="<?= htmlspecialchars($book->getImage()) ?>" alt="Photo du livre"></td>
-                    <td><?= htmlspecialchars($book->getTitle()) ?></td>
+                    <td><?= htmlspecialchars($book['title']) ?></td>
                     <td><?= htmlspecialchars($book->getAuthor()) ?></td>
                     <td><?= htmlspecialchars($book->getDescription()) ?></td>
                     <td><?= htmlspecialchars($book->isAvailable() ? 'Oui' : 'Non') ?></td>
