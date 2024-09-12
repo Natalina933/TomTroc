@@ -80,8 +80,7 @@ class UserController
     public function disconnectUser(): void
     {
         // On déconnecte l'utilisateur.
-        unset($_SESSION);
-
+        session_destroy();
         // On redirige vers la page d'accueil.
         Utils::redirect("home");
     }
@@ -233,26 +232,9 @@ class UserController
         $view->render($viewName, $data);
     }
 
-    /**
-     * Définit la session utilisateur.
-     * @param User $user
-     * @return void
-     */
-    private function setUserSession(User $user): void
-    {
-        $_SESSION['user'] = $user;
-        $_SESSION['idUser'] = $user->getId();
-    }
 
-    /**
-     * Efface la session utilisateur.
-     * @return void
-     */
-    private function clearUserSession(): void
-    {
-        unset($_SESSION['user']);
-        unset($_SESSION['idUser']);
-    }
+
+
 
     /**
      * Valide que tous les champs requis sont remplis.
@@ -269,50 +251,106 @@ class UserController
     }
 
     /**
-     * Valide que les mots de passe correspondent.
-     * @param string $password
-     * @param string $confirmPassword
-     * @throws Exception
-     */
-    private function validatePasswordsMatch(string $password, string $confirmPassword): void
-    {
-        if ($password !== $confirmPassword) {
-            throw new Exception("Les mots de passe ne correspondent pas.");
-        }
-    }
-
-    /**
-     * Vérifie que le nom d'utilisateur et l'email sont uniques.
-     * @param UserManager $userManager
-     * @param string $username
-     * @param string $email
-     * @throws Exception
-     */
-    private function ensureUsernameAndEmailAreUnique(UserManager $userManager, string $username, string $email): void
-    {
-        $existingUser = $userManager->findExistingUser(['username' => $username, 'email' => $email]);
-        if ($existingUser) {
-            throw new Exception("Un utilisateur avec ce nom d'utilisateur ou cet email existe déjà.");
-        }
-    }
-
-    /**
      * Crée un nouvel utilisateur.
      * @param string $username
      * @param string $email
      * @param string $password
      * @return User
      */
-    private function createUser(string $username, string $email, string $password): User
+
+    public function updateProfilePicture()
     {
-        return new User([
-            'username' => $username,
-            'email' => $email,
-            'password' => password_hash($password, PASSWORD_DEFAULT),
-            'profile_picture' => null,
-            'role' => self::ROLE_USER,
-            'is_active' => true,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        // var_dump($_FILES); die;
+        // Vérifier si un fichier est téléchargé
+        if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['profilePicture']['tmp_name'];
+            $fileName = $_FILES['profilePicture']['name'];
+            $fileSize = $_FILES['profilePicture']['size'];
+            $fileType = $_FILES['profilePicture']['type'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+
+            // Générer un nom de fichier unique pour éviter les conflits
+            $newFileName = uniqid('profile_', true) . '.' . $fileExtension;
+
+            // var_dump($newFileName); // Vérifier si le nom de fichier est généré correctement
+
+            // Taille maximale autorisée (exemple : 5 Mo)
+            $maxFileSize = 5 * 1024 * 1024; // 5 Mo
+
+            // Définir les extensions autorisées
+            $allowedfileExtensions = ['jpg', 'jpeg', 'png', 'svg'];
+
+            // Vérifier l'extension du fichier
+            if (!in_array($fileExtension, $allowedfileExtensions)) {
+                $error = "Type de fichier non autorisé. Veuillez télécharger un fichier au format jpg, jpeg, png ou svg.";
+                header('Location: index.php?action=myAccount&status=invalid_file_type&error=' . urlencode($error));
+                exit;
+            }
+
+            // Vérifier la taille du fichier
+            if ($fileSize > $maxFileSize) {
+                $error = "Le fichier est trop volumineux. La taille maximale autorisée est de 5 Mo.";
+                header('Location: index.php?action=myAccount&status=invalid_file_size&error=' . urlencode($error));
+                exit;
+            }
+
+            // Dossier de stockage de l'image
+            $uploadFileDir = './assets/img/users/';
+            $newFileName = uniqid('profile_', true) . '.' . $fileExtension;
+            $dest_path = $uploadFileDir . $newFileName;
+
+            // Déplacer le fichier téléchargé dans le dossier de destination
+            if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                // Mettre à jour la photo de profil dans la base de données
+                $userId = $_SESSION['user']['id']; // L'utilisateur est authentifié
+                $userModel = new UserManager();
+                if ($userModel->updateProfilePicture($userId, $dest_path)) {
+                    // Mettre à jour la session avec la nouvelle image
+                    $_SESSION['user']['profilePicture'] = $dest_path;
+
+                    // Redirection avec succès
+                    header('Location: index.php?action=myAccount&status=success');
+                    exit;
+                } else {
+                    $error = "Erreur lors de la mise à jour de la base de données.";
+                    header('Location: index.php?action=myAccount&status=db_error&error=' . urlencode($error));
+                    exit;
+                }
+            } else {
+                $error = "Erreur lors du déplacement du fichier. Veuillez réessayer.";
+                header('Location: index.php?action=myAccount&status=move_error&error=' . urlencode($error));
+                exit;
+            }
+        } else {
+            // Gérer les différentes erreurs de téléchargement
+            switch ($_FILES['profilePicture']['error']) {
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                    $error = "Le fichier est trop volumineux.";
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $error = "Le fichier n'a été que partiellement téléchargé.";
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    $error = "Aucun fichier n'a été téléchargé.";
+                    break;
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    $error = "Dossier temporaire manquant.";
+                    break;
+                case UPLOAD_ERR_CANT_WRITE:
+                    $error = "Erreur d'écriture du fichier sur le disque.";
+                    break;
+                case UPLOAD_ERR_EXTENSION:
+                    $error = "Téléchargement de fichier arrêté par une extension PHP.";
+                    break;
+                default:
+                    $error = "Erreur inconnue lors du téléchargement.";
+                    break;
+            }
+
+            header('Location: index.php?action=myAccount&status=upload_error&error=' . urlencode($error));
+            exit;
+        }
     }
 }

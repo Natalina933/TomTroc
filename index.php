@@ -5,15 +5,16 @@ require_once 'config/autoload.php';
 // On récupère l'action demandée par l'utilisateur. Si aucune action n'est demandée, on affiche la page d'accueil.
 $action = Utils::request('action', 'home');
 $bookId = Utils::request('id', 0); // Récupérer l'ID du livre depuis la requête
-error_log("Action requested: " . $action . ", Book ID: " . $bookId);
+error_log("Action demandée : " . $action . ", ID du livre : " . $bookId);
 
 try {
     // Instancier les contrôleurs
     $bookController = new BookController();
-    $userController = new userController();
-    // Pour chaque action, on appelle le bon contrôleur et la bonne méthode.
+    $userController = new UserController();
+
+    // Gestion des différentes actions
     switch ($action) {
-            // Pages accessibles à tous.
+            // Pages accessibles à tous
         case 'home':
             $bookController->showHome();
             break;
@@ -34,6 +35,7 @@ try {
             $bookController->addBook();
             break;
 
+            // Gestion des utilisateurs
         case 'registerUser':
             $userController->registerUser();
             break;
@@ -46,7 +48,6 @@ try {
             $userController->showMyAccount();
             break;
 
-
         case 'disconnectUser':
             $userController->disconnectUser();
             break;
@@ -54,19 +55,21 @@ try {
         case 'connectionForm':
             $userController->displayConnectionForm();
             break;
-            
+
         case 'registrationForm':
-            $userController = new UserController();
             $userController->displayRegistrationForm();
             break;
 
+        case 'updateProfilePicture':
+            $userController->updateProfilePicture();
+            break;
 
         default:
             throw new Exception("La page demandée n'existe pas.");
     }
 } catch (Exception $e) {
     // En cas d'erreur, on affiche la page d'erreur.
-    error_log("Exception caught: " . $e->getMessage());
+    error_log("Exception capturée : " . $e->getMessage());
     $errorView = new View('Erreur');
     $errorView->render('errorPage', ['errorMessage' => $e->getMessage()]);
 }

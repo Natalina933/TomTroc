@@ -1,27 +1,36 @@
-<?php
-
-?>
-
-
-
+<?php if (isset($_GET['error'])) : ?>
+    <div class="error-message">
+        <?= htmlspecialchars($_GET['error']) ?>
+    </div>
+<?php endif; ?>
 <div class="account-container">
     <h1>Mon Compte</h1>
-
     <!-- Section 1 : Informations du compte -->
     <div class="account-sections">
-        <!-- Carré 1 : Bibliothèque -->
+        <!-- Carré 1 : Profile -->
         <div class="account-card">
-            <img src="path_to_user_image" alt="Photo de profil">
-            <button>Modifier</button>
+            <div class="account-profile">
+                <?php if (isset($user['profilePicture']) && !empty($user['profilePicture'])) : ?>
+                    <img src="<?= ($user['profilePicture']) ?>" alt="Photo de profil">
+                <?php else : ?>
+                    <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
+                <?php endif; ?>
+
+                <!-- Formulaire pour modifier l'image de profil -->
+                <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
+                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
+                    <button type="button" id="changePictureButton">Modifier</button>
+                    <input type="submit" id="submitForm" style="display:none;">
+                </form>
+            </div>
             <p><?= ($user['username']) ?></p>
             <p>Membre depuis : <?= ($user['id']) ?></p>
             <p>BIBLIOTHÈQUE</p>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <img src="icon_books.png" alt="Icone de livres" style="margin-right: 10px;">
+            <div class="library-info">
+                <img src="/assets/img/icon_books.svg" alt="Icône de livres">
                 <p><?= ($user['role']) ?> livres</p>
             </div>
         </div>
-
         <!-- Carré 2 : Informations personnelles -->
         <div class="account-card">
             <h2>Vos informations personnelles</h2>
@@ -34,37 +43,61 @@
                 <input type="text" id="username" name="username" value="<?= $user['username'] ?>" required>
                 <button type="submit">Enregistrer</button>
             </form>
+
         </div>
     </div>
+</div>
 
-    <!-- Section 3 : Tableau des livres -->
-    <h2>Vos livres</h2>
-    <table class="table-books">
-        <thead>
-            <tr>
-                <th>Photo</th>
-                <th>Titre</th>
-                <th>Auteur</th>
-                <th>Description</th>
-                <th>Disponible</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($user->getBooks() as $book) : ?>
+<!-- Section 3 : Tableau des livres -->
+<h2>Vos livres</h2>
+<table class="table-books">
+    <thead>
+        <tr>
+            <th>Photo</th>
+            <th>Titre</th>
+            <th>Auteur</th>
+            <th>Description</th>
+            <th>Disponible</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($user['getBooks'])) : ?>
+            <?php foreach ($user['getBooks'] as $book) : ?>
                 <tr>
-                    /**Modifier tous comme le title */
-                    <td><img src="<?= htmlspecialchars($book->getImage()) ?>" alt="Photo du livre"></td>
-                    <td><?= htmlspecialchars($book['title']) ?></td>
-                    <td><?= htmlspecialchars($book->getAuthor()) ?></td>
-                    <td><?= htmlspecialchars($book->getDescription()) ?></td>
-                    <td><?= htmlspecialchars($book->isAvailable() ? 'Oui' : 'Non') ?></td>
+                    <td><img src="<?= ($book['getImage']) ?>" alt="Photo du livre"></td>
+                    <td><?= ($book['title']) ?></td>
+                    <td><?= ($book['getAuthor']) ?></td>
+                    <td><?= ($book['getDescription']) ?></td>
+                    <td><?= ($book['isAvailable'] ? 'Oui' : 'Non') ?></td>
                     <td>
-                        <a href="index.php?action=editBook&id=<?= htmlspecialchars($book->getId()) ?>">Editer</a> |
-                        <a href="index.php?action=deleteBook&id=<?= htmlspecialchars($book->getId()) ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
+                        <a href="index.php?action=editBook&id=<?= ($book['getId']) ?>">Editer</a> |
+                        <a href="index.php?action=deleteBook&id=<?= ($book['getId']) ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
+        <?php else : ?>
+            <tr>
+                <td colspan="6">Aucun livre trouvé.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
 </div>
+
+
+
+<!-- Script pour gérer la sélection et la prévisualisation de l'image -->
+<script>
+    // Quand le bouton "Modifier" est cliqué, on ouvre la sélection de fichier
+    document.getElementById('changePictureButton').onclick = function() {
+        document.getElementById('profilePictureInput').click();
+    };
+
+    // Quand un fichier est sélectionné, on soumet le formulaire
+    document.getElementById('profilePictureInput').onchange = function() {
+
+        // Soumettre automatiquement le formulaire après la sélection du fichier
+        document.getElementById('submitForm').click();
+    };
+</script>

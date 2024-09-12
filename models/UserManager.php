@@ -33,13 +33,13 @@ class UserManager extends AbstractEntityManager
             }
             var_dump('toto');
             // Inscription de l'utilisateur
-            $sql = "INSERT INTO user (username, login, password, profile_picture, is_available, role, is_active, created_at)
-                    VALUES (:username, :login, :password, :profile_picture, :is_available, :role, :is_active, :created_at)";
+            $sql = "INSERT INTO user (username, login, password, profilePicture, is_available, role, is_active, created_at)
+                    VALUES (:username, :login, :password, :profilePicture, :is_available, :role, :is_active, :created_at)";
             $stmt = $this->db->query($sql, [
                 ':username' => $username,
                 ':login' => $login,
                 ':password' => password_hash($password, PASSWORD_DEFAULT),
-                ':profile_picture' => null,
+                ':profilePicture' => null,
                 ':is_available' => 1,
                 ':role' => 'user',
                 ':is_active' => 1,
@@ -98,13 +98,13 @@ class UserManager extends AbstractEntityManager
      */
     public function registerUser(User $user): bool
     {
-        $sql = "INSERT INTO user (username, login, password, profile_picture, role) 
-                VALUES (:username, :login, :password, :profile_picture, :role)";
+        $sql = "INSERT INTO user (username, login, password, profilePicture, role) 
+                VALUES (:username, :login, :password, :profilePicture, :role)";
         $stmt = $this->db->query($sql);
         $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
         $stmt->bindParam(':login', $user->getLogin(), PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
-        $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
+        $stmt->bindParam(':profilePicture', $user->getProfilePicture(), PDO::PARAM_STR);
         $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
 
         return $stmt->execute();
@@ -121,8 +121,7 @@ class UserManager extends AbstractEntityManager
                 username = :username,
                 login = :login,
                 password = :password,
-                profile_picture = :profile_picture,
-                is_available = :is_available,
+                profilePicture = :profilePicture,
                 role = :role,
                 is_active = :is_active
                 WHERE id = :id";
@@ -131,8 +130,7 @@ class UserManager extends AbstractEntityManager
         $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
         $stmt->bindParam(':login', $user->getLogin(), PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
-        $stmt->bindParam(':profile_picture', $user->getProfilePicture(), PDO::PARAM_STR);
-        $stmt->bindParam(':is_available', $user->getIsAvailable(), PDO::PARAM_INT);
+        $stmt->bindParam(':profilePicture', $user->getProfilePicture(), PDO::PARAM_STR);
         $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
         $stmt->bindParam(':is_active', $user->getIsActive(), PDO::PARAM_INT);
 
@@ -162,5 +160,23 @@ class UserManager extends AbstractEntityManager
         $stmt->execute();
 
         return $stmt->rowCount() > 0;
+    }
+    /**
+     * Met à jour la photo de profil d'un utilisateur.
+     * @param int $userId L'ID de l'utilisateur.
+     * @param string $profilePicturePath Le chemin du fichier de la nouvelle photo de profil.
+     * @return bool Retourne vrai si la mise à jour est réussie, sinon faux.
+     */
+    public function updateProfilePicture($userId, $profilePicturePath): bool
+    {
+
+        // Requête SQL pour mettre à jour la photo de profil de l'utilisateur
+        $sql = "UPDATE user SET profilePicture = :profilePicture WHERE id = :id";
+        $stmt = $this->db->query($sql);
+        // Lier les paramètres à la requête
+        $stmt->bindParam(':profilePicture', $profilePicturePath);
+        $stmt->bindParam(':id', $userId);
+        // Exécution de la requête et retour du succès ou de l'échec
+        return $stmt->execute();
     }
 }
