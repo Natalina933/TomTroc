@@ -10,6 +10,7 @@ class User extends AbstractEntity
     protected int $id;
     private string $username;
     private string $login;
+    private string $email;
     private string $password;
     private ?string $profilePicture;
     private string $role;
@@ -30,6 +31,10 @@ class User extends AbstractEntity
     public function getLogin(): string
     {
         return $this->login;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
     }
     public function getPassword(): string
     {
@@ -73,6 +78,10 @@ class User extends AbstractEntity
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
     }
     public function setProfilePicture(?string $profilePicture): void
     {

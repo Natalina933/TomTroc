@@ -18,7 +18,7 @@
 
                 <!-- Formulaire pour modifier l'image de profil -->
                 <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
-                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
+                    <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*" style="display:none;">
                     <button type="button" id="changePictureButton">Modifier</button>
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
@@ -36,15 +36,19 @@
             <h2>Vos informations personnelles</h2>
             <form action="index.php?action=updateUser" method="post">
                 <label for="email">Adresse email</label>
-                <input type="email" id="email" name="email" value="<?= 'email' ?>" required>
+                <input type="email" id="email" name="email" value="<?= isset($user['email']) ? htmlspecialchars($user['email']) : '' ?>" required>
                 <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password">
-                <label for="username">Pseudo</label>
-                <input type="text" id="username" name="username" value="<?= $user['username'] ?>" required>
-                <button type="submit">Enregistrer</button>
-            </form>
+                <input type="password" id="password" name="password" placeholder="••••••••••••" disabled>
 
+                <label for="username">Pseudo</label>
+                <input type="text" id="username" name="username" value="<?= isset($user['username']) ? htmlspecialchars($user['username']) : '' ?>" disabled required>
+                <!-- Bouton pour activer les champs -->
+                <button type="button" id="editButton">Modifier</button>
+                <!-- Bouton pour soumettre le formulaire (invisible tant que les champs sont désactivés) -->
+                <button type="submit" id="submitButton" style="display:none;">Enregistrer</button>
+            </form>
         </div>
+
     </div>
 </div>
 
@@ -99,5 +103,16 @@
 
         // Soumettre automatiquement le formulaire après la sélection du fichier
         document.getElementById('submitForm').click();
+    };
+
+    document.getElementById('editButton').onclick = function() {
+        // Activer les champs du formulaire
+        document.getElementById('email').disabled = false;
+        document.getElementById('password').disabled = false;
+        document.getElementById('username').disabled = false;
+
+        // Cacher le bouton "Modifier" et afficher le bouton "Enregistrer"
+        document.getElementById('editButton').style.display = 'none';
+        document.getElementById('submitButton').style.display = 'inline';
     };
 </script>

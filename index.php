@@ -63,8 +63,12 @@ try {
         case 'updateProfilePicture':
             $userController->updateProfilePicture();
             break;
+        
+        case 'updateUser':
+            $userController->updateUser();
+            break;
 
-        default:
+                default:
             throw new Exception("La page demandée n'existe pas.");
     }
 } catch (Exception $e) {

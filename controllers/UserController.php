@@ -64,6 +64,7 @@ class UserController
         $_SESSION['user'] = [
             "id" => $user->getId(),
             "role" => $user->getRole(),
+            "email" => $user->getEmail(),
             "username" => $user->getUsername()
 
         ];
@@ -109,8 +110,8 @@ class UserController
 
         $userManager = new UserManager();
 
-        $user = $userManager->createUser($username, $email, $password);
-
+        $role = 'user';
+        $user = $userManager->createUser($username, $email, $password, $role);
         $_SESSION['user'] = $user;
         Utils::redirect("myAccount", ["message" => "Inscription réussie !"]);
     }
@@ -120,7 +121,7 @@ class UserController
         $this->ensureUserIsConnected();
 
         $user = $_SESSION['user'];
-
+        var_dump($user);
         $this->renderView('myAccount', "Mon Compte", [
             'user' => $user
         ]);
@@ -260,20 +261,16 @@ class UserController
 
     public function updateProfilePicture()
     {
-        // var_dump($_FILES); die;
         // Vérifier si un fichier est téléchargé
-        if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
-            $fileTmpPath = $_FILES['profilePicture']['tmp_name'];
-            $fileName = $_FILES['profilePicture']['name'];
-            $fileSize = $_FILES['profilePicture']['size'];
-            $fileType = $_FILES['profilePicture']['type'];
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['profile_picture']['tmp_name'];
+            $fileName = $_FILES['profile_picture']['name'];
+            $fileSize = $_FILES['profile_picture']['size'];
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
             // Générer un nom de fichier unique pour éviter les conflits
             $newFileName = uniqid('profile_', true) . '.' . $fileExtension;
-
-            // var_dump($newFileName); // Vérifier si le nom de fichier est généré correctement
 
             // Taille maximale autorisée (exemple : 5 Mo)
             $maxFileSize = 5 * 1024 * 1024; // 5 Mo
@@ -305,6 +302,8 @@ class UserController
                 // Mettre à jour la photo de profil dans la base de données
                 $userId = $_SESSION['user']['id']; // L'utilisateur est authentifié
                 $userModel = new UserManager();
+
+                // Appel à la méthode qui met à jour la photo de profil
                 if ($userModel->updateProfilePicture($userId, $dest_path)) {
                     // Mettre à jour la session avec la nouvelle image
                     $_SESSION['user']['profilePicture'] = $dest_path;
@@ -324,7 +323,7 @@ class UserController
             }
         } else {
             // Gérer les différentes erreurs de téléchargement
-            switch ($_FILES['profilePicture']['error']) {
+            switch ($_FILES['profile_picture']['error']) {
                 case UPLOAD_ERR_INI_SIZE:
                 case UPLOAD_ERR_FORM_SIZE:
                     $error = "Le fichier est trop volumineux.";
@@ -350,6 +349,36 @@ class UserController
             }
 
             header('Location: index.php?action=myAccount&status=upload_error&error=' . urlencode($error));
+            exit;
+        }
+    }
+    public function updateUser()
+    {
+        // Récupérer les données du formulaire
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? ''; // Assurez-vous de hacher le mot de passe avant de le stocker
+        $username = $_POST['username'] ?? '';
+        $userId = $_SESSION['user']['id']; // L'utilisateur actuel
+
+        // Validation simple (exemple : email déjà existant)
+        $userManager = new UserManager();
+        if ($userManager->emailExists($email, $userId)) {
+            $error = "Cette adresse email est déjà utilisée.";
+            header('Location: index.php?action=myAccount&error=' . urlencode($error));
+            exit;
+        }
+
+        // Mettre à jour les informations de l'utilisateur
+        $updated = $userManager->updateUser($userId, $email, $password, $username);
+
+        if ($updated) {
+            // Redirection avec succès
+            header('Location: index.php?action=myAccount&status=success');
+            exit;
+        } else {
+            // Redirection en cas d'erreur dans la mise à jour
+            $error = "Erreur lors de la mise à jour des informations.";
+            header('Location: index.php?action=myAccount&error=' . urlencode($error));
             exit;
         }
     }
