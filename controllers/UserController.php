@@ -39,17 +39,17 @@ class UserController
     public function connectUser(): void
     {
         // On récupère les données du formulaire.
-        $login = Utils::request("email");
+        $email = Utils::request("email");
         $password = Utils::request("password");
 
         // On vérifie que les données sont valides.
-        if (empty($login) || empty($password)) {
+        if (empty($email) || empty($password)) {
             throw new Exception("Tous les champs sont obligatoires.");
         }
 
         // On vérifie que l'utilisateur existe.
         $userManager = new UserManager();
-        $user = $userManager->getUserByLogin($login);
+        $user = $userManager->getUserByemail($email);
         if (!$user) {
             throw new Exception("L'utilisateur demandé n'existe pas.");
         }
@@ -65,7 +65,8 @@ class UserController
             "id" => $user->getId(),
             "role" => $user->getRole(),
             "email" => $user->getEmail(),
-            "username" => $user->getUsername()
+            "username" => $user->getUsername(),
+            "profilePicture" => $user->getProfilePicture(),
 
         ];
         $_SESSION['idUser'] = $user->getId();
@@ -110,16 +111,16 @@ class UserController
 
         $userManager = new UserManager();
 
-        $role = 'user';
-        $user = $userManager->createUser($username, $email, $password, $role);
+        $user = $userManager->createUser($username, $email, $password);
         $_SESSION['user'] = $user;
+
         Utils::redirect("myAccount", ["message" => "Inscription réussie !"]);
     }
 
     public function showMyAccount(): void
     {
         $this->ensureUserIsConnected();
-
+        var_dump($_SESSION);
         $user = $_SESSION['user'];
         var_dump($user);
         $this->renderView('myAccount', "Mon Compte", [
@@ -262,10 +263,10 @@ class UserController
     public function updateProfilePicture()
     {
         // Vérifier si un fichier est téléchargé
-        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-            $fileTmpPath = $_FILES['profile_picture']['tmp_name'];
-            $fileName = $_FILES['profile_picture']['name'];
-            $fileSize = $_FILES['profile_picture']['size'];
+        if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['profilePicture']['tmp_name'];
+            $fileName = $_FILES['profilePicture']['name'];
+            $fileSize = $_FILES['profilePicture']['size'];
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
 
@@ -323,7 +324,7 @@ class UserController
             }
         } else {
             // Gérer les différentes erreurs de téléchargement
-            switch ($_FILES['profile_picture']['error']) {
+            switch ($_FILES['profilePicture']['error']) {
                 case UPLOAD_ERR_INI_SIZE:
                 case UPLOAD_ERR_FORM_SIZE:
                     $error = "Le fichier est trop volumineux.";

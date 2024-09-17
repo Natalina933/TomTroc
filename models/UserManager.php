@@ -3,14 +3,14 @@
 class UserManager extends AbstractEntityManager
 {
     /**
-     * Récupère un utilisateur par son login.
-     * @param string $login
+     * Récupère un utilisateur par son email.
+     * @param string $email
      * @return ?User
      */
-    public function getUserByLogin(string $login): ?User
+    public function getUserByemail(string $email): ?User
     {
-        $sql = "SELECT * FROM user WHERE login = :login";
-        $stmt = $this->db->query($sql, [':login' => $login]);
+        $sql = "SELECT * FROM user WHERE email = :email";
+        $stmt = $this->db->query($sql, [':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         var_dump($user);
 
@@ -20,39 +20,36 @@ class UserManager extends AbstractEntityManager
     /**
      * Crée un nouvel utilisateur.
      * @param string $username
-     * @param string $login
+     * @param string $email
      * @param string $password
      * @return ?User
      * @throws Exception
      */
-   public function createUser(string $username, string $login, string $password, string $email): ?User
+    public function createUser(string $username,  string $email, string $password): ?User
 
     {
         try {
-            // Vérification si l'utilisateur avec le login existe déjà
-            if ($this->findExistingUser(['login' => $login])) {
-                throw new Exception("Un utilisateur avec ce login existe déjà.");
+            // Vérification si l'utilisateur avec le email existe déjà
+            if ($this->findExistingUser(['email' => $email])) {
+                throw new Exception("Un utilisateur avec ce email existe déjà.");
             }
             // var_dump('toto');
             // Inscription de l'utilisateur
-            $sql = "INSERT INTO user (username, login, password, email, profilePicture,  role, is_active, created_at)
-                    VALUES (:username, :login, :password, :email, :profilePicture, :role, :is_active, :created_at)";
+            $sql = "INSERT INTO user (username, email, password,  role, is_active)
+                    VALUES (:username, :email, :password, :role, :is_active)";
             $stmt = $this->db->query($sql, [
                 ':username' => $username,
-                ':login' => $login,
-                ':password' => password_hash($password, PASSWORD_DEFAULT),
                 ':email' => $email,
-                ':profilePicture' => null,
+                ':password' => password_hash($password, PASSWORD_DEFAULT),
                 ':role' => 'user',
                 ':is_active' => 1,
-                ':created_at' => date('Y-m-d H:i:s')
             ]);
             $stmt->execute();
             // var_dump('toto');
             // die;
 
             // Récupérer l'utilisateur créé après insertion
-            return $this->getUserByLogin($login);
+            return $this->getUserByemail($email);
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de l'inscription: " . $e->getMessage());
         }
@@ -95,25 +92,6 @@ class UserManager extends AbstractEntityManager
         return $user ? new User($user) : null;
     }
 
-    /**
-     * Inscrit un nouvel utilisateur.
-     * @param User $user L'utilisateur à inscrire.
-     * @return bool Retourne vrai si l'inscription est réussie, sinon faux.
-     */
-    public function registerUser(User $user): bool
-    {
-        $sql = "INSERT INTO user (username, login, email, password, profilePicture, role) 
-                VALUES (:username, :login, :password, :profilePicture, :role)";
-        $stmt = $this->db->query($sql);
-        $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
-        $stmt->bindParam(':login', $user->getLogin(), PDO::PARAM_STR);
-        $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
-        $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
-        $stmt->bindParam(':profilePicture', $user->getProfilePicture(), PDO::PARAM_STR);
-        $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
-
-        return $stmt->execute();
-    }
 
     /**
      * Met à jour les informations d'un utilisateur.
@@ -124,7 +102,7 @@ class UserManager extends AbstractEntityManager
     {
         // Requête SQL pour mettre à jour les informations de l'utilisateur
         $sql = "UPDATE user 
-            SET username = :username, login = :login, password = :password, profilePicture = :profilePicture, role = :role 
+            SET username = :username, email = :email, password = :password, profilePicture = :profilePicture, role = :role 
             WHERE id = :id";
 
         // Préparation de la requête
@@ -132,7 +110,7 @@ class UserManager extends AbstractEntityManager
 
         // Liaison des paramètres avec les valeurs de l'objet User
         $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
-        $stmt->bindParam(':login', $user->getLogin(), PDO::PARAM_STR);
+        $stmt->bindParam(':email', $user->getemail(), PDO::PARAM_STR);
         $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
         $stmt->bindParam(':profilePicture', $user->getProfilePicture(), PDO::PARAM_STR);
         $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
@@ -144,27 +122,20 @@ class UserManager extends AbstractEntityManager
     }
     public function emailExists($email, $userId = null): bool
     {
-        // Requête SQL pour vérifier si l'email existe déjà
-        $sql = "SELECT COUNT(*) FROM user WHERE email = :email";
+        // Vérification de l'ID utilisateur et email pour éviter les injections
+        $email = htmlspecialchars($email, ENT_QUOTES);
+        $userId = intval($userId);
 
-        // Si un `userId` est fourni, on exclut l'utilisateur en cours de la vérification
+        // Construction de la requête SQL
+        $sql = "SELECT COUNT(*) FROM user WHERE email = '{$email}'";
+
+        // Si un userId est fourni, on exclut cet utilisateur
         if ($userId !== null) {
-            $sql .= " AND id != :id";
+            $sql .= " AND id != {$userId}";
         }
 
-        // Utilisation de query pour préparer et exécuter la requête
+        // Exécution de la requête avec query()
         $stmt = $this->db->query($sql);
-
-        // Bind des paramètres
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-
-        // Bind du paramètre id s'il est fourni
-        if ($userId !== null) {
-            $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
-        }
-
-        // Exécuter la requête
-        $stmt->execute();
 
         // Retourner true si l'email existe déjà
         return $stmt->fetchColumn() > 0;
@@ -203,17 +174,17 @@ class UserManager extends AbstractEntityManager
      */
     public function updateProfilePicture($userId, $profilePicturePath): bool
     {
-        // Requête SQL pour mettre à jour la photo de profil de l'utilisateur
-        $sql = "UPDATE user SET profilePicture = :profilePicture WHERE id = :id";
+        // Échappez correctement les variables avant de les inclure dans la requête
+        $profilePicturePath = $this->db->query($profilePicturePath);
+        $userId = (int) $userId;
 
-        // Préparer la requête (utiliser prepare au lieu de query)
+        // Requête SQL avec les valeurs directement intégrées
+        $sql = "UPDATE user SET profilePicture = $profilePicturePath WHERE id = $userId";
+
+        // Exécution de la requête avec query()
         $stmt = $this->db->query($sql);
 
-        // Lier les paramètres à la requête
-        $stmt->bindParam(':profilePicture', $profilePicturePath);
-        $stmt->bindParam(':id', $userId);
-
-        // Exécuter la requête et retourner le succès ou l'échec
-        return $stmt->execute();
+        // Retourne le résultat de l'exécution (vrai ou faux)
+        return $stmt !== false;
     }
 }

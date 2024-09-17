@@ -2,17 +2,16 @@
 
 /**
  * Entité User : un utilisateur est défini par les champs
- * id, username, login, password, profilePicture, isAvailable, role, is_active, created_at, updated_at, last_login, activation_token, reset_token
+ * id, username, login, password, profilePicture, isAvailable, role, is_active, created_at, updated_at, last_email, activation_token, reset_token
  */
 
 class User extends AbstractEntity
 {
     protected int $id;
     private string $username;
-    private string $login;
     private string $email;
     private string $password;
-    private ?string $profilePicture;
+    private string $profilePicture;
     private string $role;
     private bool $isActive;
     private string $createdAt;
@@ -27,10 +26,6 @@ class User extends AbstractEntity
     public function getUsername(): string
     {
         return $this->username;
-    }
-    public function getLogin(): string
-    {
-        return $this->login;
     }
     public function getEmail(): string
     {
@@ -71,10 +66,7 @@ class User extends AbstractEntity
     {
         $this->username = $username;
     }
-    public function setLogin(string $login): void
-    {
-        $this->login = $login;
-    }
+
     public function setPassword(string $password): void
     {
         $this->password = $password;

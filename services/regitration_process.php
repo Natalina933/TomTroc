@@ -21,11 +21,11 @@ $user = new User([
 ]);
 
 // Enregistrement de l'utilisateur
-if ($userManager->registerUser($user)) {
-    // Inscription réussie, redirection vers la page de connexion
-    header('Location: connectionForm.php');
-    exit();
-} else {
-    // Erreur lors de l'inscription, afficher un message d'erreur
-    echo "Erreur lors de l'inscription. Veuillez réessayer.";
-}
+// if ($userManager->registerUser($user)) {
+//     // Inscription réussie, redirection vers la page de connexion
+//     header('Location: connectionForm.php');
+//     exit();
+// } else {
+//     // Erreur lors de l'inscription, afficher un message d'erreur
+//     echo "Erreur lors de l'inscription. Veuillez réessayer.";
+// }

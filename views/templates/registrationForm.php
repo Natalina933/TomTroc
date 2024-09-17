@@ -4,13 +4,13 @@
         <form action="index.php?action=registerUser" method="post" class="foldedCorner">
             <div class="formGrid">
                 <label for="username">Pseudo</label>
-                <input type="text" name="username" id="username" required>
+                <input type="text" name="username" id="username" autocomplete="false" required>
 
                 <label for="email">Adresse email</label>
-                <input type="email" name="email" id="email" required>
+                <input type="email" name="email" id="email" autocomplete="false" required>
 
                 <label for="password">Mot de passe</label>
-                <input type="password" name="password" id="password" required>
+                <input type="password" name="password" id="password" autocomplete="false" required>
 
                 <button class="submit">S'inscrire</button>
             </div>

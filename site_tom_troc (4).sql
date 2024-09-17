@@ -79,7 +79,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
-  `login` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `profilePicture` varchar(255) DEFAULT NULL,
   `role` enum('user','admin','moderator') DEFAULT 'user',
@@ -88,14 +88,14 @@ CREATE TABLE IF NOT EXISTS `user` (
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`login`)
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `login`, `password`, `profilePicture`, `role`, `is_active`, `created_at`, `updated_at`) VALUES
+INSERT INTO `user` (`id`, `username`, `email`, `password`, `profilePicture`, `role`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 'johndoe', 'john.doe@example.com', '482c811da5d5b4bc6d497ffa98491e38', '/assets/img/users/johndoe.jpg', 'user', 1, '2024-08-13 16:01:14', '2024-08-21 11:16:00'),
 (2, 'janedoe', 'jane.doe@example.com', '96b33694c4bb7dbd07391e0be54745fb', '/assets/img/users/janedoe.png', 'admin', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),
 (3, 'marksmith', 'mark.smith@example.com', '7d347cf0ee68174a3588f6cba31b8a67', '/assets/img/users/marksmith.png', 'moderator', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),

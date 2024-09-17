@@ -10,6 +10,7 @@
         <!-- Carré 1 : Profile -->
         <div class="account-card">
             <div class="account-profile">
+
                 <?php if (isset($user['profilePicture']) && !empty($user['profilePicture'])) : ?>
                     <img src="<?= ($user['profilePicture']) ?>" alt="Photo de profil">
                 <?php else : ?>
@@ -18,7 +19,7 @@
 
                 <!-- Formulaire pour modifier l'image de profil -->
                 <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
-                    <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*" style="display:none;">
+                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
                     <button type="button" id="changePictureButton">Modifier</button>
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
@@ -99,20 +100,20 @@
     };
 
     // Quand un fichier est sélectionné, on soumet le formulaire
-    document.getElementById('profilePictureInput').onchange = function() {
+    document.getElementById('imageInput').addEventListener('change', function() {
 
-        // Soumettre automatiquement le formulaire après la sélection du fichier
-        document.getElementById('submitForm').click();
-    };
+                // Soumettre automatiquement le formulaire après la sélection du fichier
+                document.getElementById('submitForm').click();
+            });
 
-    document.getElementById('editButton').onclick = function() {
-        // Activer les champs du formulaire
-        document.getElementById('email').disabled = false;
-        document.getElementById('password').disabled = false;
-        document.getElementById('username').disabled = false;
+            document.getElementById('editButton').onclick = function() {
+                // Activer les champs du formulaire
+                document.getElementById('email').disabled = false;
+                document.getElementById('password').disabled = false;
+                document.getElementById('username').disabled = false;
 
-        // Cacher le bouton "Modifier" et afficher le bouton "Enregistrer"
-        document.getElementById('editButton').style.display = 'none';
-        document.getElementById('submitButton').style.display = 'inline';
-    };
+                // Cacher le bouton "Modifier" et afficher le bouton "Enregistrer"
+                document.getElementById('editButton').style.display = 'none';
+                document.getElementById('submitButton').style.display = 'inline';
+            };
 </script>

@@ -35,7 +35,7 @@ try {
             $bookController->addBook();
             break;
 
-            // Gestion des utilisateurs
+    // ****Gestion des utilisateurs
         case 'registerUser':
             $userController->registerUser();
             break;
