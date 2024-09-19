@@ -115,7 +115,6 @@ class UserManager extends AbstractEntityManager
         $stmt->bindParam(':profilePicture', $user->getProfilePicture(), PDO::PARAM_STR);
         $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
         $stmt->bindParam(':id', $user->getId(), PDO::PARAM_INT);
-        $stmt->bindParam(':email', $user->getEmail(), PDO::PARAM_STR);
 
         // Exécution de la requête et retour du succès ou de l'échec
         return $stmt->execute();
@@ -158,9 +157,9 @@ class UserManager extends AbstractEntityManager
                 $conditions[] = "$key = :$key";
                 $params[$key] = $value;
             }
-            $sql .= " WHERE " . implode(" OR ", $conditions);
+            $sql .= " WHERE " . implode(" AND ", $conditions);
         }
-        var_dump($params, $sql);
+        // var_dump($params, $sql);
         $stmt = $this->db->query($sql, $params);
         $stmt->execute();
 
@@ -174,17 +173,20 @@ class UserManager extends AbstractEntityManager
      */
     public function updateProfilePicture($userId, $profilePicturePath): bool
     {
-        // Échappez correctement les variables avant de les inclure dans la requête
-        $profilePicturePath = $this->db->query($profilePicturePath);
-        $userId = (int) $userId;
+        // Préparation de la requête SQL pour mettre à jour l'image de profil
+        $sql = "UPDATE user SET profilePicture = :profilePicture WHERE id = :id";
 
-        // Requête SQL avec les valeurs directement intégrées
-        $sql = "UPDATE user SET profilePicture = $profilePicturePath WHERE id = $userId";
+        // Récupération de l'instance PDO via DBManager
+        $db = DBManager::getInstance()->getPDO();
 
-        // Exécution de la requête avec query()
-        $stmt = $this->db->query($sql);
+        // Préparation de la requête
+        $stmt = $db->prepare($sql);
 
-        // Retourne le résultat de l'exécution (vrai ou faux)
-        return $stmt !== false;
+        // Liaison des paramètres
+        $stmt->bindParam(':profilePicture', $profilePicturePath, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+
+        // Exécution de la requête et retour du succès ou de l'échec
+        return $stmt->execute();
     }
 }

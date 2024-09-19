@@ -102,18 +102,18 @@
     // Quand un fichier est sélectionné, on soumet le formulaire
     document.getElementById('imageInput').addEventListener('change', function() {
 
-                // Soumettre automatiquement le formulaire après la sélection du fichier
-                document.getElementById('submitForm').click();
-            });
+        // Soumettre automatiquement le formulaire après la sélection du fichier
+        document.getElementById('profilePictureForm').submit();
+    });
 
-            document.getElementById('editButton').onclick = function() {
-                // Activer les champs du formulaire
-                document.getElementById('email').disabled = false;
-                document.getElementById('password').disabled = false;
-                document.getElementById('username').disabled = false;
+    document.getElementById('editButton').onclick = function() {
+        // Activer les champs du formulaire
+        document.getElementById('email').disabled = false;
+        document.getElementById('password').disabled = false;
+        document.getElementById('username').disabled = false;
 
-                // Cacher le bouton "Modifier" et afficher le bouton "Enregistrer"
-                document.getElementById('editButton').style.display = 'none';
-                document.getElementById('submitButton').style.display = 'inline';
-            };
+        // Cacher le bouton "Modifier" et afficher le bouton "Enregistrer"
+        document.getElementById('editButton').style.display = 'none';
+        document.getElementById('submitButton').style.display = 'inline';
+    };
 </script>

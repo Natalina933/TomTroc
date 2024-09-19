@@ -61,14 +61,7 @@ class UserController
         }
 
         // On connecte l'utilisateur.
-        $_SESSION['user'] = [
-            "id" => $user->getId(),
-            "role" => $user->getRole(),
-            "email" => $user->getEmail(),
-            "username" => $user->getUsername(),
-            "profilePicture" => $user->getProfilePicture(),
-
-        ];
+        $_SESSION['user'] = $user;
         $_SESSION['idUser'] = $user->getId();
 
         // On redirige vers la page d'administration.
@@ -305,9 +298,9 @@ class UserController
                 $userModel = new UserManager();
 
                 // Appel à la méthode qui met à jour la photo de profil
-                if ($userModel->updateProfilePicture($userId, $dest_path)) {
+                if ($userModel->updateProfilePicture($userId, $newFileName)) {
                     // Mettre à jour la session avec la nouvelle image
-                    $_SESSION['user']['profilePicture'] = $dest_path;
+                    $_SESSION['user']['profilePicture'] = $newFileName;
 
                     // Redirection avec succès
                     header('Location: index.php?action=myAccount&status=success');
