@@ -6,8 +6,8 @@
  */
 class Book extends AbstractEntity
 {
-    private int $userId;
     protected int $id;
+    private int $userId;
     private string $title = "";
     private string $author = "";
     private ?string $img = null;

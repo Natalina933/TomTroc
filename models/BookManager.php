@@ -88,7 +88,16 @@ class bookManager extends AbstractEntityManager
         return $bookData ? new Book($bookData) : null;
     }
 
-
+    public function getAllBooksByUserId(int $userId): array
+    {
+        $sql = "SELECT * FROM book WHERE id_user = :id_user";
+        $result = $this->db->query($sql, ['id_user' => $userId]);
+        $books = [];
+        while ($book = $result->fetch()) {
+            $books[] = new Book($book);
+        }
+        return $books;
+    }
     /**
      * Ajoute ou modifie un book.
      * @param Book $book : le book à ajouter ou modifier.
@@ -143,5 +152,22 @@ class bookManager extends AbstractEntityManager
     {
         $sql = "DELETE FROM book WHERE id = :id";
         $this->db->query($sql, ['id' => $id]);
+    }
+    public function countUserBooks(int $userId): int
+    {
+        // Préparation de la requête SQL pour compter les livres de l'utilisateur
+        $sql = "SELECT COUNT(*) as book_count FROM books WHERE user_id = :user_id";
+
+        // Préparation de la requête
+        $stmt = $this->db->query($sql);
+
+        // Exécution de la requête avec l'ID de l'utilisateur
+        $stmt->execute(['user_id' => $userId]);
+
+        // Récupération du résultat
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Retourne le nombre de livres (ou 0 s'il n'y a pas de livres)
+        return $result['book_count'] ?? 0;
     }
 }

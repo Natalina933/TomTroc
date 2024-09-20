@@ -5,20 +5,21 @@ class UserController
     const ROLE_ADMIN = 'admin';
     const ROLE_USER = 'user';
 
-    /**
-     * Affiche la page d'administration des livres.
-     * @return void
-     */
-    public function showAdmin(): void
+    public function showMyAccount(): void
     {
         $this->ensureUserIsConnected();
-        $this->ensureUserHasRole(self::ROLE_ADMIN);
 
+        $userManager = new UserManager();
+        $user = $userManager->getUserById($_SESSION['user']['id']);
+
+        //on récupère les livres
         $bookManager = new BookManager();
-        $books = $bookManager->getAllBooks();
+        $books = $bookManager->getAllBooksByUserId($user->getId());
 
-        $this->renderView('adminBooks', "Administration des Livres", [
-            'books' => $books
+        //on affiche le compte
+        $this->renderView('myAccount', "Mon Compte", [
+            'user' => $user,
+            'book' => $books
         ]);
     }
 
@@ -49,7 +50,7 @@ class UserController
 
         // On vérifie que l'utilisateur existe.
         $userManager = new UserManager();
-        $user = $userManager->getUserByemail($email);
+        $user = $userManager->getUserByEmail($email);
         if (!$user) {
             throw new Exception("L'utilisateur demandé n'existe pas.");
         }
@@ -110,16 +111,6 @@ class UserController
         Utils::redirect("myAccount", ["message" => "Inscription réussie !"]);
     }
 
-    public function showMyAccount(): void
-    {
-        $this->ensureUserIsConnected();
-        var_dump($_SESSION);
-        $user = $_SESSION['user'];
-        var_dump($user);
-        $this->renderView('myAccount', "Mon Compte", [
-            'user' => $user
-        ]);
-    }
     /**
      * Affiche le formulaire de mise à jour d'un livre.
      * @return void
@@ -197,7 +188,7 @@ class UserController
      */
     private function ensureUserIsConnected(): void
     {
-        if (!isset($_SESSION['user'])) {
+        if (($_SESSION['user'])) {
             Utils::redirect("connectionForm");
         }
     }
@@ -209,7 +200,7 @@ class UserController
      */
     private function ensureUserHasRole(string $role): void
     {
-        if (!isset($_SESSION['user']) || $_SESSION['user']->getRole() !== $role) {
+        if (($_SESSION['user']) || $_SESSION['user']->getRole() !== $role) {
             throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
         }
     }
@@ -256,7 +247,7 @@ class UserController
     public function updateProfilePicture()
     {
         // Vérifier si un fichier est téléchargé
-        if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
+        if (($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
             $fileTmpPath = $_FILES['profilePicture']['tmp_name'];
             $fileName = $_FILES['profilePicture']['name'];
             $fileSize = $_FILES['profilePicture']['size'];

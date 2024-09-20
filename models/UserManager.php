@@ -3,6 +3,61 @@
 class UserManager extends AbstractEntityManager
 {
     /**
+     * Récupère tous les utilisateurs.
+     * @return array : un tableau d'objets User.
+     */
+    public function getAllUsers(): array
+    {
+        $sql = "SELECT * FROM user";
+        $result = $this->db->query($sql);
+        $users = [];
+        while ($user = $result->fetch()) {
+            $users[] = new User($user);
+        }
+        return $users;
+    }
+    /**
+     * Récupère un utilisateur par son ID.
+     * @param int $id
+     * @return ?User
+     */
+    public function getUserById(int $id): ?User
+    {
+        try {
+            // Exécution directe de la requête SQL avec l'ID spécifié
+            $sql = "SELECT * FROM user WHERE id = $id";
+            $result = $this->db->query($sql, [":id" => $id]);
+            $user = $result->fetch();
+            // Vérification des résultats
+            if ($user) {
+
+
+                return new User($user);
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la recherche de l'utilisateur : " . $e->getMessage());
+        }
+    }
+
+    public function updateBookCountForUser()
+    {
+        try {
+            $sql = "
+            UPDATE user
+            SET book_count = (
+                SELECT COUNT(*) FROM books
+                WHERE user_id = user.id
+            )
+        ";
+            $this->db->query($sql);
+        } catch (PDOException $e) {
+            // Gestion de l'erreur, par exemple :
+            echo "Erreur lors de la mise à jour du nombre de livres : " . $e->getMessage();
+        }
+    }
+    /**
      * Récupère un utilisateur par son email.
      * @param string $email
      * @return ?User
@@ -49,33 +104,12 @@ class UserManager extends AbstractEntityManager
             // die;
 
             // Récupérer l'utilisateur créé après insertion
-            return $this->getUserByemail($email);
+            return $this->getUserByEmail($email);
         } catch (PDOException $e) {
             throw new Exception("Erreur lors de l'inscription: " . $e->getMessage());
         }
     }
 
-    /**
-     * Récupère un utilisateur par son ID.
-     * @param int $id
-     * @return ?User
-     */
-    public function getUserById(int $id): ?User
-    {
-        try {
-            // Exécution directe de la requête SQL avec l'ID spécifié
-            $sql = "SELECT * FROM user WHERE id = $id";
-            $stmt = $this->db->query($sql);
-
-            // Récupérer les données de l'utilisateur
-            $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Vérification des résultats
-            return $data ? new User($data) : null;
-        } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la recherche de l'utilisateur : " . $e->getMessage());
-        }
-    }
 
     /**
      * Récupère un utilisateur par son nom d'utilisateur.
@@ -189,4 +223,9 @@ class UserManager extends AbstractEntityManager
         // Exécution de la requête et retour du succès ou de l'échec
         return $stmt->execute();
     }
+    /**
+     * Compte le nombre de livres associés à un utilisateur.
+     * @param int $userId L'ID de l'utilisateur.
+     * @return int Le nombre de livres appartenant à l'utilisateur.
+     */
 }

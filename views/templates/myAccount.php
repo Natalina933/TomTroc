@@ -11,9 +11,10 @@
         <div class="account-card">
             <div class="account-profile">
 
-                <?php if (isset($user['profilePicture']) && !empty($user['profilePicture'])) : ?>
-                    <img src="<?= ($user['profilePicture']) ?>" alt="Photo de profil">
+                <?php if ($user->getProfilePicture()) : ?>
+                    <img src="<?= ($user->getProfilePicture()) ?>" alt="Photo de profil">
                 <?php else : ?>
+
                     <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
                 <?php endif; ?>
 
@@ -24,12 +25,16 @@
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
             </div>
-            <p><?= ($user['username']) ?></p>
-            <p>Membre depuis : <?= ($user['id']) ?></p>
+            <p><?= ($user->getUsername()) ?></p>
+            <p>Membre depuis : <?= ($user->getCreatedAt()) ?></p>
             <p>BIBLIOTHÈQUE</p>
             <div class="library-info">
                 <img src="/assets/img/icon_books.svg" alt="Icône de livres">
-                <p><?= ($user['role']) ?> livres</p>
+                <p><?= ($bookManager->countUserBooks($userId)) ?> livres</p>
+
+
+                // Affiche le nombre de livres
+                echo "Vous avez " . $bookCount . " livres.";
             </div>
         </div>
         <!-- Carré 2 : Informations personnelles -->
@@ -37,12 +42,12 @@
             <h2>Vos informations personnelles</h2>
             <form action="index.php?action=updateUser" method="post">
                 <label for="email">Adresse email</label>
-                <input type="email" id="email" name="email" value="<?= isset($user['email']) ? htmlspecialchars($user['email']) : '' ?>" required>
+                <input type="email" id="email" name="email" value="<?= ($user->getEmail()) ? htmlspecialchars($user->getEmail()) : '' ?>" required>
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password" placeholder="••••••••••••" disabled>
 
                 <label for="username">Pseudo</label>
-                <input type="text" id="username" name="username" value="<?= isset($user['username']) ? htmlspecialchars($user['username']) : '' ?>" disabled required>
+                <input type="text" id="username" name="username" value="<?= ($user->getUsername()) ? htmlspecialchars($user->getUsername()) : '' ?>" disabled required>
                 <!-- Bouton pour activer les champs -->
                 <button type="button" id="editButton">Modifier</button>
                 <!-- Bouton pour soumettre le formulaire (invisible tant que les champs sont désactivés) -->
@@ -67,17 +72,18 @@
         </tr>
     </thead>
     <tbody>
-        <?php if (!empty($user['getBooks'])) : ?>
-            <?php foreach ($user['getBooks'] as $book) : ?>
+        <?php if (!empty($user->getBooks())) : ?>
+            <?php foreach ($user->getBooks() as $book) : ?>
+
                 <tr>
-                    <td><img src="<?= ($book['getImage']) ?>" alt="Photo du livre"></td>
-                    <td><?= ($book['title']) ?></td>
-                    <td><?= ($book['getAuthor']) ?></td>
-                    <td><?= ($book['getDescription']) ?></td>
-                    <td><?= ($book['isAvailable'] ? 'Oui' : 'Non') ?></td>
+                    <td><img src="<?= ($book->getImg()) ?>" alt="Photo du livre"></td>
+                    <td><?= ($book->getTitle()) ?></td>
+                    <td><?= ($book->getAuthor()) ?></td>
+                    <td><?= ($book->getDescription()) ?></td>
+                    <td><?= ($book->getIsAvailable() ? 'Oui' : 'Non') ?></td>
                     <td>
-                        <a href="index.php?action=editBook&id=<?= ($book['getId']) ?>">Editer</a> |
-                        <a href="index.php?action=deleteBook&id=<?= ($book['getId']) ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
+                        <a href="index.php?action=editBook&id=<?= ($book->getId()) ?>">Editer</a> |
+                        <a href="index.php?action=deleteBook&id=<?= ($book->getId()) ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -86,6 +92,7 @@
                 <td colspan="6">Aucun livre trouvé.</td>
             </tr>
         <?php endif; ?>
+
     </tbody>
 </table>
 </div>
