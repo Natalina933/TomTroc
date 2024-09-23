@@ -62,7 +62,7 @@ class UserManager extends AbstractEntityManager
      * @param string $email
      * @return ?User
      */
-    public function getUserByemail(string $email): ?User
+    public function getUserByEmail(string $email): ?User
     {
         $sql = "SELECT * FROM user WHERE email = :email";
         $stmt = $this->db->query($sql, [':email' => $email]);

@@ -7,19 +7,17 @@ class UserController
 
     public function showMyAccount(): void
     {
-        $this->ensureUserIsConnected();
+        $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
 
-        $userManager = new UserManager();
-        $user = $userManager->getUserById($_SESSION['user']['id']);
+        // Maintenant, on peut accéder à $_SESSION['user'] en toute sécurité
+        $user = $_SESSION['user'];
 
-        //on récupère les livres
         $bookManager = new BookManager();
         $books = $bookManager->getAllBooksByUserId($user->getId());
 
-        //on affiche le compte
         $this->renderView('myAccount', "Mon Compte", [
             'user' => $user,
-            'book' => $books
+            'books' => $books
         ]);
     }
 
@@ -188,10 +186,12 @@ class UserController
      */
     private function ensureUserIsConnected(): void
     {
-        if (($_SESSION['user'])) {
-            Utils::redirect("connectionForm");
+        if (!isset($_SESSION['user'])) { // Vérification de la session utilisateur
+            Utils::redirect("connectionForm"); // Redirection si l'utilisateur n'est pas connecté
+            exit; // On arrête l'exécution pour éviter tout comportement indésirable
         }
     }
+
 
     /**
      * Vérifie que l'utilisateur a un rôle spécifique.
@@ -285,7 +285,7 @@ class UserController
             // Déplacer le fichier téléchargé dans le dossier de destination
             if (move_uploaded_file($fileTmpPath, $dest_path)) {
                 // Mettre à jour la photo de profil dans la base de données
-                $userId = $_SESSION['user']['id']; // L'utilisateur est authentifié
+                $userId = $_SESSION['user']->getId(); // L'utilisateur est authentifié
                 $userModel = new UserManager();
 
                 // Appel à la méthode qui met à jour la photo de profil

@@ -15,7 +15,7 @@
                 <div class="nav-group nav-group--right">
                     <a href="#messages" class="nav-link">Messagerie</a>
                     <a href="index.php?action=myAccount" class="nav-link">Mon compte</a>
-                    <?php if (($_SESSION['user'])) { ?>
+                    <?php if (isset($_SESSION['user'])) { ?>
                         <a href="index.php?action=disconnectUser" class="nav-link">Déconnexion</a>
                     <?php } else { ?>
                         <a href="index.php?action=connectionForm" class="nav-link">Connexion</a>
