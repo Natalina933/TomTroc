@@ -289,7 +289,7 @@ class UserController
             // Déplacer le fichier téléchargé dans le dossier de destination
             if (move_uploaded_file($fileTmpPath, $dest_path)) {
                 // Mettre à jour la photo de profil dans la base de données
-                $userId = $_SESSION['user']->getId(); // L'utilisateur est authentifié
+                $userId = $_SESSION['user']['id']; // L'utilisateur est authentifié
                 $userModel = new UserManager();
 
                 // Appel à la méthode qui met à jour la photo de profil
@@ -341,7 +341,7 @@ class UserController
             exit;
         }
     }
-    public function updateUser()
+    public function editUser()
     {
         // Récupérer les données du formulaire
         $email = $_POST['email'] ?? '';
@@ -357,16 +357,33 @@ class UserController
             exit;
         }
 
-        // Mettre à jour les informations de l'utilisateur
-        $updated = $userManager->updateUser($userId, $email, $password, $username);
+        // Récupérer l'utilisateur à partir de son ID
+        $user = $userManager->getUserById($userId);
 
-        if ($updated) {
-            // Redirection avec succès
-            header('Location: index.php?action=myAccount&status=success');
-            exit;
+        if ($user) {
+            // Mettre à jour les informations de l'utilisateur
+            $user->setEmail($email);
+            if (!empty($password)) {
+                $user->setPassword($password);
+            }
+            $user->setUsername($username);
+
+            // Enregistrer les modifications
+            $updated = $userManager->editUser($user);
+
+            if ($updated) {
+                // Redirection avec succès
+                header('Location: index.php?action=myAccount&status=success');
+                exit;
+            } else {
+                // Redirection en cas d'erreur dans la mise à jour
+                $error = "Erreur lors de la mise à jour des informations.";
+                header('Location: index.php?action=myAccount&error=' . urlencode($error));
+                exit;
+            }
         } else {
-            // Redirection en cas d'erreur dans la mise à jour
-            $error = "Erreur lors de la mise à jour des informations.";
+            // Si l'utilisateur n'est pas trouvé
+            $error = "Utilisateur introuvable.";
             header('Location: index.php?action=myAccount&error=' . urlencode($error));
             exit;
         }

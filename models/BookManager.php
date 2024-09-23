@@ -61,22 +61,7 @@ class bookManager extends AbstractEntityManager
         }
         return $books;
     }
-    /**
-     * Recherche des livres par titre ou auteur.
-     * @param string $query : terme de recherche.
-     * @return array : un tableau d'objets Book.
-     */
-    public function searchBooks(string $query): array
-    {
-        $sql = "SELECT * FROM book WHERE title LIKE :query OR author LIKE :query";
-        $result = $this->db->query($sql, ['query' => '%' . $query . '%']);
-        $books = [];
 
-        while ($book = $result->fetch()) {
-            $books[] = new Book($book);
-        }
-        return $books;
-    }
     public function getBookById(int $id): ?Book
     {
         $sql = "SELECT * FROM book WHERE id = :id";
@@ -108,7 +93,7 @@ class bookManager extends AbstractEntityManager
         if ($book->getId() == -1) {
             $this->addBook($book);
         } else {
-            $this->updateBook($book);
+            $this->editBook($book);
         }
     }
 
@@ -132,13 +117,20 @@ class bookManager extends AbstractEntityManager
      * @param Book $book : le book à modifier.
      * @return void
      */
-    public function updateBook(Book $book): void
+    public function editBook(Book $book): void
     {
         $sql = "UPDATE book SET title = :title, description = :description, date_update = NOW() WHERE id = :id";
         $this->db->query($sql, [
-            'title' => $book->getTitle(),
-            'description' => $book->getDescription(),
             'id' => $book->getId(),
+            'useId' => $book->getUserId(),
+            'title' => $book->getTitle(),
+            'author' => $book->getAuthor(),
+            'img' => $book->getImg(),
+            'description' => $book->getDescription(),
+            'available' => $book->isAvailable(),
+            'created_at' => $book->getCreatedAt(),
+            'updated_at' => $book->getUpdatedAt(),
+
         ]);
     }
 
@@ -169,5 +161,12 @@ class bookManager extends AbstractEntityManager
 
         // Retourne le nombre de livres (ou 0 s'il n'y a pas de livres)
         return $result['book_count'] ?? 0;
+    }
+    // Méthode pour compter les livres associés à une section ou un utilisateur
+    public function countBooks(): int
+    {
+        $sql = "SELECT COUNT(*) as total FROM books";
+        $result = $this->db->query($sql);
+        return $result->fetchColumn(); // Retourne le nombre total de livres
     }
 }

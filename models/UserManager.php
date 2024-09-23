@@ -132,7 +132,7 @@ class UserManager extends AbstractEntityManager
      * @param User $user L'utilisateur avec les nouvelles informations.
      * @return bool Retourne vrai si la mise à jour est réussie, sinon faux.
      */
-    public function updateUser(User $user): bool
+    public function editUser(User $user): bool
     {
         // Requête SQL pour mettre à jour les informations de l'utilisateur
         $sql = "UPDATE user 

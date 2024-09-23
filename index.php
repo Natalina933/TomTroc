@@ -18,7 +18,7 @@ try {
         case 'home':
             $bookController->showHome();
             break;
-
+            // ****Gestion des livres
         case 'books':
             $bookController->showBooksList();
             break;
@@ -31,11 +31,14 @@ try {
             }
             break;
 
-        case 'addbook':
-            $bookController->addBook();
+        case 'editbook':
+            $bookController->editBook($bookId);
+            break;
+        case 'deletebook':
+            $bookController->deleteBook($bookId);
             break;
 
-    // ****Gestion des utilisateurs
+            // ****Gestion des utilisateurs
         case 'registerUser':
             $userController->registerUser();
             break;
@@ -63,12 +66,11 @@ try {
         case 'updateProfilePicture':
             $userController->updateProfilePicture();
             break;
-        
-        case 'updateUser':
-            $userController->updateUser();
-            break;
 
-                default:
+        case 'editUser':
+            $userController->editUser();
+            break;
+        default:
             throw new Exception("La page demandée n'existe pas.");
     }
 } catch (Exception $e) {

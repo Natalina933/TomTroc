@@ -38,7 +38,7 @@
         <!-- Carré 2 : Informations personnelles -->
         <div class="account-card">
             <h2>Vos informations personnelles</h2>
-            <form action="index.php?action=updateUser" method="post">
+            <form action="index.php?action=editUser" method="post">
                 <label for="email">Adresse email</label>
                 <input type="email" id="email" name="email" value="<?= ($user['email']) ?>" required>
                 <label for="password">Mot de passe</label>
@@ -77,8 +77,8 @@
                     <td><?= ($book->getDescription()) ?></td>
                     <td><?= ($book->isAvailable() ? 'Oui' : 'Non') ?></td>
                     <td>
-                        <a href="index.php?action=editBook&id=<?= (int)$book['id'] ?>">Editer</a> |
-                        <a href="index.php?action=deleteBook&id=<?= (int)$book['id'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
+                        <a href="index.php?action=editBook&id=<?= (int)$book->getId() ?>">Editer</a> |
+                        <a href="index.php?action=deleteBook&id=<?= (int)$book->getId() ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
