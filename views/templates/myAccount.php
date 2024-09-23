@@ -4,6 +4,7 @@
     </div>
 <?php endif; ?>
 
+
 <div class="account-container">
     <h1>Mon Compte</h1>
 
@@ -13,8 +14,8 @@
         <div class="account-card">
             <div class="account-profile">
                 <!-- Vérification et affichage de la photo de profil -->
-                <?php if (($user->profilePicture()) && !empty($user['profilePicture'])) : ?>
-                    <img src="<?= htmlspecialchars($user['profilePicture']) ?>" alt="Photo de profil">
+                <?php if (($user['profilePicture']) && !empty($user['profilePicture'])) : ?>
+                    <img src="<?= $user['profilePicture'] ?>" alt="Photo de profil">
                 <?php else : ?>
                     <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
                 <?php endif; ?>
@@ -26,12 +27,11 @@
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
             </div>
-            <p><?= htmlspecialchars($user['username']) ?></p>
-            <p>Membre depuis : <?= htmlspecialchars($user['created_at']) ?></p>
+            <p><?= ($user['username']) ?></p>
+            <p>Membre depuis : <?= ($user['createdAt']) ?></p>
             <p>BIBLIOTHÈQUE</p>
             <div class="library-info">
                 <img src="/assets/img/icon_books.svg" alt="Icône de livres">
-                <p><?= htmlspecialchars($user['role']) ?> livres</p>
             </div>
         </div>
 
@@ -40,12 +40,12 @@
             <h2>Vos informations personnelles</h2>
             <form action="index.php?action=updateUser" method="post">
                 <label for="email">Adresse email</label>
-                <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+                <input type="email" id="email" name="email" value="<?= ($user['email']) ?>" required>
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password" placeholder="••••••••••••" disabled>
 
                 <label for="username">Pseudo</label>
-                <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username']) ?>" disabled required>
+                <input type="text" id="username" name="username" value="<?= ($user['username']) ?>" disabled required>
 
                 <button type="button" id="editButton">Modifier</button>
                 <button type="submit" id="submitButton" style="display:none;">Enregistrer</button>
@@ -71,11 +71,11 @@
         <?php if (!empty($books)) : ?>
             <?php foreach ($books as $book) : ?>
                 <tr>
-                    <td><img src="<?= htmlspecialchars($book['image']) ?>" alt="Photo du livre" width="50"></td>
-                    <td><?= htmlspecialchars($book['title']) ?></td>
-                    <td><?= htmlspecialchars($book['author']) ?></td>
-                    <td><?= htmlspecialchars($book['description']) ?></td>
-                    <td><?= $book['is_available'] ? 'Oui' : 'Non' ?></td>
+                    <td><img src="<?= ($book->getImg()) ?>" alt="Photo du livre" width="50"></td>
+                    <td><?= ($book->getTitle()) ?></td>
+                    <td><?= ($book->getAuthor()) ?></td>
+                    <td><?= ($book->getDescription()) ?></td>
+                    <td><?= ($book->isAvailable() ? 'Oui' : 'Non') ?></td>
                     <td>
                         <a href="index.php?action=editBook&id=<?= (int)$book['id'] ?>">Editer</a> |
                         <a href="index.php?action=deleteBook&id=<?= (int)$book['id'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>

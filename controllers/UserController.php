@@ -8,15 +8,14 @@ class UserController
     public function showMyAccount(): void
     {
         $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
-
-        // Maintenant, on peut accéder à $_SESSION['user'] en toute sécurité
-        $user = $_SESSION['user'];
+        // var_dump($_SESSION);
+        $userId = $_SESSION['idUser'];
 
         $bookManager = new BookManager();
-        $books = $bookManager->getAllBooksByUserId($user->getId());
+        $books = $bookManager->getAllBooksByUserId($userId);
 
         $this->renderView('myAccount', "Mon Compte", [
-            'user' => $user,
+            'user' => (array)$_SESSION['user'],
             'books' => $books
         ]);
     }
@@ -58,9 +57,14 @@ class UserController
             $hash = password_hash($password, PASSWORD_DEFAULT);
             throw new Exception("Le mot de passe est incorrect : $hash");
         }
-
-        // On connecte l'utilisateur.
-        $_SESSION['user'] = $user;
+        $_SESSION['user'] = [
+            'id' => $user->getId(),
+            "role" => $user->getRole(),
+            "email" => $user->getEmail(),
+            "username" => $user->getUsername(),
+            "createdAt" => $user->getCreatedAt(),
+            "profilePicture" => $user->getProfilePicture()
+        ];
         $_SESSION['idUser'] = $user->getId();
 
         // On redirige vers la page d'administration.
@@ -200,7 +204,7 @@ class UserController
      */
     private function ensureUserHasRole(string $role): void
     {
-        if (($_SESSION['user']) || $_SESSION['user']->getRole() !== $role) {
+        if (isset($_SESSION['user']) || $_SESSION['user']->getRole() !== $role) {
             throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
         }
     }
@@ -291,7 +295,7 @@ class UserController
                 // Appel à la méthode qui met à jour la photo de profil
                 if ($userModel->updateProfilePicture($userId, $newFileName)) {
                     // Mettre à jour la session avec la nouvelle image
-                    $_SESSION['user']['profilePicture'] = $newFileName;
+                    $_SESSION['user']->setProfilePicture($newFileName);
 
                     // Redirection avec succès
                     header('Location: index.php?action=myAccount&status=success');
@@ -341,7 +345,7 @@ class UserController
     {
         // Récupérer les données du formulaire
         $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? ''; // Assurez-vous de hacher le mot de passe avant de le stocker
+        $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
         $username = $_POST['username'] ?? '';
         $userId = $_SESSION['user']['id']; // L'utilisateur actuel
 
