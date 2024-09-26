@@ -41,22 +41,7 @@ class UserManager extends AbstractEntityManager
         }
     }
 
-    public function updateBookCountForUser()
-    {
-        try {
-            $sql = "
-            UPDATE user
-            SET book_count = (
-                SELECT COUNT(*) FROM books
-                WHERE user_id = user.id
-            )
-        ";
-            $this->db->query($sql);
-        } catch (PDOException $e) {
-            // Gestion de l'erreur, par exemple :
-            echo "Erreur lors de la mise à jour du nombre de livres : " . $e->getMessage();
-        }
-    }
+    
     /**
      * Récupère un utilisateur par son email.
      * @param string $email
@@ -96,8 +81,11 @@ class UserManager extends AbstractEntityManager
                 ':username' => $username,
                 ':email' => $email,
                 ':password' => password_hash($password, PASSWORD_DEFAULT),
+                ':profilePicture'=> '/assets/img/users/profile-default.svg',
                 ':role' => 'user',
                 ':is_active' => 1,
+                ':createdAt' => date('Y-m-d H:i:s'),
+                ':updatedAt' => date('Y-m-d H:i:s')
             ]);
             $stmt->execute();
             // var_dump('toto');

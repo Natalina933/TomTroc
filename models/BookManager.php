@@ -157,16 +157,19 @@ class bookManager extends AbstractEntityManager
         $stmt->execute(['user_id' => $userId]);
 
         // Récupération du résultat
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
 
-        // Retourne le nombre de livres (ou 0 s'il n'y a pas de livres)
-        return $result['book_count'] ?? 0;
+        // Retourner le nombre de livres
+        return $result['book_count'];
     }
-    // Méthode pour compter les livres associés à une section ou un utilisateur
-    public function countBooks(): int
+    public function updateBookCount(int $userId): void
     {
-        $sql = "SELECT COUNT(*) as total FROM books";
-        $result = $this->db->query($sql);
-        return $result->fetchColumn(); // Retourne le nombre total de livres
+        $sql = "UPDATE user 
+                SET book_count = (SELECT COUNT(*) FROM book WHERE user_id = :user_id) 
+                WHERE id = :user_id";
+        $pdo = $this->db->getPDO();
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
     }
 }

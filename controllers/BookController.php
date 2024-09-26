@@ -44,18 +44,19 @@ class BookController
     public function showBookDetail(int $id): void
     {
         $bookManager = new BookManager();
-
         $book = $bookManager->getBookById($id);
+        $userManager = new UserManager();
+        $user = $userManager->getUserByUsername($id);
 
         if ($book) {
             $userManager = new UserManager();
-            $owner = $userManager->getUserById($book->getUserId());
+            $user = $userManager->getUserById($book->getUserId());
         } else {
-            $owner = null;
+            $user = null;
         }
 
         $view = new View('Book Detail');
-        $view->render('book-detail', ['book' => $book, 'user' => $owner]);
+        $view->render('book-detail', ['book' => $book, 'user' => $user]);
     }
 
     /**
@@ -150,13 +151,19 @@ class BookController
     }
     public function displayBooksSection(): void
     {
+        // Récupérer l'ID de l'utilisateur actuellement connecté (à adapter selon votre contexte)
+        $userId = $_SESSION['user']['id'];
+
         // Récupérer le BookManager
         $bookManager = new BookManager();
 
-        // Compter le nombre de livres
-        $bookCount = $bookManager->countBooks();
+        // Compter le nombre de livres et stocker le résultat dans une variable
+        $bookCount = $bookManager->countUserBooks($userId);
 
-        // Passer le nombre de livres à la vue
-        require_once 'views/myaccount.php';
+        // Passer les données à la vue
+        $view = new View('Mon compte');
+        $view->render('myAccount',  [
+            'numberOfBooks' => $bookCount
+        ]);
     }
 }

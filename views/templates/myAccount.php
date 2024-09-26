@@ -27,31 +27,55 @@
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
             </div>
-            <p><?= ($user['username']) ?></p>
-            <p>Membre depuis : <?= ($user['createdAt']) ?></p>
+            <p>
+                <?= ($user['username']) ?></p>
+            <?php
+            // Créer un objet DateTime à partir de la date d'inscription
+            $createdAt = new DateTime($user['createdAt']);
+            $now = new DateTime();
+            // Calculer la différence
+            $diff = $createdAt->diff($now);
+            
+            $memberSince = '';
+            if ($diff->y > 0) {
+                $memberSince .= $diff->y . ' ' . ($diff->y > 1 ? 'ans' : 'an');
+            }
+            if ($diff->m > 0) {
+                if (!empty($memberSince)) $memberSince .= ' et ';
+                $memberSince .= $diff->m . ' ' . ($diff->m > 1 ? 'mois' : 'mois');
+            }
+            if ($diff->y === 0 && $diff->m === 0) {
+                $memberSince = '1 mois';
+            }
+            ?>
+            <p>Membre depuis : <?= ($memberSince) ?></p>
             <p>BIBLIOTHÈQUE</p>
             <div class="library-info">
                 <img src="/assets/img/icon_books.svg" alt="Icône de livres">
+                <!-- Affichage du nombre de livres -->
+                <span><?= isset($numberOfBooks) ? $numberOfBooks : 'Aucun' ?> livres</span>
             </div>
-        </div>
 
-        <!-- Carré 2 : Informations personnelles -->
-        <div class="account-card">
-            <h2>Vos informations personnelles</h2>
-            <form action="index.php?action=editUser" method="post">
-                <label for="email">Adresse email</label>
-                <input type="email" id="email" name="email" value="<?= ($user['email']) ?>" required>
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" placeholder="••••••••••••" disabled>
-
-                <label for="username">Pseudo</label>
-                <input type="text" id="username" name="username" value="<?= ($user['username']) ?>" disabled required>
-
-                <button type="button" id="editButton">Modifier</button>
-                <button type="submit" id="submitButton" style="display:none;">Enregistrer</button>
-            </form>
         </div>
     </div>
+
+    <!-- Carré 2 : Informations personnelles -->
+    <div class="account-card">
+        <h2>Vos informations personnelles</h2>
+        <form action="index.php?action=editUser" method="post">
+            <label for="email">Adresse email</label>
+            <input type="email" id="email" name="email" value="<?= ($user['email']) ?>" required>
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" placeholder="••••••••••••" disabled>
+
+            <label for="username">Pseudo</label>
+            <input type="text" id="username" name="username" value="<?= ($user['username']) ?>" disabled required>
+
+            <button type="button" id="editButton">Modifier</button>
+            <button type="submit" id="submitButton" style="display:none;">Enregistrer</button>
+        </form>
+    </div>
+</div>
 </div>
 
 <!-- Section 3 : Tableau des livres -->

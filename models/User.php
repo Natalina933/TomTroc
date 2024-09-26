@@ -47,6 +47,7 @@ class User extends AbstractEntity
     {
         return $this->isActive;
     }
+
     public function getCreatedAt(): string
     {
         return $this->createdAt;

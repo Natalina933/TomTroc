@@ -13,6 +13,7 @@ class Book extends AbstractEntity
     private ?string $img = null;
     private string $description = "";
     private bool $available = true;
+    private string $numberOfBook;
     private ?DateTime $createdAt = null;
     private ?DateTime $updatedAt = null;
 
@@ -103,6 +104,15 @@ class Book extends AbstractEntity
     public function isAvailable(): bool
     {
         return $this->available;
+    }
+
+    public function getNumberOfBook(): string
+    {
+        return $this->numberOfBook;
+    }
+    public function setNumberOfBook(string $numberOfBook): void
+    {
+        $this->numberOfBook = $numberOfBook;
     }
 
     // Setter et Getter pour createdAt

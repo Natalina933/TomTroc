@@ -257,7 +257,7 @@ class UserController
             $fileSize = $_FILES['profilePicture']['size'];
             $fileNameCmps = explode(".", $fileName);
             $fileExtension = strtolower(end($fileNameCmps));
-
+            var_dump($fileTmpPath);
             // Générer un nom de fichier unique pour éviter les conflits
             $newFileName = uniqid('profile_', true) . '.' . $fileExtension;
 
@@ -282,20 +282,19 @@ class UserController
             }
 
             // Dossier de stockage de l'image
-            $uploadFileDir = './assets/img/users/';
+            $uploadFileDir = '/assets/img/users/';
             $newFileName = uniqid('profile_', true) . '.' . $fileExtension;
             $dest_path = $uploadFileDir . $newFileName;
-
             // Déplacer le fichier téléchargé dans le dossier de destination
-            if (move_uploaded_file($fileTmpPath, $dest_path)) {
+            if (copy($fileTmpPath, __DIR__ . "/.."  . $dest_path)) {
                 // Mettre à jour la photo de profil dans la base de données
                 $userId = $_SESSION['user']['id']; // L'utilisateur est authentifié
                 $userModel = new UserManager();
 
                 // Appel à la méthode qui met à jour la photo de profil
-                if ($userModel->updateProfilePicture($userId, $newFileName)) {
+                if ($userModel->updateProfilePicture($userId, $dest_path)) {
                     // Mettre à jour la session avec la nouvelle image
-                    $_SESSION['user']->setProfilePicture($newFileName);
+                    $_SESSION['user']['profilePicture'] = $dest_path;
 
                     // Redirection avec succès
                     header('Location: index.php?action=myAccount&status=success');

@@ -62,7 +62,9 @@ try {
         case 'registrationForm':
             $userController->displayRegistrationForm();
             break;
-
+        case 'bookCount':
+            $bookController->displayBooksSection();
+            break;
         case 'updateProfilePicture':
             $userController->updateProfilePicture();
             break;
