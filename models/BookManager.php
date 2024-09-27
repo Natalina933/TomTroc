@@ -20,7 +20,7 @@ class bookManager extends AbstractEntityManager
         }
         return $books;
     }
-
+    // SELECT b.*,u.username as name FROM book b JOIN user u ON b.user_id=u.id WHERE b.id = 5
     /**
      * Récupère les books selon les critères, les ordres et la limite spécifiés.
      * @param array $criteria : Critères de filtrage.
