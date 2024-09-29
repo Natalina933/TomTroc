@@ -148,7 +148,7 @@ class bookManager extends AbstractEntityManager
     public function countUserBooks(int $userId): int
     {
         // Préparation de la requête SQL pour compter les livres de l'utilisateur
-        $sql = "SELECT COUNT(*) as book_count FROM books WHERE user_id = :user_id";
+        $sql = "SELECT COUNT(*) as total_books FROM book WHERE user_id = :user_id";
 
         // Préparation de la requête
         $stmt = $this->db->query($sql);
@@ -160,16 +160,7 @@ class bookManager extends AbstractEntityManager
         $result = $stmt->fetch();
 
         // Retourner le nombre de livres
-        return $result['book_count'];
+        return $result['total_books'];
     }
-    public function updateBookCount(int $userId): void
-    {
-        $sql = "UPDATE user 
-                SET book_count = (SELECT COUNT(*) FROM book WHERE user_id = :user_id) 
-                WHERE id = :user_id";
-        $pdo = $this->db->getPDO();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-        $stmt->execute();
-    }
+  
 }

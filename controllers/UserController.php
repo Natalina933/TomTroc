@@ -13,7 +13,8 @@ class UserController
 
         $bookManager = new BookManager();
         $books = $bookManager->getAllBooksByUserId($userId);
-
+        // Compter les livres de l'utilisateur
+        $totalBooks = $bookManager->countUserBooks($userId);
         $this->renderView('myAccount', "Mon Compte", [
             'user' => (array)$_SESSION['user'],
             'books' => $books

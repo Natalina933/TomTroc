@@ -53,7 +53,7 @@
             <div class="library-info">
                 <img src="/assets/img/icon_books.svg" alt="Icône de livres">
                 <!-- Affichage du nombre de livres -->
-                <span><?= isset($numberOfBooks) ? $numberOfBooks : 'Aucun' ?> livres</span>
+                <span><?= isset($totalBooks ) ? $numberOfBooks : 'Aucun' ?> livres</span>
             </div>
 
         </div>
@@ -113,6 +113,7 @@
         <?php endif; ?>
     </tbody>
 </table>
+
 
 <!-- Script pour gérer la sélection et la prévisualisation de l'image -->
 <script>
