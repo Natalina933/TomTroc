@@ -8,8 +8,8 @@ class UserController
     public function showMyAccount(): void
     {
         $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
-        // var_dump($_SESSION);
-        $userId = $_SESSION['idUser'];
+        var_dump($_SESSION);
+        $userId = $_SESSION['user']['id'];
 
         $bookManager = new BookManager();
         $books = $bookManager->getAllBooksByUserId($userId);
@@ -17,7 +17,8 @@ class UserController
         $totalBooks = $bookManager->countUserBooks($userId);
         $this->renderView('myAccount', "Mon Compte", [
             'user' => (array)$_SESSION['user'],
-            'books' => $books
+            'books' => $books,
+            'totalBooks' => $totalBooks
         ]);
     }
 

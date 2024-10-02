@@ -11,14 +11,16 @@ try {
     // Instancier les contrôleurs
     $bookController = new BookController();
     $userController = new UserController();
+    $messageController = new MessageController(); // Ajout du contrôleur de messagerie
 
     // Gestion des différentes actions
     switch ($action) {
-            // Pages accessibles à tous
+        // ****Pages accessibles à tous****
         case 'home':
             $bookController->showHome();
             break;
-            // ****Gestion des livres
+
+        // ****Gestion des livres****
         case 'books':
             $bookController->showBooksList();
             break;
@@ -32,13 +34,22 @@ try {
             break;
 
         case 'editbook':
-            $bookController->editBook($bookId);
-            break;
-        case 'deletebook':
-            $bookController->deleteBook($bookId);
+            if ($bookId > 0) {
+                $bookController->editBook($bookId);
+            } else {
+                throw new Exception("ID du livre invalide.");
+            }
             break;
 
-            // ****Gestion des utilisateurs
+        case 'deletebook':
+            if ($bookId > 0) {
+                $bookController->deleteBook($bookId);
+            } else {
+                throw new Exception("ID du livre invalide.");
+            }
+            break;
+
+        // ****Gestion des utilisateurs****
         case 'registerUser':
             $userController->registerUser();
             break;
@@ -62,9 +73,11 @@ try {
         case 'registrationForm':
             $userController->displayRegistrationForm();
             break;
+
         case 'bookCount':
             $bookController->displayBooksSection();
             break;
+
         case 'updateProfilePicture':
             $userController->updateProfilePicture();
             break;
@@ -72,6 +85,16 @@ try {
         case 'editUser':
             $userController->editUser();
             break;
+
+        // ****Gestion de la messagerie****
+        case 'showMessagingPage':
+            $messageController->showMessagingPage();
+            break;
+
+        case 'sendMessage':
+            $messageController->sendMessage();
+            break;
+
         default:
             throw new Exception("La page demandée n'existe pas.");
     }

@@ -35,7 +35,7 @@
             $now = new DateTime();
             // Calculer la différence
             $diff = $createdAt->diff($now);
-            
+
             $memberSince = '';
             if ($diff->y > 0) {
                 $memberSince .= $diff->y . ' ' . ($diff->y > 1 ? 'ans' : 'an');
@@ -53,7 +53,7 @@
             <div class="library-info">
                 <img src="/assets/img/icon_books.svg" alt="Icône de livres">
                 <!-- Affichage du nombre de livres -->
-                <span><?= isset($totalBooks ) ? $numberOfBooks : 'Aucun' ?> livres</span>
+                <p>Nombre total de livres : <?= ($totalBooks) ?></p>
             </div>
 
         </div>
