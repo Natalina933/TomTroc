@@ -4,16 +4,16 @@
  * Entité Message : un message est défini par les champs
  * id, sender_id, receiver_id, content, time_sent
  */
-
 class Message extends AbstractEntity
 {
     protected int $id;
     private int $senderId;
     private int $receiverId;
     private string $content;
+    private int $isRead;
     private string $timeSent;
 
-    // Getters pour chaque propriété
+    // Getters
     public function getId(): int
     {
         return $this->id;
@@ -33,13 +33,16 @@ class Message extends AbstractEntity
     {
         return $this->content;
     }
-
+    public function getIsRead(): int
+    {
+        return $this->isRead;
+    }
     public function getTimeSent(): string
     {
         return $this->timeSent;
     }
 
-    // Setters pour chaque propriété
+    // Setters
     public function setId(int $id): void
     {
         $this->id = $id;
@@ -59,7 +62,10 @@ class Message extends AbstractEntity
     {
         $this->content = $content;
     }
-
+    public function setIsRead(int $isRead): void
+    {
+        $this->isRead = $isRead;
+    }
     public function setTimeSent(string $timeSent): void
     {
         $this->timeSent = $timeSent;

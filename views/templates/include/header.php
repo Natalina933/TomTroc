@@ -13,7 +13,7 @@
                     <a href="index.php?action=books" class="nav-link">Nos livres à l'échange</a>
                 </div>
                 <div class="nav-group nav-group--right">
-                    <a href="#messages" class="nav-link">Messagerie</a>
+                    <a href="#index.php?action=messaging" class="nav-link">Messagerie</a>
                     <a href="index.php?action=myAccount" class="nav-link">Mon compte</a>
                     <?php if (isset($_SESSION['user'])) { ?>
                         <a href="index.php?action=disconnectUser" class="nav-link">Déconnexion</a>

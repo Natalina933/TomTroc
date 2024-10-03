@@ -1,53 +1,94 @@
 <?php
 class MessageController
 {
+    /**
+     * Affiche la boîte de réception des messages pour l'utilisateur connecté.
+     * @return void
+     */
     public function showInbox(): void
     {
-        // Récupérer les messages de la boîte de réception de l'utilisateur
-        $inboxMessages = $this->messageManager->getInboxMessages($_SESSION['user']['id']);
-
-        // Afficher la vue de la boîte de réception
-        $this->renderView('inbox', 'Boîte de réception', ['messages' => $inboxMessages]);
+        //Instanciation du messageManager
+        $messageManager = new MessageManager();
+        // Récupère tous les messages de l'utilisateur connecté
+        $userId = $_SESSION['user']['id'];
+        $messages = $messageManager->getAllMessagesByUserId($userId);
+        $view = new View('Messagerie');
+        $view->render('inbox', ['messages' => $messages]);
     }
 
+    /**
+     * Affiche les messages envoyés par l'utilisateur.
+     * @return void
+     */
     public function showSentMessages(): void
     {
-        // Récupérer les messages envoyés par l'utilisateur
-        $sentMessages = $this->messageManager->getSentMessages($_SESSION['user']['id']);
-
-        // Afficher la vue des messages envoyés
-        $this->renderView('sentMessages', 'Messages envoyés', ['messages' => $sentMessages]);
+        // Instanciation du MessageManager
+        $messageManager = new MessageManager();
+        // Récupérer les messages envoyés de l'utilisateur connecté
+        $userId = $_SESSION['user']['id'];
+        $sentMessages = $messageManager->getSentMessages($userId);
+        $view = new View('Messagerie');
+        $view->render('sentMessages', ['messages' => $sentMessages]);
     }
-
-    public function showNewMessageForm(): void
+    public function showMessagesList(): void
     {
-        // Récupérer la liste des destinataires possibles (si nécessaire)
-        $recipients = $this->userManager->getAllUsers();
+        // Instanciation du MessageManager
+        $messageManager = new MessageManager();
+        // Récupère l'ID de l'utilisateur connecté
+        $userId = $_SESSION['user']['id'];
+        // Récupère tous les messages de l'utilisateur connecté (boîte de réception et messages envoyés)
+        $messages = $messageManager->getAllMessagesByUserId($userId);
 
-        // Afficher le formulaire de création de nouveau message
-        $this->renderView('newMessageForm', 'Nouveau message', ['recipients' => $recipients]);
+        // Instancie la vue et affiche la liste des messages
+        $view = new View('Messagerie');
+        $view->render('messagesList', ['messages' => $messages]);
     }
-
+    /**
+     * Envoie un nouveau message après validation des données.
+     * @return void
+     */
     public function sendMessage(): void
     {
-        // Valider et traiter les données du formulaire
-        $recipientId = Utils::request('recipientId');
-        $subject = Utils::request('subject');
+        // Instanciation du MessageManager
+        $messageManager = new MessageManager();
+        // Récupérer les données du formulaire
+        $senderId = $_SESSION['user']['id'];
+        $receiverId = Utils::request('receiverId');
         $content = Utils::request('content');
 
-        // Créer et envoyer le message
-        $message = new Message([
-            'sender_id' => $_SESSION['user']['id'],
-            'recipient_id' => $recipientId,
-            'subject' => $subject,
-            'content' => $content
-        ]);
+        // Validation des données
+        if (empty($receiverId) || empty($content)) {
+            // Gérer l'erreur si les champs sont vides
+            Utils::redirect('showNewMessageForm', ['error' => 'Les champs sont obligatoires']);
+            return;
+        }
 
-        $this->MessageManager->sendMessage($message);
+        // Création du message
+        $message = new Message();
+        $message->setSenderId($senderId);
+        $message->setReceiverId((int)$receiverId);
+        $message->setContent($content);
+        $message->setTimeSent(date('Y-m-d H:i:s'));
 
-        // Rediriger vers la page des messages envoyés
-        Utils::redirect('sentMessages');
+        // Envoi du message
+        $messageManager->sendMessage($message);
+
+        // Redirection vers la page des messages envoyés
+        Utils::redirect('showSentMessages');
     }
 
-    // ... autres méthodes liées aux messages (répondre, supprimer, marquer comme lu/non lu)
+    /**
+     * Supprime un message de la boîte de réception.
+     * @param int $messageId
+     * @return void
+     */
+    public function deleteMessage(int $messageId): void
+    {
+        // Instanciation du MessageManager
+        $messageManager = new MessageManager();
+        // Suppression du message
+        $messageManager->deleteMessage($messageId);
+        // Redirection vers la boîte de réception
+        Utils::redirect('showInbox');
+    }
 }

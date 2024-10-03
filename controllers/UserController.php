@@ -8,7 +8,7 @@ class UserController
     public function showMyAccount(): void
     {
         $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
-        var_dump($_SESSION);
+        // var_dump($_SESSION);
         $userId = $_SESSION['user']['id'];
 
         $bookManager = new BookManager();

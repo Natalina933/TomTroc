@@ -5,22 +5,23 @@ require_once 'config/autoload.php';
 // On récupère l'action demandée par l'utilisateur. Si aucune action n'est demandée, on affiche la page d'accueil.
 $action = Utils::request('action', 'home');
 $bookId = Utils::request('id', 0); // Récupérer l'ID du livre depuis la requête
+
 error_log("Action demandée : " . $action . ", ID du livre : " . $bookId);
 
 try {
     // Instancier les contrôleurs
     $bookController = new BookController();
     $userController = new UserController();
-    $messageController = new MessageController(); // Ajout du contrôleur de messagerie
+    $messageController = new MessageController();
 
     // Gestion des différentes actions
     switch ($action) {
-        // ****Pages accessibles à tous****
+            // ****Pages accessibles à tous****
         case 'home':
             $bookController->showHome();
             break;
 
-        // ****Gestion des livres****
+            // ****Gestion des livres****
         case 'books':
             $bookController->showBooksList();
             break;
@@ -49,7 +50,7 @@ try {
             }
             break;
 
-        // ****Gestion des utilisateurs****
+            // ****Gestion des utilisateurs****
         case 'registerUser':
             $userController->registerUser();
             break;
@@ -86,15 +87,27 @@ try {
             $userController->editUser();
             break;
 
-        // ****Gestion de la messagerie****
+            // **** Gestion de la messagerie ****
         case 'showMessagingPage':
-            $messageController->showMessagingPage();
+            $messageController->showInbox();
+            break;
+
+        case 'showMessagesList':
+            $messageController->showMessagesList();
+            break;
+
+        case 'showSentMessages':
+            $messageController->showSentMessages();
             break;
 
         case 'sendMessage':
             $messageController->sendMessage();
             break;
 
+        // case 'deleteMessage':
+        //     // Suppression d'un message
+        //     $messageController->deleteMessage();
+        //     break;
         default:
             throw new Exception("La page demandée n'existe pas.");
     }

@@ -2,11 +2,10 @@
 
 /**
  * Classe qui gère les messages.
- */
-class MessageManager extends AbstractEntityManager
+ */class MessageManager extends AbstractEntityManager
 {
     /**
-     * Récupère tous les messages d'un utilisateur.
+     * Récupère tous les messages reçus par un utilisateur.
      * @param int $userId
      * @return array : un tableau d'objets Message.
      */
@@ -16,10 +15,27 @@ class MessageManager extends AbstractEntityManager
         $result = $this->db->query($sql, ['userId' => $userId]);
         $messages = [];
 
-        while ($message = $result->fetch()) {
-            $messages[] = new Message($message);
+        while ($messageData = $result->fetch()) {
+            $messages[] = new Message($messageData);
         }
         return $messages;
+    }
+
+    /**
+     * Récupère tous les messages envoyés par un utilisateur.
+     * @param int $userId
+     * @return array : un tableau d'objets Message.
+     */
+    public function getSentMessages(int $userId): array
+    {
+        $sql = "SELECT * FROM messages WHERE sender_id = :userId ORDER BY time_sent DESC";
+        $result = $this->db->query($sql, ['userId' => $userId]);
+        $sentMessages = [];
+
+        while ($messageData = $result->fetch()) {
+            $sentMessages[] = new Message($messageData);
+        }
+        return $sentMessages;
     }
 
     /**
@@ -60,19 +76,5 @@ class MessageManager extends AbstractEntityManager
     {
         $sql = "DELETE FROM messages WHERE id = :id";
         $this->db->query($sql, ['id' => $id]);
-    }
-
-    /**
-     * Compte le nombre de messages reçus par un utilisateur.
-     * @param int $userId
-     * @return int
-     */
-    public function countUserMessages(int $userId): int
-    {
-        $sql = "SELECT COUNT(*) as total_messages FROM messages WHERE receiver_id = :userId";
-        $stmt = $this->db->query($sql, ['userId' => $userId]);
-        $result = $stmt->fetch();
-
-        return (int)$result['total_messages'];
     }
 }
