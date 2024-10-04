@@ -148,19 +148,26 @@ class bookManager extends AbstractEntityManager
     public function countUserBooks(int $userId): int
     {
         // Préparation de la requête SQL pour compter les livres de l'utilisateur
-        $sql = "SELECT COUNT(*) as total_books FROM book WHERE user_id = :user_id";
+        $sql = "SELECT COUNT(*) as total_books FROM book";
+        $params = [];
 
-        // Préparation de la requête
-        $stmt = $this->db->query($sql);
+        // Ajout de la condition pour l'ID de l'utilisateur
+        $criteria = ['user_id' => $userId];
 
-        // Exécution de la requête avec l'ID de l'utilisateur
-        $stmt->execute(['user_id' => $userId]);
+        if (!empty($criteria)) {
+            $conditions = [];
+            foreach ($criteria as $key => $value) {
+                $conditions[] = "$key = :$key";
+                $params[$key] = $value;
+            }
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
 
-        // Récupération du résultat
+        // Exécution de la requête
+        $stmt = $this->db->query($sql, $params);
         $result = $stmt->fetch();
 
-        // Retourner le nombre de livres
+        // Retourner le nombre total de livres
         return $result['total_books'];
     }
-  
 }
