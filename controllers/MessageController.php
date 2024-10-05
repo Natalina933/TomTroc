@@ -5,15 +5,58 @@ class MessageController
      * Affiche la boîte de réception des messages pour l'utilisateur connecté.
      * @return void
      */
-    public function showInbox(): void
+    public function showMessaging(): void
     {
-        //Instanciation du messageManager
-        $messageManager = new MessageManager();
-        // Récupère tous les messages de l'utilisateur connecté
+        $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
+        // var_dump($_SESSION);
         $userId = $_SESSION['user']['id'];
+
+        // Instanciation du messageManager
+        $messageManager = new MessageManager();
+
+        // Récupère tous les messages de l'utilisateur connecté
         $messages = $messageManager->getAllMessagesByUserId($userId);
+
+        // Rendu de la vue pour la messagerie
         $view = new View('Messagerie');
-        $view->render('inbox', ['messages' => $messages]);
+        $view->render('messaging', ['messages' => $messages]);
+    }
+
+    /**
+     * Vérifie que l'utilisateur est connecté.
+     * @return void
+     */
+    private function ensureUserIsConnected(): void
+    {
+        if (!isset($_SESSION['user'])) { // Vérification de la session utilisateur
+            Utils::redirect("connectionForm"); // Redirection si l'utilisateur n'est pas connecté
+            exit; // On arrête l'exécution pour éviter tout comportement indésirable
+        }
+    }
+
+    /**
+     * Rend une vue.
+     * @param string $viewName
+     * @param string $pageTitle
+     * @param array $data
+     * @return void
+     */
+    private function renderView(string $viewName, string $pageTitle, array $data = []): void
+    {
+        $view = new View($pageTitle);
+        $view->render($viewName, $data);
+    }
+
+    /**
+     * Vérifie que l'utilisateur a un rôle spécifique.
+     * @param string $role
+     * @throws Exception
+     */
+    private function ensureUserHasRole(string $role): void
+    {
+        if (isset($_SESSION['user']) || $_SESSION['user']->getRole() !== $role) {
+            throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
+        }
     }
 
     /**
@@ -42,53 +85,5 @@ class MessageController
         // Instancie la vue et affiche la liste des messages
         $view = new View('Messagerie');
         $view->render('messagesList', ['messages' => $messages]);
-    }
-    /**
-     * Envoie un nouveau message après validation des données.
-     * @return void
-     */
-    public function sendMessage(): void
-    {
-        // Instanciation du MessageManager
-        $messageManager = new MessageManager();
-        // Récupérer les données du formulaire
-        $senderId = $_SESSION['user']['id'];
-        $receiverId = Utils::request('receiverId');
-        $content = Utils::request('content');
-
-        // Validation des données
-        if (empty($receiverId) || empty($content)) {
-            // Gérer l'erreur si les champs sont vides
-            Utils::redirect('showNewMessageForm', ['error' => 'Les champs sont obligatoires']);
-            return;
-        }
-
-        // Création du message
-        $message = new Message();
-        $message->setSenderId($senderId);
-        $message->setReceiverId((int)$receiverId);
-        $message->setContent($content);
-        $message->setTimeSent(date('Y-m-d H:i:s'));
-
-        // Envoi du message
-        $messageManager->sendMessage($message);
-
-        // Redirection vers la page des messages envoyés
-        Utils::redirect('showSentMessages');
-    }
-
-    /**
-     * Supprime un message de la boîte de réception.
-     * @param int $messageId
-     * @return void
-     */
-    public function deleteMessage(int $messageId): void
-    {
-        // Instanciation du MessageManager
-        $messageManager = new MessageManager();
-        // Suppression du message
-        $messageManager->deleteMessage($messageId);
-        // Redirection vers la boîte de réception
-        Utils::redirect('showInbox');
     }
 }

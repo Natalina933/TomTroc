@@ -61,7 +61,9 @@ CREATE TABLE IF NOT EXISTS `message` (
   `receiver_id` int NOT NULL,
   `content` text NOT NULL,
   `is_read` tinyint(1) NOT NULL DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT 
+  
+  CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_sender_message` FOREIGN KEY (`sender_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_receiver_message` FOREIGN KEY (`receiver_id`) REFERENCES `user`(`id`) ON DELETE CASCADE

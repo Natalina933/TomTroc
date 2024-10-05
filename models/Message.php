@@ -2,7 +2,7 @@
 
 /**
  * Entité Message : un message est défini par les champs
- * id, sender_id, receiver_id, content, time_sent
+ * id, sender_id, receiver_id, content, created_at
  */
 class Message extends AbstractEntity
 {

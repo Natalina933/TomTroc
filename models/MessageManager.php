@@ -2,7 +2,7 @@
 
 /**
  * Classe qui gère les messages.
- */class MessageManager extends AbstractEntityManager
+ */ class MessageManager extends AbstractEntityManager
 {
     /**
      * Récupère tous les messages reçus par un utilisateur.
@@ -11,7 +11,7 @@
      */
     public function getAllMessagesByUserId(int $userId): array
     {
-        $sql = "SELECT * FROM messages WHERE receiver_id = :userId ORDER BY time_sent DESC";
+        $sql = "SELECT * FROM message WHERE receiver_id = :userId ORDER BY created_at DESC";
         $result = $this->db->query($sql, ['userId' => $userId]);
         $messages = [];
 
@@ -28,7 +28,7 @@
      */
     public function getSentMessages(int $userId): array
     {
-        $sql = "SELECT * FROM messages WHERE sender_id = :userId ORDER BY time_sent DESC";
+        $sql = "SELECT * FROM message WHERE sender_id = :userId ORDER BY created_at DESC";
         $result = $this->db->query($sql, ['userId' => $userId]);
         $sentMessages = [];
 
@@ -52,20 +52,20 @@
         return $messageData ? new Message($messageData) : null;
     }
 
-    /**
-     * Envoie un message.
-     * @param Message $message : le message à envoyer.
-     * @return void
-     */
-    public function sendMessage(Message $message): void
-    {
-        $sql = "INSERT INTO messages (sender_id, receiver_id, content, time_sent) VALUES (:senderId, :receiverId, :content, NOW())";
-        $this->db->query($sql, [
-            'senderId' => $message->getSenderId(),
-            'receiverId' => $message->getReceiverId(),
-            'content' => $message->getContent(),
-        ]);
-    }
+    // /**
+    //  * Envoie un message.
+    //  * @param Message $message : le message à envoyer.
+    //  * @return void
+    //  */
+    // public function sendMessage(Message $message): void
+    // {
+    //     $sql = "INSERT INTO messages (sender_id, receiver_id, content, created_at) VALUES (:senderId, :receiverId, :content, NOW())";
+    //     $this->db->query($sql, [
+    //         'senderId' => $message->getSenderId(),
+    //         'receiverId' => $message->getReceiverId(),
+    //         'content' => $message->getContent(),
+    //     ]);
+    // }
 
     /**
      * Supprime un message par son ID.

@@ -88,8 +88,8 @@ try {
             break;
 
             // **** Gestion de la messagerie ****
-        case 'showMessagingPage':
-            $messageController->showInbox();
+        case 'showMessaging':
+            $messageController->showMessaging();
             break;
 
         case 'showMessagesList':
@@ -100,9 +100,9 @@ try {
             $messageController->showSentMessages();
             break;
 
-        case 'sendMessage':
-            $messageController->sendMessage();
-            break;
+        // case 'sendMessage':
+        //     $messageController->sendMessage();
+        //     break;
 
         // case 'deleteMessage':
         //     // Suppression d'un message
