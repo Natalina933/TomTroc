@@ -11,14 +11,17 @@ class Message extends AbstractEntity
     private int $receiverId;
     private string $content;
     private int $isRead;
-    private string $timeSent;
+    private int $createdAt;
 
     // Getters
     public function getId(): int
     {
         return $this->id;
     }
-
+    public function getCreatedAt(): int
+    {
+        return $this->createdAt;
+    }
     public function getSenderId(): int
     {
         return $this->senderId;
@@ -37,10 +40,7 @@ class Message extends AbstractEntity
     {
         return $this->isRead;
     }
-    public function getTimeSent(): string
-    {
-        return $this->timeSent;
-    }
+    
 
     // Setters
     public function setId(int $id): void
@@ -66,8 +66,5 @@ class Message extends AbstractEntity
     {
         $this->isRead = $isRead;
     }
-    public function setTimeSent(string $timeSent): void
-    {
-        $this->timeSent = $timeSent;
-    }
+
 }

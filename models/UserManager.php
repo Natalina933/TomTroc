@@ -41,7 +41,7 @@ class UserManager extends AbstractEntityManager
         }
     }
 
-    
+
     /**
      * Récupère un utilisateur par son email.
      * @param string $email
@@ -81,7 +81,7 @@ class UserManager extends AbstractEntityManager
                 ':username' => $username,
                 ':email' => $email,
                 ':password' => password_hash($password, PASSWORD_DEFAULT),
-                ':profilePicture'=> '/assets/img/users/profile-default.svg',
+                ':profilePicture' => '/assets/img/users/profile-default.svg',
                 ':role' => 'user',
                 ':is_active' => 1,
                 ':createdAt' => date('Y-m-d H:i:s'),
@@ -98,7 +98,7 @@ class UserManager extends AbstractEntityManager
         }
     }
 
-
+    
     /**
      * Récupère un utilisateur par son nom d'utilisateur.
      * @param string $username
