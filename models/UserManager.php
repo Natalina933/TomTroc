@@ -25,7 +25,7 @@ class UserManager extends AbstractEntityManager
     {
         try {
             // Exécution directe de la requête SQL avec l'ID spécifié
-            $sql = "SELECT * FROM user WHERE id = $id";
+            $sql = "SELECT * FROM user WHERE id = :id";
             $result = $this->db->query($sql, [":id" => $id]);
             $user = $result->fetch();
             // Vérification des résultats
@@ -211,9 +211,5 @@ class UserManager extends AbstractEntityManager
         // Exécution de la requête et retour du succès ou de l'échec
         return $stmt->execute();
     }
-    /**
-     * Compte le nombre de livres associés à un utilisateur.
-     * @param int $userId L'ID de l'utilisateur.
-     * @return int Le nombre de livres appartenant à l'utilisateur.
-     */
+
 }

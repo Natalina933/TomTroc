@@ -31,7 +31,7 @@
                 <?php if ($user) { ?>
                     <!-- Affichage de la photo de profil -->
                     <?php if ($user->getProfilePicture()) { ?>
-                        <img src="<?= htmlspecialchars($user->getProfilePicture()) ?>" alt="Photo de profil de <?= htmlspecialchars($user->getUsername()) ?>" class="owner-photo">
+                        <img src="<?= ($user->getProfilePicture()) ?>" alt="Photo de profil de <?= htmlspecialchars($user->getUsername()) ?>" class="owner-photo">
                     <?php } else { ?>
                         <div class="owner-photo placeholder"></div>
                     <?php } ?>
