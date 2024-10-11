@@ -67,33 +67,37 @@
         SELECT 
             message.id AS message_id, 
             message.content, 
-            message.createdAt AS message_date, 
-            message.isRead,
+            message.created_at AS message_date, 
+            message.is_read,
             user.id AS user_id, 
             user.username, 
-            user.email, 
             user.profilePicture
         FROM message
         INNER JOIN user ON message.sender_id = user.id
         WHERE message.receiver_id = :userId
-        ORDER BY message.createdAt DESC
-    ";
-
-        // Exécution de la requête avec les paramètres
+        ORDER BY message.created_at DESC
+        ";
+    
         $stmt = $this->db->query($sql, [':userId' => $userId]);
         $messages = [];
-
-        // Récupération des résultats
+    
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $messages[] = $row; // Ajoutez chaque message au tableau
+            $messages[] = [
+                'message_id' => $row['message_id'],
+                'content' => $row['content'],
+                'createdAt' => $row['message_date'],
+                'sender' => [
+                    'id' => $row['user_id'],
+                    'username' => $row['username'],
+                    'profilePicture' => $row['profilePicture']
+                ]
+            ]; // Crée un tableau associatif
         }
-        // Vérification si aucun message n'a été trouvé
-        if (empty($messages)) {
-            return []; // Retourne un tableau vide si aucun message n'est trouvé
-        }
-
+    
         return $messages;
     }
+    
+
     // /**
     //  * Envoie un message.
     //  * @param Message $message : le message à envoyer.

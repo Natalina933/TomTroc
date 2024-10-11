@@ -4,7 +4,6 @@
     </div>
 <?php endif; ?>
 
-
 <main class="messaging-container">
     <div class="messenger-container">
         <!-- Section 1 : Conversations -->
@@ -17,17 +16,12 @@
                 <?php else : ?>
                     <!-- Boucle pour afficher chaque message reçu -->
                     <?php foreach ($messages as $message) : ?>
-                        <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId(), ENT_QUOTES, 'UTF-8') ?>" data-receiver-id="<?= htmlspecialchars($message->getReceiverId(), ENT_QUOTES, 'UTF-8') ?>">
-                            <!-- Affichage de la photo de profil -->
-                            <!-- <img src="<?= htmlspecialchars($sender['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil"> -->
-
+                        <li class="conversation" data-message-id="<?= htmlspecialchars($message['message_id'], ENT_QUOTES, 'UTF-8') ?>" data-receiver-id="<?= htmlspecialchars($message['sender']['id'], ENT_QUOTES, 'UTF-8') ?>">
+                            <img src="<?= htmlspecialchars($message['sender']['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message['sender']['username'], ENT_QUOTES, 'UTF-8') ?>">
                             <div class="conversation-info">
-                                <!-- Affichage du nom de l'expéditeur -->
-                                <!-- <p class="name"><?= htmlspecialchars($sender['username'], ENT_QUOTES, 'UTF-8') ?></p> -->
-                                <span class="description"><?= (strlen($message->getContent()) > 50) ? htmlspecialchars(substr($message->getContent(), 0, 50), ENT_QUOTES, 'UTF-8') . '...' : htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?></span>
-                                <?php if (($message->getCreatedAt())): ?>
-                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i'), ENT_QUOTES, 'UTF-8') ?></span>
-                                <?php endif; ?>
+                                <p class="name"><?= htmlspecialchars($message['sender']['username'], ENT_QUOTES, 'UTF-8') ?></p>
+                                <span class="description"><?= htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <span class="timestamp"><?= htmlspecialchars(date('H:i', strtotime($message['createdAt'])), ENT_QUOTES, 'UTF-8') ?></span> <!-- Correction ici -->
                             </div>
                         </li>
                     <?php endforeach; ?>
@@ -35,7 +29,7 @@
             </ul>
         </section>
 
-        <!-- Section 2 : chat -->
+        <!-- Section 2 : Chat -->
         <section class="chat">
             <div class="chat-header">
                 <!-- <img src="profil1.jpg" alt="Photo de profil" class="sender"> -->
@@ -56,7 +50,6 @@
                 <textarea placeholder="Votre message..."></textarea>
                 <button>Envoyer</button>
             </div>
+        </section>
     </div>
 </main>
-
-</body>

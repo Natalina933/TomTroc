@@ -15,7 +15,7 @@ class MessageController
         $messageManager = new MessageManager();
 
         // Récupère tous les messages de l'utilisateur connecté
-        $messages = $messageManager->getAllMessagesByUserId($userId);
+        $messages = $messageManager->getMessagesByUserId($userId);
         // var_dump($messages);
         // Rendu de la vue pour la messagerie
         $view = new View('Messagerie');
