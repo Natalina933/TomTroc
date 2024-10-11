@@ -11,14 +11,14 @@ class Message extends AbstractEntity
     private int $receiverId;
     private string $content;
     private int $isRead;
-    private int $createdAt;
+    private DateTime $createdAt;
 
     // Getters
     public function getId(): int
     {
         return $this->id;
     }
-    public function getCreatedAt(): int
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
@@ -40,14 +40,30 @@ class Message extends AbstractEntity
     {
         return $this->isRead;
     }
-    
+
 
     // Setters
     public function setId(int $id): void
     {
         $this->id = $id;
     }
-
+    public function setCreatedAt($createdAt) : void
+    {
+        if (is_string($createdAt)) {
+            // Si c'est une chaîne, on la convertit en objet DateTime
+            try {
+                $this->createdAt = new DateTime($createdAt);
+            } catch (Exception $e) {
+                var_dump("Erreur de conversion de la date : " . $e->getMessage());
+            }
+        } elseif ($createdAt instanceof DateTime) {
+            // Si c'est déjà un objet DateTime, on l'affecte directement
+            $this->createdAt = $createdAt;
+        } else {
+            // Gère le cas où le type n'est ni string ni DateTime
+            throw new InvalidArgumentException("L'argument de setCreatedAt doit être une chaîne ou un objet DateTime.");
+        }
+    }
     public function setSenderId(int $senderId): void
     {
         $this->senderId = $senderId;
@@ -66,5 +82,4 @@ class Message extends AbstractEntity
     {
         $this->isRead = $isRead;
     }
-
 }

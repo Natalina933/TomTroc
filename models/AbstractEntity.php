@@ -31,10 +31,13 @@ abstract class AbstractEntity
             $method = 'set' . str_replace('_', '', ucwords($key, '_'));
             if (method_exists($this, $method)) {
                 $this->$method($value);
+            } else {
+                // on affiche un message pour déboguer les erreurs de correspondance
+                var_dump("La méthode $method n'existe pas dans " . get_class($this));
             }
         }
     }
-
+    
     /** 
      * Setter pour l'id.
      * @param int $id

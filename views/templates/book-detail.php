@@ -44,7 +44,7 @@
             </div>
 
 
-            <a href="message" class="btn">Envoyer un message</a>
+            <a href="index.php?action=sendMessage&id=<?= htmlspecialchars($user->getId()) ?>" class="btn">Envoyer un message</a>
             </form>
         </article>
     <?php } else { ?>

@@ -103,7 +103,8 @@ try {
         case 'showMyPublicAccount':
             $publicAccountController->showMyPublicAccount();
             break;
-            
+        
+
         // case 'sendMessage':
         //     $messageController->sendMessage();
         //     break;

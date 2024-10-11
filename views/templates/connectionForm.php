@@ -1,7 +1,7 @@
 <div class="connection-wrapper">
     <h1>Connexion</h1>
     <div class="connection-form">
-        <form action="index.php?action=connectUser" method="post" class="foldedCorner">
+        <form action="index.php?action=connectUser" method="POST" class="foldedCorner">
             <div class="formGrid">
                 <label for="email">Adresse email</label>
                 <input type="email" name="email" id="email" required>

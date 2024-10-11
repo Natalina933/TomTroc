@@ -61,15 +61,17 @@ INSERT INTO `book` (`id`, `title`, `author`, `img`, `description`, `createdAt`, 
 
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE IF NOT EXISTS `message` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `sender_id` int NOT NULL,
-  `receiver_id` int NOT NULL,
-  `content` text NOT NULL,
-  `is_read` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+  id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (sender_id) REFERENCES user(id) ON DELETE SET NULL,
+    FOREIGN KEY (receiver_id) REFERENCES user(id) ON DELETE SET NULL,
+    INDEX (sender_id),
+    INDEX (receiver_id)
+);
 --
 -- Déchargement des données de la table `message`
 --

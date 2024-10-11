@@ -12,10 +12,15 @@
     public function getAllMessagesByUserId(int $userId): array
     {
         $sql = "SELECT * FROM message WHERE receiver_id = :userId ORDER BY created_at DESC";
-        $result = $this->db->query($sql, ['userId' => $userId]);
+        try {
+            $result = $this->db->query($sql, ['userId' => $userId]);
+        } catch (PDOException $e) {
+            echo "Erreur dans la requête SQL : " . $e->getMessage();
+        }
         $messages = [];
 
         while ($messageData = $result->fetch()) {
+            // var_dump($messageData);
             $messages[] = new Message($messageData);
         }
         return $messages;

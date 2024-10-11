@@ -16,7 +16,7 @@ class MessageController
 
         // Récupère tous les messages de l'utilisateur connecté
         $messages = $messageManager->getAllMessagesByUserId($userId);
-
+        // var_dump($messages);
         // Rendu de la vue pour la messagerie
         $view = new View('Messagerie');
         $view->render('messaging', ['messages' => $messages]);
@@ -34,30 +34,7 @@ class MessageController
         }
     }
 
-    /**
-     * Rend une vue.
-     * @param string $viewName
-     * @param string $pageTitle
-     * @param array $data
-     * @return void
-     */
-    private function renderView(string $viewName, string $pageTitle, array $data = []): void
-    {
-        $view = new View($pageTitle);
-        $view->render($viewName, $data);
-    }
 
-    /**
-     * Vérifie que l'utilisateur a un rôle spécifique.
-     * @param string $role
-     * @throws Exception
-     */
-    private function ensureUserHasRole(string $role): void
-    {
-        if (isset($_SESSION['user']) || $_SESSION['user']->getRole() !== $role) {
-            throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
-        }
-    }
 
     /**
      * Affiche les messages envoyés par l'utilisateur.
@@ -86,4 +63,32 @@ class MessageController
         $view = new View('Messagerie');
         $view->render('messagesList', ['messages' => $messages]);
     }
+    // public function sendMessage(): void
+    // {
+    //     // Vérifie si les champs content et receiverId sont définis dans le formulaire
+    //     if (isset($_POST['content']) && isset($_POST['receiverId'])) {
+    //         $content = $_POST['content'];
+    //         $receiverId = $_POST['receiverId'];
+    //         $senderId = $_SESSION['user']['id'];
+
+    //         // Instanciation du messageManager
+    //         $messageManager = new MessageManager();
+
+    //         // Crée un nouvel objet Message en passant les données sous forme de tableau
+    //         $message = new Message([
+    //             'sender_id' => $senderId,
+    //             'receiver_id' => $receiverId,
+    //             'content' => $content
+    //         ]);
+
+    //         // Envoie le message
+    //         $messageManager->sendMessage($message);
+
+    //         // Redirige ou affiche un message de succès
+    //         Utils::redirect("messagerie");
+    //     } else {
+    //         // Affiche un message d'erreur si les données requises ne sont pas présentes
+    //         echo "Les champs 'content' et 'receiverId' sont requis.";
+    //     }
+    // }
 }

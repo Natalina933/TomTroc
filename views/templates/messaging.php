@@ -18,13 +18,16 @@
                     <!-- Boucle pour afficher chaque message reçu -->
                     <?php foreach ($messages as $message) : ?>
                         <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId(), ENT_QUOTES, 'UTF-8') ?>" data-receiver-id="<?= htmlspecialchars($message->getReceiverId(), ENT_QUOTES, 'UTF-8') ?>">
-
+                            <!-- Affichage de la photo de profil -->
                             <!-- <img src="<?= htmlspecialchars($sender['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil"> -->
 
                             <div class="conversation-info">
+                                <!-- Affichage du nom de l'expéditeur -->
                                 <!-- <p class="name"><?= htmlspecialchars($sender['username'], ENT_QUOTES, 'UTF-8') ?></p> -->
                                 <span class="description"><?= (strlen($message->getContent()) > 50) ? htmlspecialchars(substr($message->getContent(), 0, 50), ENT_QUOTES, 'UTF-8') . '...' : htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?></span>
-                                <!-- <span class="timestamp"><?= date('H:i', strtotime($message->getCreatedAt())) ?></span> -->
+                                <?php if (($message->getCreatedAt())): ?>
+                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i'), ENT_QUOTES, 'UTF-8') ?></span>
+                                <?php endif; ?>
                             </div>
                         </li>
                     <?php endforeach; ?>
