@@ -77,10 +77,15 @@
         WHERE message.receiver_id = :userId
         ORDER BY message.created_at DESC
         ";
-    
-        $stmt = $this->db->query($sql, [':userId' => $userId]);
+
+        try {
+            $stmt = $this->db->query($sql, [':userId' => $userId]);
+        } catch (PDOException $e) {
+            echo "Erreur dans la requête SQL : " . $e->getMessage();
+            return [];
+        }
         $messages = [];
-    
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $messages[] = [
                 'message_id' => $row['message_id'],
@@ -91,26 +96,90 @@
                     'username' => $row['username'],
                     'profilePicture' => $row['profilePicture']
                 ]
-            ]; // Crée un tableau associatif
+            ]; // on retourne un tableau associatif
         }
-    
+
         return $messages;
     }
-    
 
-    // /**
-    //  * Envoie un message.
-    //  * @param Message $message : le message à envoyer.
-    //  * @return void
-    //  */
+    public function getConversationBetweenUsers(int $userId, int $receiverId): array
+    {
+        $sql = "
+        SELECT 
+            message.content, 
+            message.created_at AS message_date, 
+            message.sender_id,
+            user.username, 
+            user.profilePicture
+        FROM 
+            message
+        INNER JOIN 
+            user 
+        ON 
+            message.sender_id = user.id
+        WHERE 
+        (message.sender_id = :userId 
+            AND message.receiver_id = :receiverId)
+        OR (message.sender_id = :receiverId AND message.receiver_id = :userId)
+        ORDER BY message.created_at ASC";
+
+        $stmt = $this->db->query($sql, [
+            ':userId' => $userId,
+            ':receiverId' => $receiverId,
+        ]);
+
+        $conversation = [];
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $conversation[] = [
+                'content' => $row['content'],
+                'createdAt' => $row['message_date'],
+                'sender' => [
+                    'id' => $row['sender_id'],
+                    'username' => $row['username'],
+                    'profilePicture' => $row['profilePicture'],
+                ]
+            ];
+        }
+
+        return $conversation;
+    }
+
+    /**
+     * Récupère un utilisateur par son ID.
+     * @param int $id
+     * @return array|null
+     */
+    public function getUserById(int $id): ?array
+    {
+        $sql = "SELECT id, username, profilePicture FROM user WHERE id = :id";
+        try {
+            $stmt = $this->db->query($sql, ['id' => $id]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user ? $user : null;
+        } catch (PDOException $e) {
+            echo "Erreur dans la requête SQL : " . $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Envoie un message.
+     * @param Message $message : le message à envoyer.
+     * @return void
+     */
     public function sendMessage(Message $message): void
     {
-        $sql = "INSERT INTO messages (created_at, receiver_id, content ) VALUES (:senderId, :receiverId, :content, NOW())";
-        $this->db->query($sql, [
-            'created_at' => $message->getSenderId(),
-            'receiverId' => $message->getReceiverId(),
-            'content' => $message->getContent(),
-        ]);
+        $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at) VALUES (:senderId, :receiverId, :content, NOW())";
+        try {
+            $this->db->query($sql, [
+                'senderId' => $message->getSenderId(),
+                'receiverId' => $message->getReceiverId(),
+                'content' => $message->getContent(),
+            ]);
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'envoi du message : " . $e->getMessage();
+        }
     }
 
     /**
@@ -120,7 +189,11 @@
      */
     public function deleteMessage(int $id): void
     {
-        $sql = "DELETE FROM messages WHERE id = :id";
-        $this->db->query($sql, ['id' => $id]);
+        $sql = "DELETE FROM message WHERE id = :id";
+        try {
+            $this->db->query($sql, ['id' => $id]);
+        } catch (PDOException $e) {
+            echo "Erreur lors de la suppression du message : " . $e->getMessage();
+        }
     }
 }

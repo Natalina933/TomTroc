@@ -30,26 +30,32 @@
         </section>
 
         <!-- Section 2 : Chat -->
-        <section class="chat">
+        <div class="chat">
             <div class="chat-header">
-                <!-- <img src="profil1.jpg" alt="Photo de profil" class="sender"> -->
-                <span class="chat-title">Discussion avec John Doe</span>
+                <span class="chat-title">Discussion avec <?= htmlspecialchars($conversation[0]['sender']['username'], ENT_QUOTES, 'UTF-8') ?></span>
             </div>
             <div class="messages">
-                <div class="message">
-                    <div class="message-header">
-                        <span class="author">John Doe</span>
-                        <span class="timestamp">12:30</span>
+                <?php foreach ($conversation as $message) : ?>
+                    <div class="message <?= $message['sender']['id'] == $_SESSION['user']['id'] ? 'sent' : 'received' ?>">
+                        <div class="message-header">
+                            <span class="author"><?= htmlspecialchars($message['sender']['username'], ENT_QUOTES, 'UTF-8') ?></span>
+                            <span class="timestamp"><?= htmlspecialchars(date('H:i', strtotime($message['createdAt'])), ENT_QUOTES, 'UTF-8') ?></span>
+                        </div>
+                        <div class="message-content">
+                            <?= htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8') ?>
+                        </div>
                     </div>
-                    <div class="message-content">
-                        Lorem ipsum dolor sit amet...
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
-            <div class="chat-input">
-                <textarea placeholder="Votre message..."></textarea>
-                <button>Envoyer</button>
-            </div>
-        </section>
+            <!-- <div class="chat-input">
+                <form action="sendMessage.php" method="post">
+                    <textarea name="content" placeholder="Votre message..."></textarea>
+                    <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($receiverId) ?>">
+                    <button type="submit">Envoyer</button>
+                </form>
+            </div> -->
+        </div>
+
+
     </div>
 </main>

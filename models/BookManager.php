@@ -133,6 +133,50 @@ class bookManager extends AbstractEntityManager
 
         ]);
     }
+    public function getBookWithSellerInfo(int $bookId): ?array
+    {
+        $sql = "
+            SELECT 
+                book.id AS book_id, 
+                book.title AS book_title, 
+                book.author AS book_author, 
+                book.img AS book_img, 
+                book.is_available AS book_availability, 
+                user.username AS seller_username, 
+                user.profilePicture AS seller_profilePicture
+            FROM 
+                book 
+            INNER JOIN 
+                user 
+            ON 
+                book.user_id = user.id
+            WHERE 
+                book.id = :bookId
+        ";
+
+        $stmt = $this->db->query($sql, [
+            ':bookId' => $bookId,
+        ]);
+
+        $bookData = [];  // Création d'un tableau pour stocker les données du livre et du vendeur
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $bookData[] = [
+                'id' => $row['book_id'],
+                'title' => $row['book_title'],
+                'author' => $row['book_author'],
+                'img' => $row['book_img'],
+                'is_available' => $row['book_availability'],
+                'seller' => [
+                    'username' => $row['seller_username'],
+                    'profilePicture' => $row['seller_profilePicture'],
+                ],
+            ];
+        }
+
+        // Retourne soit un tableau avec les informations, soit null si aucun résultat n'a été trouvé
+        return !empty($bookData) ? $bookData[0] : null;
+    }
 
 
     /**

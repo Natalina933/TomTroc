@@ -13,15 +13,16 @@ try {
     $bookController = new BookController();
     $userController = new UserController();
     $messageController = new MessageController();
+    // $publicAccountController = new PublicAccountController(); // Instancier le contrôleur manquant
 
     // Gestion des différentes actions
     switch ($action) {
-            // ****Pages accessibles à tous****
+        // ****Pages accessibles à tous****
         case 'home':
             $bookController->showHome();
             break;
 
-            // ****Gestion des livres****
+        // ****Gestion des livres****
         case 'books':
             $bookController->showBooksList();
             break;
@@ -50,7 +51,7 @@ try {
             }
             break;
 
-            // ****Gestion des utilisateurs****
+        // ****Gestion des utilisateurs****
         case 'registerUser':
             $userController->registerUser();
             break;
@@ -87,7 +88,7 @@ try {
             $userController->editUser();
             break;
 
-            // **** Gestion de la messagerie ****
+        // **** Gestion de la messagerie ****
         case 'showMessaging':
             $messageController->showMessaging();
             break;
@@ -100,19 +101,12 @@ try {
             $messageController->showSentMessages();
             break;
 
-        case 'showMyPublicAccount':
-            $publicAccountController->showMyPublicAccount();
-            break;
-        
-
-        // case 'sendMessage':
-        //     $messageController->sendMessage();
+        // **** Affichage du compte public ****
+        // case 'showMyPublicAccount':
+        //     $publicAccountController->showMyPublicAccount();
         //     break;
 
-        // case 'deleteMessage':
-        //     // Suppression d'un message
-        //     $messageController->deleteMessage();
-        //     break;
+
         default:
             throw new Exception("La page demandée n'existe pas.");
     }

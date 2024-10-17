@@ -8,18 +8,42 @@ class MessageController
     public function showMessaging(): void
     {
         $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
-        // var_dump($_SESSION);
         $userId = $_SESSION['user']['id'];
 
         // Instanciation du messageManager
         $messageManager = new MessageManager();
 
-        // Récupère tous les messages de l'utilisateur connecté
-        $messages = $messageManager->getMessagesByUserId($userId);
-        // var_dump($messages);
-        // Rendu de la vue pour la messagerie
-        $view = new View('Messagerie');
-        $view->render('messaging', ['messages' => $messages]);
+        if (isset($_GET['receiver_id'])) {
+            $receiverId = (int) $_GET['receiver_id'];
+
+            // Vérifie que l'utilisateur existe
+            $receiver = $messageManager->getUserById($receiverId);
+            if (!$receiver) {
+                Utils::redirect('messaging?error=Utilisateur non trouvé');
+            }
+
+            // Récupère la conversation entre l'utilisateur connecté et l'interlocuteur
+            $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
+
+            // Récupère les informations de l'interlocuteur
+            $receiverName = $receiver['username'];
+
+            // Rendu de la vue avec la conversation
+            $view = new View('Messagerie');
+            $view->render('messaging', [
+                'messages' => $messageManager->getMessagesByUserId($userId),
+                'conversation' => $conversation,
+                'receiverId' => $receiverId,
+                'receiverName' => $receiverName
+            ]);
+        } else {
+            // Récupère tous les messages de l'utilisateur connecté
+            $messages = $messageManager->getMessagesByUserId($userId);
+
+            // Rendu de la vue pour la liste des messages
+            $view = new View('Messagerie');
+            $view->render('messaging', ['messages' => $messages]);
+        }
     }
 
     /**
@@ -63,32 +87,59 @@ class MessageController
         $view = new View('Messagerie');
         $view->render('messagesList', ['messages' => $messages]);
     }
-    // public function sendMessage(): void
-    // {
-    //     // Vérifie si les champs content et receiverId sont définis dans le formulaire
-    //     if (isset($_POST['content']) && isset($_POST['receiverId'])) {
-    //         $content = $_POST['content'];
-    //         $receiverId = $_POST['receiverId'];
-    //         $senderId = $_SESSION['user']['id'];
+    /**
+     * Envoie un message.
+     * @return void
+     */
+    public function sendMessage(): void
+    {
+        $this->ensureUserIsConnected();
 
-    //         // Instanciation du messageManager
-    //         $messageManager = new MessageManager();
+        $userId = $_SESSION['user']['id'];
+        $receiverId = isset($_POST['receiver_id']) ? (int) $_POST['receiver_id'] : null;
+        $content = isset($_POST['content']) ? trim($_POST['content']) : '';
 
-    //         // Crée un nouvel objet Message en passant les données sous forme de tableau
-    //         $message = new Message([
-    //             'sender_id' => $senderId,
-    //             'receiver_id' => $receiverId,
-    //             'content' => $content
-    //         ]);
+        if ($receiverId && !empty($content)) {
+            // Instanciation du MessageManager
+            $messageManager = new MessageManager();
 
-    //         // Envoie le message
-    //         $messageManager->sendMessage($message);
+            // Création d'un nouveau message
+            $message = new Message([
+                'sender_id' => $userId,
+                'receiver_id' => $receiverId,
+                'content' => $content
+            ]);
 
-    //         // Redirige ou affiche un message de succès
-    //         Utils::redirect("messagerie");
-    //     } else {
-    //         // Affiche un message d'erreur si les données requises ne sont pas présentes
-    //         echo "Les champs 'content' et 'receiverId' sont requis.";
-    //     }
-    // }
+            // Envoi du message
+            $messageManager->sendMessage($message);
+
+            // Redirection vers la conversation
+            Utils::redirect('messaging?receiver_id=' . $receiverId);
+        } else {
+            // Redirection avec un message d'erreur
+            Utils::redirect('messaging?receiver_id=' . $receiverId . '&error=Message vide');
+        }
+    }
+
+    public function showConversation(): void
+    {
+        $this->ensureUserIsConnected(); // Vérification de l'utilisateur connecté
+
+        $userId = $_SESSION['user']['id'];
+        $receiverId = $_GET['receiver_id'] ?? null; // Récupère l'ID de l'interlocuteur depuis l'URL
+
+        if (!$receiverId) {
+            Utils::redirect('messaging'); // Si pas d'ID d'interlocuteur, redirige vers la messagerie
+        }
+
+        // Instanciation du MessageManager
+        $messageManager = new MessageManager();
+
+        // Récupère la conversation entre l'utilisateur connecté et l'interlocuteur
+        $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
+
+        // Rendu de la vue avec la conversation
+        $view = new View('Messagerie');
+        $view->render('conversation', ['conversation' => $conversation, 'receiverId' => $receiverId]);
+    }
 }
