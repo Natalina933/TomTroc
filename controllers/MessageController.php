@@ -5,7 +5,7 @@ class MessageController
      * Affiche la boîte de réception des messages pour l'utilisateur connecté.
      * @return void
      */
-    public function showMessaging(): void
+    public function showMessaging(bool $showConversation = false, int $receiverId = null): void
     {
         $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
         $userId = $_SESSION['user']['id'];
@@ -112,12 +112,9 @@ class MessageController
             // Envoi du message
             $messageManager->sendMessage($message);
 
-            // Redirection vers la conversation
+            // Redirection vers la conversation avec le message nouvellement envoyé
             Utils::redirect('messaging?receiver_id=' . $receiverId);
-        } else {
-            // Redirection avec un message d'erreur
-            Utils::redirect('messaging?receiver_id=' . $receiverId . '&error=Message vide');
-        }
+        } 
     }
 
     public function showConversation(): void

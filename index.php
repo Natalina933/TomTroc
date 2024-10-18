@@ -100,6 +100,10 @@ try {
         case 'showSentMessages':
             $messageController->showSentMessages();
             break;
+        
+        case 'sendMessage':
+            $messageController->sendMessage();
+            break;
 
         // **** Affichage du compte public ****
         // case 'showMyPublicAccount':

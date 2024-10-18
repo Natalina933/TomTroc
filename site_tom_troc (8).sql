@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 18 oct. 2024 à 14:06
+-- Généré le : ven. 18 oct. 2024 à 16:09
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.3.6
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   PRIMARY KEY (`id`),
   KEY `sender_id` (`sender_id`),
   KEY `receiver_id` (`receiver_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `message`
@@ -82,7 +82,11 @@ INSERT INTO `message` (`id`, `sender_id`, `receiver_id`, `content`, `created_at`
 (3, 6, 10, 'Salut, tu as vu mon dernier livre ?', '2024-10-04 07:00:00', 1),
 (10, 6, 6, 'Oui, il a l’air intéressant !', '2024-10-04 07:10:00', 1),
 (9, 9, 6, 'Bonjour,\n\nJe voulais te remercier pour l\'échange de livres que nous avons effectué la semaine dernière. J\'ai commencé à lire celui que tu m\'as envoyé, et je dois dire qu\'il est vraiment captivant. L\'histoire est bien construite et les personnages sont très attachants. Je suis curieuse de savoir ce que tu as pensé du livre que je t\'ai envoyé, si tu as eu le temps de le lire. En tout cas, n\'hésite pas à me faire signe si tu souhaites échanger d\'autres livres à l\'avenir. Ce serait avec plaisir !\n\nÀ très bientôt !\n\nAmicalement,', '2024-10-04 08:00:00', 0),
-(6, 6, 9, 'Oui, avec plaisir !', '2024-10-04 08:05:00', 1);
+(6, 6, 9, 'Oui, avec plaisir !', '2024-10-04 08:05:00', 1),
+(22, 6, 9, 'ggggg', '2024-10-18 15:56:55', 0),
+(23, 6, 6, 'bonjour', '2024-10-18 15:59:13', 0),
+(24, 6, 6, 'bonjour', '2024-10-18 16:00:51', 0),
+(25, 6, 9, 'hola', '2024-10-18 16:01:30', 0);
 
 -- --------------------------------------------------------
 

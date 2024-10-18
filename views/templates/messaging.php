@@ -72,12 +72,12 @@
                     <?php endforeach; ?>
                 </div>
                 <div class="chat-input">
-                <form action="sendMessage.php" method="post">
-                    <textarea name="content" placeholder="Votre message..."></textarea>
-                    <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($receiverId) ?>">
-                    <button type="submit">Envoyer</button>
-                </form>
-            </div>
+                    <form action="index.php?action=sendMessage" method="post">
+                        <textarea name="content" placeholder="Votre message..."></textarea>
+                        <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($receiverId) ?>">
+                        <button type="submit">Envoyer</button>
+                    </form>
+                </div>
             </div>
         <?php } ?>
 
