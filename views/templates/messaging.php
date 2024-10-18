@@ -17,15 +17,14 @@
                     <?php foreach ($messages as $message) : ?>
                         <?php if ($message->getSender() !== null) : ?>
                             <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId(), ENT_QUOTES, 'UTF-8') ?>" data-receiver-id="<?= htmlspecialchars($message->getSender()->getId(), ENT_QUOTES, 'UTF-8') ?>">
-                                <a href="index.php?action=showMessaging&receiver_id=<?= $message->getSender()->getId(); ?>">
-                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
-                                    <div class="conversation-info">
-                                        <p class="name"><?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
-                                        <span class="description"><?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?></span>
-                                        <span class="timestamp"><?= htmlspecialchars(date('H:i', $message->getCreatedAt()->getTimeStamp()), ENT_QUOTES, 'UTF-8') ?></span>
-                                    </div>
-                                </a>
+                                <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
+                                <div class="conversation-info">
+                                    <p class="name"><?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
+                                    <span class="description"><?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="timestamp"><?= htmlspecialchars(date('H:i', $message->getCreatedAt()->getTimeStamp()), ENT_QUOTES, 'UTF-8') ?></span>
+                                </div>
                             </li>
+
                         <?php else : ?>
                             <!-- Gérer le cas où l'expéditeur n'est pas trouvé -->
                             <li class="conversation">Expéditeur inconnu</li>

@@ -283,6 +283,13 @@ main {
     align-items: center;
 
 }
+.conversation-info .description {
+    white-space: nowrap; /* Empêche le texte de se décomposer en plusieurs lignes */
+    overflow: hidden; /* Cache le texte qui dépasse les limites */
+    text-overflow: ellipsis; /* Ajoute les points de suspension (...) */
+    max-width: 200px; /* Ajuste la largeur maximale de la description */
+    display: block; /* S'assure que l'élément soit un bloc pour appliquer correctement le style */
+}
 
 /* Button styles */
 .account-card button {
