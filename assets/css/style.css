@@ -290,6 +290,87 @@ main {
     max-width: 200px; /* Ajuste la largeur maximale de la description */
     display: block; /* S'assure que l'élément soit un bloc pour appliquer correctement le style */
 }
+.chat-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-user-info {
+    display: flex;
+    align-items: center;
+}
+
+.chat-user-info img {
+    width: 40px; /* Taille de la photo de profil */
+    height: 40px;
+    border-radius: 50%; /* Pour un effet de cercle */
+    margin-right: 10px; /* Espace entre la photo et le nom */
+}
+
+.chat-title {
+    font-weight: bold;
+    font-size: 18px; /* Taille du nom de l'utilisateur */
+}
+.messages {
+    padding: 10px;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 10px;
+    max-width: 70%; /* Limite la largeur des messages */
+}
+
+.message.sent {
+    justify-content: flex-end; /* Aligne à droite les messages envoyés */
+    background-color: #d0e8ff; /* Fond bleu clair pour les messages envoyés */
+    padding: 10px;
+    border-radius: 10px;
+    text-align: right;
+    align-self: flex-end; /* Message aligné à droite */
+}
+
+.message.received {
+    justify-content: flex-start; /* Aligne à gauche les messages reçus */
+    background-color: #fff; /* Fond blanc pour les messages reçus */
+    padding: 10px;
+    border-radius: 10px;
+    text-align: left;
+    align-self: flex-start; /* Message aligné à gauche */
+    position: relative;
+}
+
+.message.received img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Photo de profil ronde */
+    margin-right: 10px;
+    align-self: flex-start;
+}
+
+.message-content {
+    padding: 8px;
+    background-color: inherit;
+    border-radius: 8px;
+    word-wrap: break-word; /* Pour gérer les longs messages */
+}
+
+.message-footer {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 5px;
+    display: block;
+}
+
+.message.sent .message-footer {
+    text-align: right;
+}
+
+.message.received .message-footer {
+    text-align: left;
+}
 
 /* Button styles */
 .account-card button {

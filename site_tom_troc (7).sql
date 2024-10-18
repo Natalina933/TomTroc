@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 11 oct. 2024 à 10:06
+-- Généré le : ven. 18 oct. 2024 à 14:06
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.3.6
 
@@ -77,12 +77,12 @@ CREATE TABLE IF NOT EXISTS `message` (
 --
 
 INSERT INTO `message` (`id`, `sender_id`, `receiver_id`, `content`, `created_at`, `is_read`) VALUES
-(21, 11, 2, 'Salut ! Comment vas-tu ?', '2024-10-04 06:30:00', 0),
-(9, 9, 11, 'Je vais bien, merci ! Et toi ?', '2024-10-04 06:35:00', 1),
-(3, 11, 6, 'Salut, tu as vu mon dernier livre ?', '2024-10-04 07:00:00', 1),
-(4, 6, 21, 'Oui, il a l’air intéressant !', '2024-10-04 07:10:00', 1),
-(5, 9, 21, 'On se voit ce week-end ?', '2024-10-04 08:00:00', 0),
-(6, 1, 9, 'Oui, avec plaisir !', '2024-10-04 08:05:00', 1);
+(21, 9, 6, 'Salut ! Comment vas-tu ?', '2024-10-04 06:30:00', 0),
+(2, 10, 11, 'Je vais bien, merci ! Et toi ?', '2024-10-04 06:35:00', 1),
+(3, 6, 10, 'Salut, tu as vu mon dernier livre ?', '2024-10-04 07:00:00', 1),
+(10, 6, 6, 'Oui, il a l’air intéressant !', '2024-10-04 07:10:00', 1),
+(9, 9, 6, 'Bonjour,\n\nJe voulais te remercier pour l\'échange de livres que nous avons effectué la semaine dernière. J\'ai commencé à lire celui que tu m\'as envoyé, et je dois dire qu\'il est vraiment captivant. L\'histoire est bien construite et les personnages sont très attachants. Je suis curieuse de savoir ce que tu as pensé du livre que je t\'ai envoyé, si tu as eu le temps de le lire. En tout cas, n\'hésite pas à me faire signe si tu souhaites échanger d\'autres livres à l\'avenir. Ce serait avec plaisir !\n\nÀ très bientôt !\n\nAmicalement,', '2024-10-04 08:00:00', 0),
+(6, 6, 9, 'Oui, avec plaisir !', '2024-10-04 08:05:00', 1);
 
 -- --------------------------------------------------------
 
@@ -118,7 +118,7 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`, `profilePicture`, `ro
 (7, 'nat123@free', 'nat123@free', '$2y$10$ZGbesW7apJ68YZ9Kd24zH.0hPXM8DXWppkn4Ngb.LO/7pBay5asQ6', '', 'user', 1, '2024-09-14 10:24:04', '2024-09-14 12:24:04'),
 (9, 'aa', '1230@free.fr', '$2y$10$DbCjgo/agVyD0Wrk1Mx85.SeLZJS36H7wNF/21H1HwAuN5reYUK1K', '/assets/img/users/profile_66f7d4c4831c74.39756367.jpeg', 'user', 1, '2024-09-14 10:28:05', '2024-09-28 12:04:52'),
 (10, 'nath', '020202@gh.fr', '$2y$10$DAMZC/jTEvvcyp.ckdWE4OXgC2kYOjkwN2eUmpiTmOc8tNSNkT.Ia', '', 'user', 1, '2024-09-21 14:34:54', '2024-10-11 11:41:02'),
-(13, 'popo', '0212345@free.fr', '$2y$10$YfP5ClzmeWsu/COEO0vPGexg4NCuUS8ia8xbrvzC83XSQVe/pQLRe', '', 'user', 1, '2024-09-21 14:38:39', '2024-09-21 14:38:39'),
+(11, 'popo', '0212345@free.fr', '$2y$10$YfP5ClzmeWsu/COEO0vPGexg4NCuUS8ia8xbrvzC83XSQVe/pQLRe', '', 'user', 1, '2024-09-21 14:38:39', '2024-10-18 11:05:59'),
 (15, 'oioi', '741@fre.fr', '$2y$10$sLBJz3dRYib.st260IXwLukeICw2lM7U/xe89sCraqR719WIywT/.', '', 'user', 1, '2024-09-21 15:26:12', '2024-09-21 15:26:12'),
 (16, 'totot', '123456789@gm.fr', '$2y$10$b87ZUspDMkq7NIaSqmTGR.kph4SkhG.3rBW2SubnEiDZ28Gc.djj2', '', 'user', 1, '2024-09-21 16:00:38', '2024-09-21 16:00:38'),
 (19, 'ththt', '00000@fr.fr', '$2y$10$6RmhatlQIhuVQhKnTsNxcedFdrn27fwDPLnPgY.0ZwiR4QwmF80mS', '', 'user', 1, '2024-09-22 14:27:20', '2024-09-22 14:27:20'),

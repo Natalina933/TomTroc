@@ -52,7 +52,7 @@ class UserManager extends AbstractEntityManager
         $sql = "SELECT * FROM user WHERE email = :email";
         $stmt = $this->db->query($sql, [':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        var_dump($user);
+        // var_dump($user);
 
         return $user ? new User($user) : null;
     }
