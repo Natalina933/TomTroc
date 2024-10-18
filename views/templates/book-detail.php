@@ -29,7 +29,8 @@
                 <div class="owner-info">
 
                     <!-- Informations du propriétaire -->
-                    <?php if ($user) { ?>
+                    <?php if ($book->getUser()) { ?>
+                        <?php $user = $book->getUser(); ?>
                         <!-- Affichage de la photo de profil -->
                         <?php if ($user->getProfilePicture()) { ?>
                             <img src="<?= ($user->getProfilePicture()) ?>" alt="Photo de profil de <?= htmlspecialchars($user->getUsername()) ?>" class="owner-photo">
@@ -45,7 +46,7 @@
                 </div>
 
 
-                <a href="index.php?action=showMessaging"<?= htmlspecialchars($user->getId()) ?>" class="btn">Envoyer un message</a>
+                <a href="index.php?action=showMessaging" <?= htmlspecialchars($user->getId()) ?>" class="btn">Envoyer un message</a>
             </form>
         </article>
     <?php } else { ?>

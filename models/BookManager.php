@@ -59,6 +59,7 @@ class bookManager extends AbstractEntityManager
         while ($book = $result->fetch()) {
             $books[] = new Book($book);
         }
+
         return $books;
     }
 
@@ -141,7 +142,7 @@ class bookManager extends AbstractEntityManager
                 book.title AS book_title, 
                 book.author AS book_author, 
                 book.img AS book_img, 
-                book.is_available AS book_availability, 
+                book.available AS book_availability, 
                 user.username AS seller_username, 
                 user.profilePicture AS seller_profilePicture
             FROM 

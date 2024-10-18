@@ -61,8 +61,19 @@
      * @param int $userId
      * @return array
      */
-    public function getMessagesByUserId(int $userId): array
+    public function getMessagesByUserId(int $userId)
     {
+        $sql = "SELECT * FROM message WHERE receiver_id = :id";
+        $stmt = $this->db->query($sql, ['id' => $userId]);
+        $messages = [];
+        while ($message = $stmt->fetch()) {
+            $messages[] = new Message($message);
+        }
+
+
+        return $messages;
+
+
         $sql = "
         SELECT 
             message.id AS message_id, 

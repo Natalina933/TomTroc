@@ -8,10 +8,28 @@ class Message extends AbstractEntity
 {
     protected int $id;
     private int $senderId;
+
+    private ?User $sender;
     private int $receiverId;
+
+    private ?User $receiver;
     private string $content;
     private int $isRead;
     private DateTime $createdAt;
+
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+
+        $userManager = new UserManager();
+
+        if ($this->senderId) {
+            $this->sender = $userManager->getUserById($this->senderId);
+        }
+        if ($this->receiverId) {
+            $this->receiver = $userManager->getUserById($this->receiverId);
+        }
+    }
 
     // Getters
     public function getId(): int
@@ -47,7 +65,7 @@ class Message extends AbstractEntity
     {
         $this->id = $id;
     }
-    public function setCreatedAt($createdAt) : void
+    public function setCreatedAt($createdAt): void
     {
         if (is_string($createdAt)) {
             // Si c'est une chaîne, on la convertit en objet DateTime
@@ -81,5 +99,21 @@ class Message extends AbstractEntity
     public function setIsRead(int $isRead): void
     {
         $this->isRead = $isRead;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getReceiver(): ?User
+    {
+        return $this->receiver;
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getSender(): ?User
+    {
+        return $this->sender;
     }
 }

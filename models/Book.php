@@ -8,6 +8,9 @@ class Book extends AbstractEntity
 {
     protected int $id;
     private int $userId;
+
+    // Pas relié a la base de donnée
+    private ?User $user;
     private string $title = "";
     private string $author = "";
     private ?string $img = null;
@@ -16,6 +19,17 @@ class Book extends AbstractEntity
     private string $numberOfBook;
     private ?DateTime $createdAt = null;
     private ?DateTime $updatedAt = null;
+
+
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+
+        $userManager = new UserManager();
+        if ($this->userId) {
+            $this->user = $userManager->getUserById($this->userId);
+        }
+    }
 
     // Getter et Setter pour id
     public function getId(): int
@@ -151,4 +165,13 @@ class Book extends AbstractEntity
     {
         return $this->updatedAt;
     }
+
+    /**
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
 }

@@ -37,7 +37,7 @@ class User extends AbstractEntity
     }
     public function getProfilePicture(): ?string
     {
-        return $this->profilePicture;
+        return $this->profilePicture ?: "/assets/img/users/profile-default.svg";
     }
     public function getRole(): string
     {

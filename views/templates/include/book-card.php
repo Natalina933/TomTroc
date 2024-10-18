@@ -20,8 +20,9 @@
         <h3><?= htmlspecialchars($book->getTitle()) ?? 'Titre non disponible' ?></h3>
         <p class="author"><?= htmlspecialchars($book->getAuthor()) ?? 'Auteur non disponible' ?></p>
         <!-- Vérification si l'utilisateur (vendeur) est bien défini -->
-        <?php if ($user) { ?>
-            <p class="seller">Vendu par : <?= htmlspecialchars($user->getUsername() ?? 'Utilisateur inconnu') ?></p>
+        <?php
+        if ($book->getUser()) { ?>
+            <p class="seller">Vendu par : <?= $book->getUser()->getUsername(); ?></p>
         <?php } else { ?>
             <p class="seller">Vendeur inconnu</p>
         <?php } ?>

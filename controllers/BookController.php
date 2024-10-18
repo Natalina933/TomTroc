@@ -45,17 +45,9 @@ class BookController
     {
         $bookManager = new BookManager();
         $book = $bookManager->getBookById($id);
-        $userManager = new UserManager();
-
-        if ($book) {
-            $userManager = new UserManager();
-            $user = $userManager->getUserById($book->getUserId());
-        } else {
-            $user = null;
-        }
 
         $view = new View('Book Detail');
-        $view->render('book-detail', ['book' => $book, 'user' => $user]);
+        $view->render('book-detail', ['book' => $book]);
     }
 
     /**

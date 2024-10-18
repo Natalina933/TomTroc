@@ -39,7 +39,6 @@ class MessageController
         } else {
             // Récupère tous les messages de l'utilisateur connecté
             $messages = $messageManager->getMessagesByUserId($userId);
-
             // Rendu de la vue pour la liste des messages
             $view = new View('Messagerie');
             $view->render('messaging', ['messages' => $messages]);
