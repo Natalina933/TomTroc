@@ -28,7 +28,6 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
                 </ul>
-
         </section>
 
         <!-- Section 2 : Chat -->
@@ -36,41 +35,46 @@
             <div class="chat">
                 <div class="chat-header">
                     <div class="chat-user-info">
-                        <!-- Photo de profil -->
-                        <img src="<?= htmlspecialchars($conversation[0]['sender']['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($conversation[0]['sender']['username'], ENT_QUOTES, 'UTF-8') ?>">
-
-                        <!-- Nom de l'utilisateur -->
-                        <span class="chat-title"><?= htmlspecialchars($conversation[0]['sender']['username'], ENT_QUOTES, 'UTF-8') ?></span>
+                        <!-- Photo de profil et Nom de l'utilisateur avec qui vous discutez -->
+                        <?php
+                        $chatUser = ($conversation[0]['sender']['id'] != $_SESSION['user']['id']) ? $conversation[0]['sender'] : $conversation[0]['receiver'];
+                        ?>
+                        <img src="<?= htmlspecialchars($chatUser['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($chatUser['username'], ENT_QUOTES, 'UTF-8') ?>">
+                        <span class="chat-title"><?= htmlspecialchars($chatUser['username'], ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                 </div>
-                <div class="messages">
-                    <?php foreach ($conversation as $message) : ?>
-                        <!-- Message envoyé -->
-                        <?php if ($message['sender']['id'] == $_SESSION['user']['id']) : ?>
-                            <!-- var_dump($_SESSION['user']['id']); -->
-                            <div class="message sent">
-                                <div class="message-content">
-                                    <?= htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8') ?>
-                                </div>
-                                <div class="message-footer">
-                                    <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($message['createdAt'])), ENT_QUOTES, 'UTF-8') ?></span>
-                                </div>
-                            </div>
 
-                            <!-- Message reçu -->
-                        <?php else : ?>
-                            <div class="message received">
-                                <img src="<?= htmlspecialchars($message['sender']['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message['sender']['username'], ENT_QUOTES, 'UTF-8') ?>">
-                                <div class="message-content">
-                                    <?= htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8') ?>
+                <!-- Section des messages -->
+                <div class="messages-container">
+                    <div class="messages">
+                        <?php foreach ($conversation as $message) : ?>
+                            <!-- Message envoyé -->
+                            <?php if ($message['sender']['id'] == $_SESSION['user']['id']) : ?>
+                                <div class="message sent">
+                                    <div class="message-content">
+                                        <?= htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8') ?>
+                                    </div>
+                                    <div class="message-footer">
+                                        <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($message['createdAt'])), ENT_QUOTES, 'UTF-8') ?></span>
+                                    </div>
                                 </div>
-                                <div class="message-footer">
-                                    <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($message['createdAt'])), ENT_QUOTES, 'UTF-8') ?></span>
+                            <?php else : ?>
+                                <!-- Message reçu -->
+                                <div class="message received">
+                                    <img src="<?= htmlspecialchars($message['sender']['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message['sender']['username'], ENT_QUOTES, 'UTF-8') ?>">
+                                    <div class="message-content">
+                                        <?= htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8') ?>
+                                    </div>
+                                    <div class="message-footer">
+                                        <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($message['createdAt'])), ENT_QUOTES, 'UTF-8') ?></span>
+                                    </div>
                                 </div>
-                            </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
+
+                <!-- Champ de texte pour envoyer un message -->
                 <div class="chat-input">
                     <form action="index.php?action=sendMessage" method="post">
                         <textarea name="content" placeholder="Votre message..."></textarea>
@@ -80,7 +84,5 @@
                 </div>
             </div>
         <?php } ?>
-
-
     </div>
 </main>

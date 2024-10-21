@@ -1025,6 +1025,32 @@ form button:hover {
 .chat-footer button:hover {
     background-color: #2980b9;
 }
+/* Style pour la zone de messages avec une barre de défilement */
+.messages-container {
+    height: 400px; /* Hauteur maximale de la zone de chat */
+    overflow-y: auto; /* Ajout d'une barre de défilement verticale */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Optionnel : pour styliser la scrollbar */
+.messages-container::-webkit-scrollbar {
+    width: 8px; /* Largeur de la scrollbar */
+}
+
+.messages-container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Couleur de l'arrière-plan de la scrollbar */
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+    background-color: #888; /* Couleur de la barre de défilement */
+    border-radius: 10px; /* Pour arrondir la scrollbar */
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Couleur au survol de la scrollbar */
+}
 
 
 /*****************************************************************
