@@ -371,6 +371,9 @@ main {
 .message.received .message-footer {
     text-align: left;
 }
+.unread-message {
+    background-color: #f0f8ff; /* Couleur différente pour les messages non lus */
+}
 
 /* Button styles */
 .account-card button {

@@ -2,7 +2,20 @@
 class MessageController
 {
     /**
+     * Vérifie que l'utilisateur est connecté.
+     * @return void
+     */
+    private function ensureUserIsConnected(): void
+    {
+        if (!isset($_SESSION['user'])) { // Vérification de la session utilisateur
+            Utils::redirect("connectionForm"); // Redirection si l'utilisateur n'est pas connecté
+            exit; // On arrête l'exécution pour éviter tout comportement indésirable
+        }
+    }
+
+    /**
      * Affiche la boîte de réception des messages pour l'utilisateur connecté.
+     * @param int|null $receiverId
      * @return void
      */
     public function showMessaging(int $receiverId = null): void
@@ -10,8 +23,10 @@ class MessageController
         $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
         $userId = $_SESSION['user']['id'];
 
-        // Instanciation du messageManager
+        // Instanciation du MessageManager
         $messageManager = new MessageManager();
+        // Récupérer le nombre de messages non lus
+        $unreadCount = $messageManager->getUnreadMessagesCount($userId);
 
         if (isset($_GET['receiver_id'])) {
             $receiverId = (int) $_GET['receiver_id'];
@@ -28,13 +43,14 @@ class MessageController
             // Récupère les informations de l'interlocuteur
             $receiverName = $receiver['username'];
 
-            // Rendu de la vue avec la conversation
+            // Rendu de la vue avec le nombre de messages non lus
             $view = new View('Messagerie');
             $view->render('messaging', [
                 'messages' => $messageManager->getMessagesByUserId($userId),
                 'conversation' => $conversation,
                 'receiverId' => $receiverId,
-                'receiverName' => $receiverName
+                'receiverName' => $receiverName,
+                'unreadCount' => $unreadCount // Ajout du nombre de messages non lus
             ]);
         } else {
             // Récupère tous les messages de l'utilisateur connecté
@@ -44,20 +60,6 @@ class MessageController
             $view->render('messaging', ['messages' => $messages]);
         }
     }
-
-    /**
-     * Vérifie que l'utilisateur est connecté.
-     * @return void
-     */
-    private function ensureUserIsConnected(): void
-    {
-        if (!isset($_SESSION['user'])) { // Vérification de la session utilisateur
-            Utils::redirect("connectionForm"); // Redirection si l'utilisateur n'est pas connecté
-            exit; // On arrête l'exécution pour éviter tout comportement indésirable
-        }
-    }
-
-
 
     /**
      * Affiche les messages envoyés par l'utilisateur.
@@ -73,6 +75,11 @@ class MessageController
         $view = new View('Messagerie');
         $view->render('sentMessages', ['messages' => $sentMessages]);
     }
+
+    /**
+     * Affiche la liste de tous les messages de l'utilisateur.
+     * @return void
+     */
     public function showMessagesList(): void
     {
         // Instanciation du MessageManager
@@ -86,6 +93,7 @@ class MessageController
         $view = new View('Messagerie');
         $view->render('messagesList', ['messages' => $messages]);
     }
+
     /**
      * Envoie un message.
      * @return void
@@ -98,9 +106,9 @@ class MessageController
         $receiverId = isset($_POST['receiver_id']) ? (int) $_POST['receiver_id'] : null;
         $content = isset($_POST['content']) ? trim($_POST['content']) : '';
 
+        // Instanciation du MessageManager
+        $messageManager = new MessageManager();
         if ($receiverId && !empty($content)) {
-            // Instanciation du MessageManager
-            $messageManager = new MessageManager();
 
             // Création d'un nouveau message
             $message = new Message([
@@ -112,11 +120,28 @@ class MessageController
             // Envoi du message
             $messageManager->sendMessage($message);
 
-            // Redirection vers la conversation avec le message nouvellement envoyé
-            Utils::redirect('messaging?receiver_id=' . $receiverId);
+            // Récupération de la conversation après l'envoi
+            $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
+
+            // Rendu de la vue showMessaging avec la conversation
+            $view = new View('Messagerie'); // Utilise le bon nom de la vue
+            $view->render('messaging', [
+                'conversation' => $conversation,
+                'receiverId' => $receiverId,
+                'successMessage' => 'Message envoyé avec succès!',
+                'messages' => $messageManager->getMessagesByUserId($userId), // Pour afficher la liste des messages
+                'unreadCount' => $messageManager->getUnreadMessagesCount($userId) // Compte des messages non lus
+            ]);
+        } else {
+            // Redirection ou affichage d'une erreur si le message n'est pas valide
+            Utils::redirect('messaging?error=Message ou destinataire invalide');
         }
     }
 
+    /**
+     * Affiche la conversation avec un interlocuteur spécifique.
+     * @return void
+     */
     public function showConversation(): void
     {
         $this->ensureUserIsConnected(); // Vérification de l'utilisateur connecté
@@ -136,6 +161,6 @@ class MessageController
 
         // Rendu de la vue avec la conversation
         $view = new View('Messagerie');
-        $view->render('conversation', ['conversation' => $conversation, 'receiverId' => $receiverId]);
+        $view->render('messaging', ['conversation' => $conversation, 'receiverId' => $receiverId]);
     }
 }

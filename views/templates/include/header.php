@@ -14,6 +14,12 @@
                 </div>
                 <div class="nav-group nav-group--right">
                     <a href="index.php?action=showMessaging" class="nav-link">Messagerie</a>
+                    
+                    <!-- Ajout de la vérification pour éviter les erreurs si $unreadCount n'est pas défini -->
+                    <?php if (isset($unreadCount) && $unreadCount > 0) { ?>
+                        <span><?php echo $unreadCount; ?></span>
+                    <?php } ?>
+
                     <a href="index.php?action=myAccount" class="nav-link">Mon compte</a>
                     <?php if (isset($_SESSION['user'])) { ?>
                         <a href="index.php?action=disconnectUser" class="nav-link">Déconnexion</a>
@@ -25,6 +31,7 @@
         </div>
     </nav>
 </header>
+
 
 
 <script>

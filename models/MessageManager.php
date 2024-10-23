@@ -63,16 +63,16 @@
      */
     public function getMessagesByUserId(int $userId)
     {
-        $sql = "SELECT * FROM message WHERE receiver_id = :id";
+        $sql = "SELECT * FROM message WHERE receiver_id = :id 
+        OR sender_id = :id 
+        GROUP BY LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id) 
+        ORDER BY created_at DESC";
         $stmt = $this->db->query($sql, ['id' => $userId]);
         $messages = [];
         while ($message = $stmt->fetch()) {
             $messages[] = new Message($message);
         }
-
-
         return $messages;
-
 
         $sql = "
         SELECT 
@@ -84,8 +84,10 @@
             user.username, 
             user.profilePicture
         FROM message
-        INNER JOIN user ON message.sender_id = user.id
+        INNER JOIN 
+        user ON message.sender_id = user.id
         WHERE message.receiver_id = :userId
+        GROUP BY message.sender_id
         ORDER BY message.created_at DESC
         ";
 
@@ -172,6 +174,12 @@
             echo "Erreur dans la requête SQL : " . $e->getMessage();
             return null;
         }
+    }
+    public function getUnreadMessagesCount(int $userId): int
+    {
+        $sql = "SELECT COUNT(*) FROM message WHERE receiver_id = :userId AND is_read = 0";
+        $stmt = $this->db->query($sql, ['userId' => $userId]);
+        return (int) $stmt->fetchColumn();
     }
 
     /**

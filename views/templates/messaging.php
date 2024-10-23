@@ -82,6 +82,7 @@
                         <button type="submit">Envoyer</button>
                     </form>
                 </div>
+
             </div>
         <?php } ?>
     </div>
