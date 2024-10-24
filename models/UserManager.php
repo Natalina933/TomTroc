@@ -98,7 +98,7 @@ class UserManager extends AbstractEntityManager
         }
     }
 
-    
+
     /**
      * Récupère un utilisateur par son nom d'utilisateur.
      * @param string $username
@@ -122,25 +122,23 @@ class UserManager extends AbstractEntityManager
      */
     public function editUser(User $user): bool
     {
-        // Requête SQL pour mettre à jour les informations de l'utilisateur
-        $sql = "UPDATE user 
-            SET username = :username, email = :email, password = :password, profilePicture = :profilePicture, role = :role 
-            WHERE id = :id";
+        // Accès à l'instance PDO via getPDO()
+        $pdo = DBManager::getInstance()->getPDO();
 
-        // Préparation de la requête
-        $stmt = $this->db->query($sql);
+        // Construction de la requête SQL avec les données échappées
+        $sql = "UPDATE user SET username = " . $pdo->quote($user->getUsername()) .
+            ", email = " . $pdo->quote($user->getEmail());
 
-        // Liaison des paramètres avec les valeurs de l'objet User
-        $stmt->bindParam(':username', $user->getUsername(), PDO::PARAM_STR);
-        $stmt->bindParam(':email', $user->getemail(), PDO::PARAM_STR);
-        $stmt->bindParam(':password', $user->getPassword(), PDO::PARAM_STR);
-        $stmt->bindParam(':profilePicture', $user->getProfilePicture(), PDO::PARAM_STR);
-        $stmt->bindParam(':role', $user->getRole(), PDO::PARAM_STR);
-        $stmt->bindParam(':id', $user->getId(), PDO::PARAM_INT);
+        // Mettre à jour le mot de passe uniquement s'il a été modifié
+        if (!empty($user->getPassword())) {
+            $sql .= ", password = " . $pdo->quote($user->getPassword());
+        }
+        $sql .= " WHERE id = " . (int)$user->getId();
 
-        // Exécution de la requête et retour du succès ou de l'échec
-        return $stmt->execute();
+        // Exécuter la requête avec query()
+        return $pdo->query($sql) !== false;
     }
+
     public function emailExists($email, $userId = null): bool
     {
         // Vérification de l'ID utilisateur et email pour éviter les injections
@@ -211,5 +209,4 @@ class UserManager extends AbstractEntityManager
         // Exécution de la requête et retour du succès ou de l'échec
         return $stmt->execute();
     }
-
 }

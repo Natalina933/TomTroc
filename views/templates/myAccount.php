@@ -27,7 +27,7 @@
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
             </div>
-            <p><?= ($user['id']) ?> </p>  
+            <p><?= ($user['id']) ?> </p>
             <p><?= ($user['username']) ?></p>
             <?php
             // Créer un objet DateTime à partir de la date d'inscription
@@ -63,20 +63,22 @@
     <div class="account-card">
         <h2>Vos informations personnelles</h2>
         <form action="index.php?action=editUser" method="post">
+
             <label for="email">Adresse email</label>
-            <input type="email" id="email" name="email" value="<?= ($user['email']) ?>" required>
+            <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" disabled required>
+
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" placeholder="••••••••••••" disabled>
 
             <label for="username">Pseudo</label>
-            <input type="text" id="username" name="username" value="<?= ($user['username']) ?>" disabled required>
+            <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username']) ?>" disabled required>
 
             <button type="button" id="editButton">Modifier</button>
             <button type="submit" id="submitButton" style="display:none;">Enregistrer</button>
         </form>
     </div>
 </div>
-</div>
+
 
 <!-- Section 3 : Tableau des livres -->
 <h2>Vos livres</h2>
@@ -117,20 +119,15 @@
 
 <!-- Script pour gérer la sélection et la prévisualisation de l'image -->
 <script>
-    document.getElementById('changePictureButton').onclick = function() {
-        document.getElementById('profilePictureInput').click();
-    };
-
-    document.getElementById('profilePictureInput').addEventListener('change', function() {
-        document.getElementById('profilePictureForm').submit();
-    });
-
     document.getElementById('editButton').onclick = function() {
-        document.getElementById('email').disabled = false;
-        document.getElementById('password').disabled = false;
-        document.getElementById('username').disabled = false;
+    // Activer les champs pour les rendre modifiables
+    document.getElementById('email').disabled = false;
+    document.getElementById('password').disabled = false;
+    document.getElementById('username').disabled = false;
 
-        document.getElementById('editButton').style.display = 'none';
-        document.getElementById('submitButton').style.display = 'inline';
-    };
+    // Cacher le bouton "Modifier" et afficher le bouton "Enregistrer"
+    document.getElementById('editButton').style.display = 'none';
+    document.getElementById('submitButton').style.display = 'inline';
+};
+
 </script>

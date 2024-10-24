@@ -342,25 +342,27 @@ class UserController
             exit;
         }
     }
-    public function editUser()
+    public function editUser(): void
     {
+        // ID de l'utilisateur connecté
+        $userId = $_SESSION['user']['id']; 
+    
         // Récupérer les données du formulaire
         $email = $_POST['email'] ?? '';
         $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
         $username = $_POST['username'] ?? '';
-        $userId = $_SESSION['user']['id']; // L'utilisateur actuel
-
-        // Validation simple (exemple : email déjà existant)
+    
+        // Vérifier si l'email existe déjà
         $userManager = new UserManager();
         if ($userManager->emailExists($email, $userId)) {
             $error = "Cette adresse email est déjà utilisée.";
             header('Location: index.php?action=myAccount&error=' . urlencode($error));
             exit;
         }
-
+    
         // Récupérer l'utilisateur à partir de son ID
         $user = $userManager->getUserById($userId);
-
+    
         if ($user) {
             // Mettre à jour les informations de l'utilisateur
             $user->setEmail($email);
@@ -368,25 +370,32 @@ class UserController
                 $user->setPassword($password);
             }
             $user->setUsername($username);
-
-            // Enregistrer les modifications
-            $updated = $userManager->editUser($user);
-
-            if ($updated) {
-                // Redirection avec succès
+    
+            // Sauvegarder les modifications
+            if ($userManager->editUser($user)) {
+                // Mise à jour des données de session
+                $_SESSION['user'] = [
+                    'id' => $user->getId(),
+                    'email' => $user->getEmail(),
+                    'username' => $user->getUsername(),
+                    'role' => $user->getRole(),
+                    'profilePicture' => $user->getProfilePicture(),
+                    'createdAt' => $user->getCreatedAt(),
+                ];
+    
+                // Rediriger avec un message de succès
                 header('Location: index.php?action=myAccount&status=success');
                 exit;
             } else {
-                // Redirection en cas d'erreur dans la mise à jour
-                $error = "Erreur lors de la mise à jour des informations.";
-                header('Location: index.php?action=myAccount&error=' . urlencode($error));
+                // Message d'erreur si la mise à jour échoue
+                header('Location: index.php?action=myAccount&error=Erreur lors de la mise à jour');
                 exit;
             }
         } else {
-            // Si l'utilisateur n'est pas trouvé
-            $error = "Utilisateur introuvable.";
-            header('Location: index.php?action=myAccount&error=' . urlencode($error));
+            // Message d'erreur si l'utilisateur n'est pas trouvé
+            header('Location: index.php?action=myAccount&error=Utilisateur introuvable');
             exit;
         }
     }
+    
 }
