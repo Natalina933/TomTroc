@@ -103,8 +103,10 @@
                     <td><?= ($book->getDescription()) ?></td>
                     <td><?= ($book->isAvailable() ? 'Oui' : 'Non') ?></td>
                     <td>
-                        <a href="index.php?action=editBook&id=<?= (int)$book->getId() ?>">Editer</a> |
+                    <td>
+                        <a href="index.php?action=editbook&id=<?= (int)$book->getId() ?>">Éditer</a>
                         <a href="index.php?action=deleteBook&id=<?= (int)$book->getId() ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
+                    </td>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -120,14 +122,13 @@
 <!-- Script pour gérer la sélection et la prévisualisation de l'image -->
 <script>
     document.getElementById('editButton').onclick = function() {
-    // Activer les champs pour les rendre modifiables
-    document.getElementById('email').disabled = false;
-    document.getElementById('password').disabled = false;
-    document.getElementById('username').disabled = false;
+        // Activer les champs pour les rendre modifiables
+        document.getElementById('email').disabled = false;
+        document.getElementById('password').disabled = false;
+        document.getElementById('username').disabled = false;
 
-    // Cacher le bouton "Modifier" et afficher le bouton "Enregistrer"
-    document.getElementById('editButton').style.display = 'none';
-    document.getElementById('submitButton').style.display = 'inline';
-};
-
+        // Cacher le bouton "Modifier" et afficher le bouton "Enregistrer"
+        document.getElementById('editButton').style.display = 'none';
+        document.getElementById('submitButton').style.display = 'inline';
+    };
 </script>

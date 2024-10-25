@@ -55,59 +55,45 @@ class BookController
      * @return void
      */
 
-    public function editBook(): void
+    public function editBook($bookId): void
     {
-        // Vérifier si l'utilisateur est connecté
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?action=login');
             exit;
         }
+        // Récupérer l'objet Book
 
-        // Vérifier si les données du formulaire sont soumises
+        $bookManager = new BookManager();
+        $book = $bookManager->getBookById($bookId);
+
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Récupérer l'ID du livre à modifier depuis les données POST
             $bookId = filter_input(INPUT_POST, 'id');
-
-            // Récupérer les données du formulaire de modification
             $title = filter_input(INPUT_POST, 'title');
             $description = filter_input(INPUT_POST, 'description');
             $author = filter_input(INPUT_POST, 'author');
-            $img = $_FILES['img']['name'] ?? null;
             $available = isset($_POST['available']) ? 1 : 0;
 
-            // Vérifier si l'image a été téléchargée
-            if ($img && !empty($_FILES['img']['tmp_name'])) {
-                $uploadDir = './assets/img/books/';
-                $newFileName = uniqid('book_', true) . '.' . pathinfo($img, PATHINFO_EXTENSION);
-                $destPath = $uploadDir . $newFileName;
+            $img = $_FILES['img']['name'] ?? null;
 
-                // Déplacer le fichier téléchargé vers le dossier de destination
-                if (!move_uploaded_file($_FILES['img']['tmp_name'], $destPath)) {
-                    header('Location: index.php?action=editBook&id=' . $bookId . '&status=error_upload');
-                    exit;
-                }
-            } else {
-                $newFileName = null;
-            }
-
-            // Récupérer l'objet Book depuis le BookManager
-            $bookManager = new BookManager();
-            $book = $bookManager->getBookById($bookId);
 
             if ($book) {
-                // Mettre à jour les informations du livre
                 $book->setTitle($title);
                 $book->setDescription($description);
                 $book->setAuthor($author);
                 $book->setAvailable($available);
                 $book->setUpdatedAt(date('Y-m-d H:i:s'));
 
-                // Si une nouvelle image a été téléchargée, mettre à jour l'image
-                if ($newFileName) {
-                    $book->setImg($newFileName);
+                if ($img && !empty($_FILES['img']['tmp_name'])) {
+                    $uploadDir = './assets/img/books/';
+                    $newFileName = uniqid('book_', true) . '.' . pathinfo($img, PATHINFO_EXTENSION);
+                    $destPath = $uploadDir . $newFileName;
+
+                    if (move_uploaded_file($_FILES['img']['tmp_name'], $destPath)) {
+                        $book->setImg($newFileName);
+                    }
                 }
 
-                // Enregistrer les modifications dans la base de données
                 if ($bookManager->editBook($book)) {
                     header('Location: index.php?action=viewBook&id=' . $bookId . '&status=success');
                 } else {
@@ -119,9 +105,10 @@ class BookController
             exit;
         }
 
-        // Si la requête n'est pas POST, rediriger vers la page de modification
-        header('Location: index.php?action=editBook');
+        $view = new View('Book Edit');
+        $view->render('book-edit', ['book' => $book]);
     }
+
 
     public function deleteBook()
     {

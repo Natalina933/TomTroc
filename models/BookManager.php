@@ -120,17 +120,15 @@ class bookManager extends AbstractEntityManager
      */
     public function editBook(Book $book): void
     {
-        $sql = "UPDATE book SET title = :title, description = :description, date_update = NOW() WHERE id = :id";
+        $sql = "UPDATE book SET title = :title, description = :description, author = :author, updatedAt = NOW(), img = :img, available = :available, user_id = :userId WHERE id = :id";
         $this->db->query($sql, [
             'id' => $book->getId(),
-            'useId' => $book->getUserId(),
+            'userId' => $book->getUserId(),
             'title' => $book->getTitle(),
             'author' => $book->getAuthor(),
             'img' => $book->getImg(),
             'description' => $book->getDescription(),
             'available' => $book->isAvailable(),
-            'created_at' => $book->getCreatedAt(),
-            'updated_at' => $book->getUpdatedAt(),
 
         ]);
     }
