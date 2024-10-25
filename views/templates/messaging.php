@@ -3,7 +3,7 @@
         <?= htmlspecialchars($_GET['error']) ?>
     </div>
 <?php endif; ?>
-
+<?php echo var_dump($messages); ?>
 <main class="messaging-container">
     <div class="messenger-container">
         <!-- Section 1 : Conversations -->

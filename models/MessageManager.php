@@ -98,8 +98,10 @@
             return [];
         }
         $messages = [];
+        $sqlResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $sqlResult;
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $sqlResult) {
             $messages[] = [
                 'message_id' => $row['message_id'],
                 'content' => $row['content'],
