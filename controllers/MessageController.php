@@ -20,42 +20,35 @@ class MessageController
      */
     public function showMessaging(int $receiverId = null): void
     {
-        $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
+        $this->ensureUserIsConnected();
         $userId = $_SESSION['user']['id'];
 
-        // Instanciation du MessageManager
         $messageManager = new MessageManager();
-        // Récupérer le nombre de messages non lus
         $unreadCount = $messageManager->getUnreadMessagesCount($userId);
 
+        // Si un `receiver_id` est passé, ouvre la conversation avec cet utilisateur
         if (isset($_GET['receiver_id'])) {
             $receiverId = (int) $_GET['receiver_id'];
-
-            // Vérifie que l'utilisateur existe
             $receiver = $messageManager->getUserById($receiverId);
+
             if (!$receiver) {
                 Utils::redirect('messaging?error=Utilisateur non trouvé');
+                exit;
             }
 
-            // Récupère la conversation entre l'utilisateur connecté et l'interlocuteur
             $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
-
-            // Récupère les informations de l'interlocuteur
             $receiverName = $receiver['username'];
 
-            // Rendu de la vue avec le nombre de messages non lus
             $view = new View('Messagerie');
             $view->render('messaging', [
                 'messages' => $messageManager->getMessagesByUserId($userId),
                 'conversation' => $conversation,
                 'receiverId' => $receiverId,
                 'receiverName' => $receiverName,
-                'unreadCount' => $unreadCount // Ajout du nombre de messages non lus
+                'unreadCount' => $unreadCount
             ]);
         } else {
-            // Récupère tous les messages de l'utilisateur connecté
             $messages = $messageManager->getMessagesByUserId($userId);
-            // Rendu de la vue pour la liste des messages
             $view = new View('Messagerie');
             $view->render('messaging', ['messages' => $messages]);
         }

@@ -44,9 +44,7 @@
                         <p>Propriétaire inconnu</p>
                     <?php } ?>
                 </div>
-
-
-                <a href="index.php?action=showMessaging" <?= htmlspecialchars($user->getId()) ?>" class="btn">Envoyer un message</a>
+                <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn">Envoyer un message</a>
             </form>
         </article>
     <?php } else { ?>
