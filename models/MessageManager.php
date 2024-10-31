@@ -109,7 +109,8 @@
                 'sender' => [
                     'id' => $row['user_id'],
                     'username' => $row['username'],
-                    'profilePicture' => $row['profilePicture']
+                    'profilePicture' => $row['profilePicture'] ?? 'assets/images/default-profile.jpg',
+
                 ]
             ]; // on retourne un tableau associatif
         }
@@ -152,14 +153,25 @@
                 'sender' => [
                     'id' => $row['sender_id'],
                     'username' => $row['username'],
-                    'profilePicture' => $row['profilePicture'],
+                    'profilePicture' => $row['profilePicture'] ?? 'assets/images/default-profile.jpg',
+
                 ]
             ];
         }
 
         return $conversation;
     }
-
+    public function createNewConversation(int $userId, int $receiverId)
+    {
+        $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at) 
+                VALUES (:sender_id, :receiver_id, :content, NOW())";
+        $this->db->query($sql, [
+            'sender_id' => $userId,
+            'receiver_id' => $receiverId,
+            'content' => "Début de la conversation"
+        ]);
+    }
+    
     /**
      * Récupère un utilisateur par son ID.
      * @param int $id

@@ -17,12 +17,12 @@ try {
 
     // Gestion des différentes actions
     switch ($action) {
-        // ****Pages accessibles à tous****
+            // ****Pages accessibles à tous****
         case 'home':
             $bookController->showHome();
             break;
 
-        // ****Gestion des livres****
+            // ****Gestion des livres****
         case 'books':
             $bookController->showBooksList();
             break;
@@ -51,7 +51,7 @@ try {
             }
             break;
 
-        // ****Gestion des utilisateurs****
+            // ****Gestion des utilisateurs****
         case 'registerUser':
             $userController->registerUser();
             break;
@@ -88,7 +88,7 @@ try {
             $userController->editUser();
             break;
 
-        // **** Gestion de la messagerie ****
+            // **** Gestion de la messagerie ****
         case 'showMessaging':
             $messageController->showMessaging();
             break;
@@ -100,15 +100,15 @@ try {
         case 'showSentMessages':
             $messageController->showSentMessages();
             break;
-        
+
         case 'sendMessage':
             $messageController->sendMessage();
             break;
 
-        // **** Affichage du compte public ****
-        // case 'showMyPublicAccount':
-        //     $publicAccountController->showMyPublicAccount();
-        //     break;
+            // **** Affichage du compte public ****
+        case 'showPublicAccount':
+            $publicAccountController->showPublicAccount();
+            break;
 
 
         default:

@@ -37,7 +37,11 @@
                     <div class="chat-user-info">
                         <!-- Photo de profil et Nom de l'utilisateur avec qui vous discutez -->
                         <?php
-                        $chatUser = ($conversation[0]['sender']['id'] != $_SESSION['user']['id']) ? $conversation[0]['sender'] : $conversation[0]['receiver'];
+                        if (!empty($conversation)) {
+                            $chatUser = ($conversation[0]['sender']['id'] != $_SESSION['user']['id']) ? $conversation[0]['sender'] : $conversation[0]['receiver'];
+                        } else {
+                            echo "Aucun message dans cette conversation.";
+                        }
                         ?>
                         <img src="<?= htmlspecialchars($chatUser['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($chatUser['username'], ENT_QUOTES, 'UTF-8') ?>">
                         <span class="chat-title"><?= htmlspecialchars($chatUser['username'], ENT_QUOTES, 'UTF-8') ?></span>
