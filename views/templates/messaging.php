@@ -3,7 +3,6 @@
         <?= htmlspecialchars($_GET['error']) ?>
     </div>
 <?php endif; ?>
-<?php echo var_dump($messages); ?>
 <main class="messaging-container">
     <div class="messenger-container">
         <!-- Section 1 : Conversations -->
@@ -15,11 +14,12 @@
                 <?php else : ?>
                     <!-- Boucle pour afficher chaque message reçu -->
                     <?php foreach ($messages as $message) : ?>
-                        <a href="index.php?action=showMessaging&receiver_id=<?php echo $message->getSender()->getId(); ?>">
+                        <?php $sender = $message->getSender()->getId() != $_SESSION['user']['id'] ?  $message->getSender() :  $message->getReceiver(); ?>
+                        <a href="index.php?action=showMessaging&receiver_id=<?php echo $sender->getId(); ?>">
                             <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId(), ENT_QUOTES, 'UTF-8') ?>" data-receiver-id="<?= htmlspecialchars($message->getSender()->getId(), ENT_QUOTES, 'UTF-8') ?>">
-                                <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
+                                <img src="<?= htmlspecialchars($sender->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($sender->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
                                 <div class="conversation-info">
-                                    <p class="name"><?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
+                                    <p class="name"><?= htmlspecialchars($sender->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
                                     <span class="description"><?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?></span>
                                     <span class="timestamp"><?= htmlspecialchars(date('H:i', $message->getCreatedAt()->getTimeStamp()), ENT_QUOTES, 'UTF-8') ?></span>
                                 </div>
@@ -38,13 +38,14 @@
                         <!-- Photo de profil et Nom de l'utilisateur avec qui vous discutez -->
                         <?php
                         if (!empty($conversation)) {
-                            $chatUser = ($conversation[0]['sender']['id'] != $_SESSION['user']['id']) ? $conversation[0]['sender'] : $conversation[0]['receiver'];
+                            $chatUser = $message->getSender()->getId() != $_SESSION['user']['id'] ?  $message->getSender() :  $message->getReceiver();;
                         } else {
                             echo "Aucun message dans cette conversation.";
                         }
                         ?>
-                        <img src="<?= htmlspecialchars($chatUser['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($chatUser['username'], ENT_QUOTES, 'UTF-8') ?>">
-                        <span class="chat-title"><?= htmlspecialchars($chatUser['username'], ENT_QUOTES, 'UTF-8') ?></span>
+
+                        <img src="<?= htmlspecialchars($chatUser->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($chatUser->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
+                        <span class="chat-title"><?= htmlspecialchars($chatUser->getUsername(), ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                 </div>
 
@@ -53,24 +54,24 @@
                     <div class="messages">
                         <?php foreach ($conversation as $message) : ?>
                             <!-- Message envoyé -->
-                            <?php if ($message['sender']['id'] == $_SESSION['user']['id']) : ?>
+                            <?php if ($message->getSender()->getId() != $_SESSION['user']['id']) : ?>
                                 <div class="message sent">
                                     <div class="message-content">
-                                        <?= htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8') ?>
+                                        <?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?>
                                     </div>
                                     <div class="message-footer">
-                                        <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($message['createdAt'])), ENT_QUOTES, 'UTF-8') ?></span>
+                                        <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($message->getCreatedAt()->getTimeStamp())), ENT_QUOTES, 'UTF-8') ?></span>
                                     </div>
                                 </div>
                             <?php else : ?>
                                 <!-- Message reçu -->
                                 <div class="message received">
-                                    <img src="<?= htmlspecialchars($message['sender']['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message['sender']['username'], ENT_QUOTES, 'UTF-8') ?>">
+                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
                                     <div class="message-content">
-                                        <?= htmlspecialchars($message['content'], ENT_QUOTES, 'UTF-8') ?>
+                                        <?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?>
                                     </div>
                                     <div class="message-footer">
-                                        <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($message['createdAt'])), ENT_QUOTES, 'UTF-8') ?></span>
+                                        <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i', strtotime($message->getCreatedAt()->getTimeStamp())), ENT_QUOTES, 'UTF-8') ?></span>
                                     </div>
                                 </div>
                             <?php endif; ?>

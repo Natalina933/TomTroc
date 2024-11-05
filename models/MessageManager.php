@@ -122,17 +122,9 @@
     {
         $sql = "
         SELECT 
-            message.content, 
-            message.created_at AS message_date, 
-            message.sender_id,
-            user.username, 
-            user.profilePicture
+            *
         FROM 
             message
-        INNER JOIN 
-            user 
-        ON 
-            message.sender_id = user.id
         WHERE 
         (message.sender_id = :userId 
             AND message.receiver_id = :receiverId)
@@ -147,31 +139,22 @@
         $conversation = [];
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $conversation[] = [
-                'content' => $row['content'],
-                'createdAt' => $row['message_date'],
-                'sender' => [
-                    'id' => $row['sender_id'],
-                    'username' => $row['username'],
-                    'profilePicture' => $row['profilePicture'] ?? 'assets/images/default-profile.jpg',
-
-                ]
-            ];
+            $conversation[] = new Message($row);
         }
 
         return $conversation;
     }
     public function createNewConversation(int $userId, int $receiverId)
     {
-        $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at) 
+        $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at)
                 VALUES (:sender_id, :receiver_id, :content, NOW())";
         $this->db->query($sql, [
             'sender_id' => $userId,
             'receiver_id' => $receiverId,
-            'content' => "Début de la conversation"
+            'content' => ""
         ]);
     }
-    
+
     /**
      * Récupère un utilisateur par son ID.
      * @param int $id
