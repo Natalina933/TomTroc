@@ -27,7 +27,7 @@
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
             </div>
-            <p><?= ($user['id']) ?> </p>
+            <!-- <p><?= ($user['id']) ?> </p> -->
             <p><?= ($user['username']) ?></p>
             <?php
             // Créer un objet DateTime à partir de la date d'inscription

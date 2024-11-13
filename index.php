@@ -13,7 +13,7 @@ try {
     $bookController = new BookController();
     $userController = new UserController();
     $messageController = new MessageController();
-    // $publicAccountController = new PublicAccountController(); // Instancier le contrôleur manquant
+    $publicAccountController = new PublicAccountController(); // Instancier le contrôleur manquant
 
     // Gestion des différentes actions
     switch ($action) {

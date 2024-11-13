@@ -12,18 +12,16 @@
         <div class="account-card">
             <div class="account-profile">
                 <!-- Vérification et affichage de la photo de profil -->
-                <?php if (($user['profilePicture']) && !empty($user['profilePicture'])) : ?>
-                    <img src="<?= $user['profilePicture'] ?>" alt="Photo de profil">
+                <?php if ($user->getProfilePicture() && !empty($user->getProfilePicture())) : ?>
+                    <img src="<?= htmlspecialchars($user->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
                 <?php else : ?>
                     <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
                 <?php endif; ?>
-
             </div>
-            <p>
-                <?= ($user['username']) ?></p>
+            <p><?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
             <?php
             // Créer un objet DateTime à partir de la date d'inscription
-            $createdAt = new DateTime($user['createdAt']);
+            $createdAt = new DateTime($user->getCreatedAt());
             $now = new DateTime();
             // Calculer la différence
             $diff = $createdAt->diff($now);
@@ -40,55 +38,44 @@
                 $memberSince = '1 mois';
             }
             ?>
-            <p>Membre depuis : <?= ($memberSince) ?></p>
+            <p>Membre depuis : <?= htmlspecialchars($memberSince, ENT_QUOTES, 'UTF-8') ?></p>
             <p>BIBLIOTHÈQUE</p>
             <div class="library-info">
                 <img src="/assets/img/icon_books.svg" alt="Icône de livres">
                 <!-- Affichage du nombre de livres -->
-                <p>Nombre total de livres : <?= ($totalBooks) ?></p>
+                <?= htmlspecialchars($totalBooks, ENT_QUOTES, 'UTF-8') ?> livres
             </div>
-
+            <a href="/messaging" class="btn">Ecrire un message</a>
         </div>
     </div>
 
-    <!-- Carré 2 : Informations personnelles -->
-    <div class="account-card">
-        <form>
-            <label for="username">Pseudo</label>
-            <input type="text" id="username" name="username" value="<?= ($user['username']) ?>" disabled required>
-        </form>
-    </div>
-</div>
-</div>
 
-<!-- Section 3 : Tableau des livres -->
-<h2>Vos livres</h2>
-<table class="table-books">
-    <thead>
-        <tr>
-            <th>Photo</th>
-            <th>Titre</th>
-            <th>Auteur</th>
-            <th>Description</th>
-            <th>Disponible</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if (!empty($books)) : ?>
-            <?php foreach ($books as $book) : ?>
-                <tr>
-                    <td><img src="<?= ($book->getImg()) ?>" alt="Photo du livre" width="50"></td>
-                    <td><?= ($book->getTitle()) ?></td>
-                    <td><?= ($book->getAuthor()) ?></td>
-                    <td><?= ($book->getDescription()) ?></td>
-                    <td><?= ($book->isAvailable() ? 'Oui' : 'Non') ?></td>
-                </tr>
-            <?php endforeach; ?>
-        <?php else : ?>
+
+    <!-- Section 3 : Tableau des livres -->
+
+    <table class="table-books">
+        <thead>
             <tr>
-                <td colspan="6">Aucun livre trouvé.</td>
+                <th>Photo</th>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Description</th>
             </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php if (!empty($books)) : ?>
+                <?php foreach ($books as $book) : ?>
+                    <tr>
+                        <td><img src="<?= htmlspecialchars($book->getImg(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre" width="50"></td>
+                        <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($book->getAuthor(), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($book->getDescription(), ENT_QUOTES, 'UTF-8') ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <tr>
+                    <td colspan="6">Aucun livre trouvé.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
