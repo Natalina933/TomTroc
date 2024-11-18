@@ -285,10 +285,9 @@ class UserController
 
             // Dossier de stockage de l'image
             $uploadFileDir = '/assets/img/users/';
-            $newFileName = uniqid('profile_', true) . '.' . $fileExtension;
             $dest_path = $uploadFileDir . $newFileName;
             // Déplacer le fichier téléchargé dans le dossier de destination
-            if (copy($fileTmpPath, __DIR__ . "/.."  . $dest_path)) {
+            if (move_uploaded_file($fileTmpPath, __DIR__ . "/.."  . $dest_path)) {
                 // Mettre à jour la photo de profil dans la base de données
                 $userId = $_SESSION['user']['id']; // L'utilisateur est authentifié
                 $userModel = new UserManager();

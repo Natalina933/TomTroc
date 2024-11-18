@@ -74,23 +74,6 @@
         }
         return $messages;
 
-        $sql = "
-        SELECT 
-            message.id AS message_id, 
-            message.content, 
-            message.created_at AS message_date, 
-            message.is_read,
-            user.id AS user_id, 
-            user.username, 
-            user.profilePicture
-        FROM message
-        INNER JOIN 
-        user ON message.sender_id = user.id
-        WHERE message.receiver_id = :userId
-        GROUP BY message.sender_id
-        ORDER BY message.created_at DESC
-        ";
-
         try {
             $stmt = $this->db->query($sql, [':userId' => $userId]);
         } catch (PDOException $e) {
