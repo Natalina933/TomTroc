@@ -22,32 +22,32 @@ class MessageController
     {
         $this->ensureUserIsConnected();
         $userId = $_SESSION['user']['id'];
-    
+
         $messageManager = new MessageManager();
         $unreadCount = $messageManager->getUnreadMessagesCount($userId);
-    
+
         // Si un `receiver_id` est passé, ouvre la conversation avec cet utilisateur
         if (isset($_GET['receiver_id'])) {
             $receiverId = (int) $_GET['receiver_id'];
             $receiver = $messageManager->getUserById($receiverId);
-    
+
             if (!$receiver) {
                 Utils::redirect('messaging?error=Utilisateur non trouvé');
                 exit;
             }
-    
-            // Vérifier si une conversation existe déjà entre l'utilisateur et le destinataire
+
+            // Vérifie si une conversation existe déjà entre l'utilisateur et le destinataire
             $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
-    
+
             // Si aucune conversation n'existe, créer un message initial pour démarrer la conversation
             if (empty($conversation)) {
                 $messageManager->createNewConversation($userId, $receiverId);
                 // Recharger la conversation pour inclure le message initial
                 $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
             }
-    
+
             $receiverName = $receiver['username'];
-    
+
             // Rendre la vue avec les données de conversation
             $view = new View('Messagerie');
             $view->render('messaging', [
@@ -64,7 +64,7 @@ class MessageController
             $view->render('messaging', ['messages' => $messages]);
         }
     }
-    
+
 
     /**
      * Affiche les messages envoyés par l'utilisateur.
@@ -106,14 +106,23 @@ class MessageController
     public function sendMessage(): void
     {
         $this->ensureUserIsConnected();
-
         $userId = $_SESSION['user']['id'];
-        $receiverId = isset($_POST['receiver_id']) ? (int) $_POST['receiver_id'] : null;
-        $content = isset($_POST['content']) ? trim($_POST['content']) : '';
 
+        $receiverId = filter_input(INPUT_POST, 'receiver_id', FILTER_VALIDATE_INT);
+        $content = htmlspecialchars(trim($_POST['content']), ENT_QUOTES, 'UTF-8');
+
+        if (!$receiverId || empty($content)) {
+            $_SESSION['error'] = 'Message ou destinataire invalide.';
+            Utils::redirect('messaging');
+            exit;
+        }
+        // Debugging pour voir si tout fonctionne correctement
+        error_log("User ID: $userId");
+        error_log("Receiver ID: $receiverId");
+        error_log("Message content: $content");
         // Instanciation du MessageManager
-        $messageManager = new MessageManager();
-        if ($receiverId && !empty($content)) {
+        try {
+            $messageManager = new MessageManager();
 
             // Création d'un nouveau message
             $message = new Message([
@@ -121,13 +130,11 @@ class MessageController
                 'receiver_id' => $receiverId,
                 'content' => $content
             ]);
-
             // Envoi du message
             $messageManager->sendMessage($message);
 
             // Récupération de la conversation après l'envoi
             $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
-
             // Rendu de la vue showMessaging avec la conversation
             $view = new View('Messagerie'); // Utilise le bon nom de la vue
             $view->render('messaging', [
@@ -137,9 +144,10 @@ class MessageController
                 'messages' => $messageManager->getMessagesByUserId($userId), // Pour afficher la liste des messages
                 'unreadCount' => $messageManager->getUnreadMessagesCount($userId) // Compte des messages non lus
             ]);
-        } else {
-            // Redirection ou affichage d'une erreur si le message n'est pas valide
-            Utils::redirect('messaging?error=Message ou destinataire invalide');
+        } catch (Exception $e) {
+            // Gestion des erreurs
+            $_SESSION['error'] = 'Erreur lors de l\'envoi du message : ' . $e->getMessage();
+            Utils::redirect('messaging');
         }
     }
 

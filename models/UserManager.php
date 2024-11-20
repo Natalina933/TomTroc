@@ -49,12 +49,17 @@ class UserManager extends AbstractEntityManager
      */
     public function getUserByEmail(string $email): ?User
     {
-        $sql = "SELECT * FROM user WHERE email = :email";
-        $stmt = $this->db->query($sql, [':email' => $email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        // var_dump($user);
+        try {
 
-        return $user ? new User($user) : null;
+            $sql = "SELECT * FROM user WHERE email = :email";
+            $stmt = $this->db->query($sql, [':email' => $email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            // var_dump($user);
+
+            return $user ? new User($user) : null;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
+        }
     }
 
     /**
@@ -75,8 +80,8 @@ class UserManager extends AbstractEntityManager
             }
             // var_dump('toto');
             // Inscription de l'utilisateur
-            $sql = "INSERT INTO user (username, email, password,  role, is_active)
-                    VALUES (:username, :email, :password, :role, :is_active)";
+            $sql = "INSERT INTO user (username, email, password, profilePicture, role, is_active)
+                    VALUES (:username, :email, :password, :profilePicture, :role, :is_active)";
             $stmt = $this->db->query($sql, [
                 ':username' => $username,
                 ':email' => $email,
@@ -88,8 +93,6 @@ class UserManager extends AbstractEntityManager
                 ':updatedAt' => date('Y-m-d H:i:s')
             ]);
             $stmt->execute();
-            // var_dump('toto');
-            // die;
 
             // Récupérer l'utilisateur créé après insertion
             return $this->getUserByEmail($email);
