@@ -120,6 +120,15 @@
 
 <!-- Script pour gérer la sélection et la prévisualisation de l'image -->
 <script>
+        document.getElementById('changePictureButton').onclick = function() {
+        document.getElementById('profilePictureInput').click();
+    };
+
+    document.getElementById('profilePictureInput').addEventListener('change', function() {
+        document.getElementById('profilePictureForm').submit();
+    });
+
+
     document.getElementById('editButton').onclick = function() {
         // Activer les champs pour les rendre modifiables
         document.getElementById('email').disabled = false;

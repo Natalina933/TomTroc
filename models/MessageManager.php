@@ -146,7 +146,7 @@
     }
     public function createNewConversation(int $userId, int $receiverId)
     {
-        $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at)
+       $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at)
                 VALUES (:sender_id, :receiver_id, :content, NOW())";
         $this->db->query($sql, [
             'sender_id' => $userId,
@@ -154,7 +154,7 @@
             'content' => ""
         ]);
     }
-
+    
     /**
      * Récupère un utilisateur par son ID.
      * @param int $id

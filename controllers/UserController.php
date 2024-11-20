@@ -285,10 +285,15 @@ class UserController
 
             // Dossier de stockage de l'image
             $uploadFileDir = '/assets/img/users/';
-            $newFileName = uniqid('profile_', true) . '.' . $fileExtension;
             $dest_path = $uploadFileDir . $newFileName;
             // Déplacer le fichier téléchargé dans le dossier de destination
-            if (copy($fileTmpPath, __DIR__ . "/.."  . $dest_path)) {
+            if (move_uploaded_file($fileTmpPath, __DIR__ . "/.."  . $dest_path)) {
+
+
+                // var_dump(__DIR__ . "/.." . $dest_path);
+                // Afficher la nouvelle image dans la page
+
+
                 // Mettre à jour la photo de profil dans la base de données
                 $userId = $_SESSION['user']['id']; // L'utilisateur est authentifié
                 $userModel = new UserManager();
@@ -345,13 +350,13 @@ class UserController
     public function editUser(): void
     {
         // ID de l'utilisateur connecté
-        $userId = $_SESSION['user']['id']; 
-    
+        $userId = $_SESSION['user']['id'];
+
         // Récupérer les données du formulaire
         $email = $_POST['email'] ?? '';
         $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
         $username = $_POST['username'] ?? '';
-    
+
         // Vérifier si l'email existe déjà
         $userManager = new UserManager();
         if ($userManager->emailExists($email, $userId)) {
@@ -359,10 +364,10 @@ class UserController
             header('Location: index.php?action=myAccount&error=' . urlencode($error));
             exit;
         }
-    
+
         // Récupérer l'utilisateur à partir de son ID
         $user = $userManager->getUserById($userId);
-    
+
         if ($user) {
             // Mettre à jour les informations de l'utilisateur
             $user->setEmail($email);
@@ -370,7 +375,7 @@ class UserController
                 $user->setPassword($password);
             }
             $user->setUsername($username);
-    
+
             // Sauvegarder les modifications
             if ($userManager->editUser($user)) {
                 // Mise à jour des données de session
@@ -382,7 +387,7 @@ class UserController
                     'profilePicture' => $user->getProfilePicture(),
                     'createdAt' => $user->getCreatedAt(),
                 ];
-    
+
                 // Rediriger avec un message de succès
                 header('Location: index.php?action=myAccount&status=success');
                 exit;
@@ -397,5 +402,4 @@ class UserController
             exit;
         }
     }
-    
 }
