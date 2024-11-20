@@ -3,50 +3,48 @@
         <?= htmlspecialchars($_GET['error']) ?>
     </div>
 <?php endif; ?>
+
 <main class="messaging-container">
     <div class="messenger-container">
         <!-- Section 1 : Conversations -->
         <section class="sidebar">
             <h2>Messagerie</h2>
-            <a class="conversations">
-                <?php if (count($messages) == 0) : ?>
+            <ul class="conversations">
+                <?php if (empty($messages)) : ?>
                     <li>Aucune conversation trouvée.</li>
                 <?php else : ?>
                     <!-- Boucle pour afficher chaque message reçu -->
                     <?php foreach ($messages as $message) : ?>
-                        <?php $sender = $message->getSender()->getId() != $_SESSION['user']['id'] ?  $message->getSender() :  $message->getReceiver(); ?>
-                        <a href="index.php?action=showMessaging&receiver_id=<?php echo $sender->getId(); ?>">
-                            <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId(), ENT_QUOTES, 'UTF-8') ?>" data-receiver-id="<?= htmlspecialchars($message->getSender()->getId(), ENT_QUOTES, 'UTF-8') ?>">
-                                <img src="<?= htmlspecialchars($sender->getProfilePicture() ?? 'default-profile.png', ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
+                        <?php
+                        $sender = $message->getSender()->getId() != $_SESSION['user']['id'] ? $message->getSender() : $message->getReceiver();
+                        ?>
+                        <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId()) ?>" data-receiver-id="<?= htmlspecialchars($sender->getId()) ?>">
+                            <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($sender->getId()) ?>">
+                                <img src="<?= htmlspecialchars($sender->getProfilePicture() ?? 'default-profile.png') ?>" alt="Photo de profil">
                                 <div class="conversation-info">
-                                    <p class="name"><?= htmlspecialchars($sender->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
-                                    <span class="description"><?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?></span>
-                                    <span class="timestamp"><?= htmlspecialchars(date('H:i', $message->getCreatedAt()->getTimeStamp()), ENT_QUOTES, 'UTF-8') ?></span>
+                                    <p class="name"><?= htmlspecialchars($sender->getUsername()) ?></p>
+                                    <span class="description"><?= htmlspecialchars($message->getContent()) ?></span>
+                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
                                 </div>
-                            </li>
-                        </a>
+                            </a>
+                        </li>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                </ul>
+            </ul>
         </section>
 
         <!-- Section 2 : Chat -->
-        <?php if (isset($conversation)) { ?>
+        <?php if (isset($conversation) && !empty($conversation)) : ?>
             <div class="chat">
                 <div class="chat-header">
                     <div class="chat-user-info">
-                        <!-- Photo de profil et Nom de l'utilisateur avec qui vous discutez -->
                         <?php
-                        if (!empty($conversation)) {
-                            $chatUser = $message->getSender()->getId() != $_SESSION['user']['id']  ?  $message->getSender() 
-                                            :  $message->getReceiver();
-                        } else {
-                            echo "Aucun message dans cette conversation.";
-                        }
+                        $chatUser = $conversation[0]->getSender()->getId() != $_SESSION['user']['id']
+                            ? $conversation[0]->getSender()
+                            : $conversation[0]->getReceiver();
                         ?>
-
-                        <img src="<?= htmlspecialchars($chatUser->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($chatUser->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
-                        <span class="chat-title"><?= htmlspecialchars($chatUser->getUsername(), ENT_QUOTES, 'UTF-8') ?></span>
+                        <img src="<?= htmlspecialchars($chatUser->getProfilePicture() ?? 'default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($chatUser->getUsername()) ?>">
+                        <span class="chat-title"><?= htmlspecialchars($chatUser->getUsername()) ?></span>
                     </div>
                 </div>
 
@@ -54,28 +52,17 @@
                 <div class="messages-container">
                     <div class="messages">
                         <?php foreach ($conversation as $message) : ?>
-                            <!-- Message envoyé -->
-                            <?php if ($message->getSender()->getId() != $_SESSION['user']['id']) : ?>
-                                <div class="message sent">
-                                    <div class="message-content">
-                                        <?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?>
-                                    </div>
-                                    <div class="message-footer">
-                                        <span class="timestamp"><?= htmlspecialchars(date('d/m/Y H:i'), ENT_QUOTES, 'UTF-8') ?></span>
-                                    </div>
+                            <div class="message <?= $message->getSender()->getId() == $_SESSION['user']['id'] ? 'sent' : 'received' ?>">
+                                <?php if ($message->getSender()->getId() != $_SESSION['user']['id']) : ?>
+                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture() ?? 'default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername()) ?>">
+                                <?php endif; ?>
+                                <div class="message-content">
+                                    <?= htmlspecialchars($message->getContent()) ?>
                                 </div>
-                            <?php else : ?>
-                                <!-- Message reçu -->
-                                <div class="message received">
-                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
-                                    <div class="message-content">
-                                        <?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?>
-                                    </div>
-                                    <div class="message-footer">
-                                        <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('d/m/Y H:i'), ENT_QUOTES, 'UTF-8') ?></span>
-                                    </div>
+                                <div class="message-footer">
+                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('d/m/Y H:i')) ?></span>
                                 </div>
-                            <?php endif; ?>
+                            </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -83,14 +70,16 @@
                 <!-- Champ de texte pour envoyer un message -->
                 <div class="chat-input">
                     <form action="index.php?action=sendMessage" method="post">
-                        <textarea name="content" placeholder="Votre message...">
-                        </textarea>
-                        <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($receiverId) ?>">
+                        <textarea name="content" placeholder="Votre message..."></textarea>
+                        <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($chatUser->getId()) ?>">
                         <button type="submit">Envoyer</button>
                     </form>
                 </div>
-
             </div>
-        <?php } ?>
+        <?php else : ?>
+            <div class="no-conversation">
+                <p>Sélectionnez une conversation pour commencer à chatter.</p>
+            </div>
+        <?php endif; ?>
     </div>
 </main>

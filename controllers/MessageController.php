@@ -41,7 +41,7 @@ class MessageController
 
             // Si aucune conversation n'existe, créer un message initial pour démarrer la conversation
             if (empty($conversation)) {
-                $messageManager->createNewConversation($userId, $receiverId);
+                // $messageManager->createNewConversation($userId, $receiverId);
                 // Recharger la conversation pour inclure le message initial
                 $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
             }

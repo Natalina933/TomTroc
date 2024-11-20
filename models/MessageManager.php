@@ -127,16 +127,16 @@
 
         return $conversation;
     }
-    public function createNewConversation(int $userId, int $receiverId)
-    {
-       $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at)
-                VALUES (:sender_id, :receiver_id, :content, NOW())";
-        $this->db->query($sql, [
-            'sender_id' => $userId,
-            'receiver_id' => $receiverId,
-            'content' => ""
-        ]);
-    }
+    // public function createNewConversation(int $userId, int $receiverId)
+    // {
+    //    $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at)
+    //             VALUES (:sender_id, :receiver_id, :content, NOW())";
+    //     $this->db->query($sql, [
+    //         'sender_id' => $userId,
+    //         'receiver_id' => $receiverId,
+    //         'content' => ""
+    //     ]);
+    // }
     
     /**
      * Récupère un utilisateur par son ID.

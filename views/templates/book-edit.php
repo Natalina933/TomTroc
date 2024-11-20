@@ -1,6 +1,13 @@
 <?php
 ?>
+<!-- <-bouton retour -->
+<h2>Modifier les informations</h2>
+<img src="<?php echo $book->getImg(); ?>" alt="Image du livre">
+<a href="index.php?action=book-detail&id=<?= $book->getId(); ?>">Retour</a>
+
+<!-- formulaire de modification du livre -->
 <h2>Modifier le livre</h2>
+<!-- on récupère les données du livre pour les afficher dans les inputs -->
 <form action="index.php?action=editbook&id=<?= $book->getId(); ?>" method="post" enctype="multipart/form-data">
     <input type="hidden" name="id" value="<?= $book->getId(); ?>">
 
