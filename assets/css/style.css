@@ -305,6 +305,9 @@ main {
     align-items: center;
 
 }
+
+/* section messagerie */
+
 .conversation-info .description {
     white-space: nowrap; /* Empêche le texte de se décomposer en plusieurs lignes */
     overflow: hidden; /* Cache le texte qui dépasse les limites */
@@ -519,11 +522,129 @@ form button:hover {
 
 
 /**
- * Styles pour le coin replié des formulaires
+ * Styles pour details book
  */
+ .book-edit-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
 
+.back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.edit-title {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.book-edit-content {
+    display: flex;
+    gap: 40px;
+}
+
+.book-image-section {
+    flex: 1;
+}
+
+.book-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.image-upload {
+    margin-top: 10px;
+}
+
+.upload-label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.file-input {
+    width: 100%;
+}
+
+.book-form-section {
+    flex: 2;
+}
+
+.form-title {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.form-checkbox {
+    margin-right: 10px;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .book-edit-content {
+        flex-direction: column;
+    }
+}
 /****************************************************************
-*style lastest book
+ * Styles pour la liste des livres
  ***********/
 /**
  * Styles pour la liste des livres
