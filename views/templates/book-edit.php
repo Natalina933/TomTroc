@@ -15,7 +15,7 @@
         </div>
 
         <div class="book-form-section">
-            <h2 class="form-title">Modifier le livre</h2>
+
             <form action="index.php?action=editbook&id=<?= $book->getId(); ?>" method="post" enctype="multipart/form-data" class="edit-form">
                 <input type="hidden" name="id" value="<?= $book->getId(); ?>">
 
@@ -30,18 +30,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="description" class="form-label">Description</label>
+                    <label for="description" class="form-label">Commentaire</label>
                     <textarea id="description" name="description" required class="form-textarea"><?= htmlspecialchars($book->getDescription()); ?></textarea>
                 </div>
 
-                <div class="form-group checkbox-group">
-                    <label for="available" class="form-label checkbox-label">
-                        <input type="checkbox" id="available" name="available" <?= $book->isAvailable() ? 'checked' : ''; ?> class="form-checkbox">
-                        Disponible
-                    </label>
+                <div class="form-group">
+                    <label for="available" class="form-label">Disponibilité</label>
+                    <select id="available" name="available" class="form-select">
+                        <option value="1" <?= $book->isAvailable() ? 'selected' : ''; ?>>Disponible</option>
+                        <option value="0" <?= !$book->isAvailable() ? 'selected' : ''; ?>>Non disponible</option>
+                    </select>
                 </div>
-
-                <button type="submit" class="submit-button">Enregistrer les modifications</button>
+                <button type="submit" class="submit-button">Valider</button>
             </form>
         </div>
     </div>
