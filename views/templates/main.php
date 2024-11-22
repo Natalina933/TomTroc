@@ -17,7 +17,7 @@
     <meta name="viewport" description="width=device-width, initial-scale=1.0">
     <title><?= ($title) ?></title>
     <link rel="icon" type="image/x-icon" href="../../assets/img/Mini_logo.svg">
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/main.css">
 </head>
 
 <body>

@@ -5,5 +5,9 @@
 @import 'account.css';
 @import 'books.css';
 @import 'messaging.css';
-@import 'forms.css';
 @import 'responsive.css';
+@import 'home.css';
+@import 'exchange.css';
+@import 'error.css';
+@import 'footer.css';
+@import 'layout.css';

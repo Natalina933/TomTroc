@@ -1,0 +1,253 @@
+/** * Styles pour book edit * **/
+.book-edit-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.back-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.edit-title {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.book-edit-content {
+    display: flex;
+    gap: 40px;
+}
+
+.book-image-section {
+    flex: 1;
+}
+
+.book-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+
+.image-upload {
+    margin-top: 10px;
+}
+
+.upload-label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.file-input {
+    width: 100%;
+}
+
+.book-form-section {
+    flex: 2;
+}
+
+.form-title {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.form-checkbox {
+    margin-right: 10px;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+
+/** * Styles pour la section book-detail * **/
+.book-detail {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.book-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.book-author {
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.book-description {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.book-owner-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.owner-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.owner-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.owner-photo.placeholder {
+    background-color: #ccc;
+}
+
+.owner-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.image-container img {
+    width: 100%;
+    /* height: auto; */
+    display: block;
+}
+
+.availability-badge {
+    position: absolute;
+    top: 12.7px;
+    left: 119px;
+    padding: 3.96px;
+    border-radius: 23.67px;
+    background: #C56D6D;
+    color: #fff;
+    opacity: 1;
+    width: 68.3px;
+    height: 14.92px;
+    font-family: 'Inter', sans-serif;
+    font-size: 7.1px;
+    font-weight: 500;
+    line-height: 8.59px;
+    text-align: center;
+}
+
+.image-container .availability-badge {
+    display: block;
+}
+
+/** * Styles info propriétaire de detailbook * **/
+.owner-info {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 114px;
+    max-width: 157px;
+    margin: 20px 0;
+}
+
+.owner-info .book-owner-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.owner-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.owner-photo.placeholder {
+    background-color: #ddd;
+    display: inline-block;
+}
+
+.owner-name {
+    font-size: 1em;
+    color: #555;
+    margin-top: 5px;
+    font-weight: 600;
+}

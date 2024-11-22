@@ -1,0 +1,79 @@
+header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: var(--backgroundColor);
+}
+/** * Styles navigation * **/
+.main-nav {
+    height: 80px;
+    background-color: var(--backgroundColor);
+    position: relative;
+}
+.nav-wrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+/* mettre flex-column au lieu de.nav-group {
+    display: flex;
+    flex-direction: column;
+} */
+.nav-link {
+    font-family: 'Inter';
+    font-size: 12px;
+    text-align: left;
+    color: var(--textColor);
+    padding: 10px 20px;
+    position: relative;
+    display: inline-block;
+}
+.nav-link:hover {
+    font-weight: 400;
+}
+/** * style logo * **/
+/* mettre flex-center au lieu de .logo-link {
+    display: flex;
+    align-items: center;
+} */
+.logo-image {
+    width: 155px;
+    height: 51px;
+}
+/** * styles hamburger * **/
+.hamburger {
+    /* display: flex; */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 40px;
+    color: var(--hamburgerColor);
+    /* right: 20px; */
+    z-index: 11;
+}
+/** * styles menu * **/
+.menu {
+    display: none;
+    flex-direction: column;
+    background-color: var(--buttonDefaultColor);
+}
+.menu.active {
+    display: flex;
+}
+/** * Styles pour la bulle des messages non lus * **/
+.unread-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #ff4d4d;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,60 @@
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/** * Styles pour le bouton * **/
+.btn {
+    display: inline-block;
+    width: 335px;
+    padding: 22px 38px;
+    border-radius: 10px;
+    background-color: var(--buttonDefaultColor);
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    margin: 20px auto;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+.btn.view-all-books {
+    width: 218px;
+    height: 63px;
+    padding: 22px 38px;
+    border-radius: 10px;
+    border: 1px solid var(--buttonDefaultColor);
+    background-color: #F5F3EF;
+    opacity: 1;
+    color: var(--buttonDefaultColor);
+    font-size: 1em;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 30px;
+    gap: 10px;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.36px;
+    text-align: center;
+}
+
+.btn.view-all-books:hover {
+    background-color: #E2E0DA;
+    /* Couleur de fond au survol */
+    border-color: #008C4F;
+}

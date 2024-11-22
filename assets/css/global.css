@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+body {
+    font-family: 'Playfair Display';
+    background-color: var(--backgroundColor);
+    color: var(--textColor);
+}
+h1, h2 {
+    font-weight: 400;
+    color: var(--headerColor);
+}
+h1 {
+    font-size: 36px;
+    line-height: 47.99px;
+    margin: 20px;
+}
+h2 {
+    font-size: 32px;
+    line-height: 42.66px;
+    margin: 20px 0;
+}
+ul {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+main {
+    display: flex;
+    flex-direction: column;
+}
