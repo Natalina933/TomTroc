@@ -13,12 +13,34 @@ class Utils {
      */
     public static function convertDateToFrenchFormat(DateTime $date) : string
     {
-        // Attention, s'il y a un soucis lié à IntlDateFormatter c'est qu'il faut
-        // activer l'extention intl_date_formater (ou intl) au niveau du serveur apache. 
-        // Ca peut se faire depuis php.ini ou parfois directement depuis votre utilitaire (wamp/mamp/xamp)
+        // Attention, s'il y a un problème lié à IntlDateFormatter, 
+        // il faut activer l'extension "intl" dans le fichier php.ini.
         $dateFormatter = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::FULL);
         $dateFormatter->setPattern('EEEE d MMMM Y');
         return $dateFormatter->format($date);
+    }
+
+    /**
+     * Formate une date relative au format "il y a X jours/semaines/mois/années".
+     * @param DateTime $date : La date à formatter.
+     * @return string : Une chaîne de caractères indiquant combien de temps s'est écoulé depuis la date.
+     */
+    public static function formatMemberSince(DateTime $date) : string
+    {
+        $now = new DateTime();
+        $interval = $now->diff($date);
+
+        if ($interval->y > 0) {
+            return "Membre depuis " . $interval->y . " an" . ($interval->y > 1 ? "s" : "");
+        } elseif ($interval->m > 0) {
+            return "Membre depuis " . $interval->m . " mois";
+        } elseif ($interval->d >= 7) {
+            return "Membre depuis " . floor($interval->d / 7) . " semaine" . (floor($interval->d / 7) > 1 ? "s" : "");
+        } elseif ($interval->d > 0) {
+            return "Membre depuis " . $interval->d . " jour" . ($interval->d > 1 ? "s" : "");
+        } else {
+            return "Membre depuis aujourd'hui";
+        }
     }
 
     /**
@@ -38,8 +60,8 @@ class Utils {
     }
 
     /**
-     * Cette méthode retourne le code js a insérer en attribut d'un bouton.
-     * pour ouvrir une popup "confirm", et n'effectuer l'action que si l'utilisateur
+     * Cette méthode retourne le code js à insérer en attribut d'un bouton.
+     * Pour ouvrir une popup "confirm", et n'effectuer l'action que si l'utilisateur
      * a bien cliqué sur "ok".
      * @param string $message : le message à afficher dans la popup.
      * @return string : le code js à insérer dans le bouton.
@@ -50,20 +72,20 @@ class Utils {
     }
 
     /**
-     * Cette méthode protège une chaine de caractères contre les attaques XSS.
+     * Cette méthode protège une chaîne de caractères contre les attaques XSS.
      * De plus, elle transforme les retours à la ligne en balises <p> pour un affichage plus agréable. 
-     * @param string $string : la chaine à protéger.
-     * @return string : la chaine protégée.
+     * @param string $string : la chaîne à protéger.
+     * @return string : la chaîne protégée.
      */
     public static function format(string $string) : string
     {
-        // Etape 1, on protège le texte avec htmlspecialchars.
+        // Étape 1 : protéger le texte avec htmlspecialchars.
         $finalString = htmlspecialchars($string, ENT_QUOTES);
 
-        // Etape 2, le texte va être découpé par rapport aux retours à la ligne, 
+        // Étape 2 : découper par rapport aux retours à la ligne.
         $lines = explode("\n", $finalString);
 
-        // On reconstruit en mettant chaque ligne dans un paragraphe (et en sautant les lignes vides).
+        // Reconstruire en mettant chaque ligne dans un paragraphe.
         $finalString = "";
         foreach ($lines as $line) {
             if (trim($line) != "") {
@@ -86,5 +108,4 @@ class Utils {
     {
         return $_REQUEST[$variableName] ?? $defaultValue;
     }
-
 }
