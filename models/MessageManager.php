@@ -107,7 +107,7 @@
             return [];
         }
     }
-   
+
 
     /**
      * Récupère un utilisateur par son ID.
@@ -155,6 +155,25 @@
         } catch (PDOException $e) {
             echo "Erreur lors de l'envoi du message : " . $e->getMessage();
         }
+    }
+    public function getLastMessagesByUserId(int $userId): array
+    {
+        $sql = "SELECT m.* FROM message m
+            INNER JOIN (
+                SELECT LEAST(sender_id, receiver_id) as user1, GREATEST(sender_id, receiver_id) as user2, MAX(created_at) as max_date
+                FROM message
+                WHERE sender_id = :userId OR receiver_id = :userId
+                GROUP BY LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id)
+            ) latest ON (m.sender_id = latest.user1 AND m.receiver_id = latest.user2) OR (m.sender_id = latest.user2 AND m.receiver_id = latest.user1)
+            WHERE m.created_at = latest.max_date
+            ORDER BY m.created_at DESC";
+
+        $stmt = $this->db->query($sql, ['userId' => $userId]);
+        $messages = [];
+        while ($messageData = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $messages[] = new Message($messageData);
+        }
+        return $messages;
     }
 
     /**

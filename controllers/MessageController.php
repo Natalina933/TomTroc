@@ -22,11 +22,14 @@ class MessageController
     {
         $this->ensureUserIsConnected();
         $userId = $_SESSION['user']['id'];
-
         $messageManager = new MessageManager();
-        $unreadCount = $messageManager->getUnreadMessagesCount($userId);
 
-        // Si un `receiver_id` est passé, ouvre la conversation avec cet utilisateur
+        $viewData = [
+            'messages' => $messageManager->getMessagesByUserId($userId),
+            'unreadCount' => $messageManager->getUnreadMessagesCount($userId),
+            'lastMessages' => $messageManager->getLastMessagesByUserId($userId)
+        ];
+
         if (isset($_GET['receiver_id'])) {
             $receiverId = (int) $_GET['receiver_id'];
             $receiver = $messageManager->getUserById($receiverId);
@@ -36,33 +39,13 @@ class MessageController
                 exit;
             }
 
-            // Vérifie si une conversation existe déjà entre l'utilisateur et le destinataire
-            $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
-
-            // Si aucune conversation n'existe, créer un message initial pour démarrer la conversation
-            if (empty($conversation)) {
-                // $messageManager->createNewConversation($userId, $receiverId);
-                // Recharger la conversation pour inclure le message initial
-                $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
-            }
-
-            $receiverName = $receiver['username'];
-
-            // Rendre la vue avec les données de conversation
-            $view = new View('Messagerie');
-            $view->render('messaging', [
-                'messages' => $messageManager->getMessagesByUserId($userId),
-                'conversation' => $conversation,
-                'receiverId' => $receiverId,
-                'receiverName' => $receiverName,
-                'unreadCount' => $unreadCount
-            ]);
-        } else {
-            // Afficher les messages de l'utilisateur si aucun `receiver_id` n'est passé
-            $messages = $messageManager->getMessagesByUserId($userId);
-            $view = new View('Messagerie');
-            $view->render('messaging', ['messages' => $messages]);
+            $viewData['conversation'] = $messageManager->getConversationBetweenUsers($userId, $receiverId);
+            $viewData['receiverId'] = $receiverId;
+            $viewData['receiverName'] = $receiver['username'];
         }
+
+        $view = new View('Messagerie');
+        $view->render('messaging', $viewData);
     }
 
 
