@@ -137,6 +137,15 @@
             return 0;
         }
     }
+    // public function markMessagesAsRead(int $userId, int $senderId): void
+    // {
+    //     $sql = "UPDATE message SET is_read = 1 WHERE receiver_id = :userId AND sender_id = :senderId AND is_read = 0";
+    //     try {
+    //         $this->db->query($sql, ['userId' => $userId, 'senderId' => $senderId]);
+    //     } catch (PDOException $e) {
+    //         error_log("Erreur lors du marquage des messages comme lus : " . $e->getMessage());
+    //     }
+    // }
 
     /**
      * Envoie un message.
