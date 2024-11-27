@@ -36,6 +36,7 @@
                     </p>
 
 
+                    <p>Membre depuis : <?= htmlspecialchars(Utils::formatMemberSince(new DateTime($user['createdAt'])), ENT_QUOTES, 'UTF-8') ?></p>
                     <p>BIBLIOTHÈQUE</p>
                     <div class="library-info">
                         <img src="/assets/img/icon_books.svg" alt="Icône de livres">
@@ -50,7 +51,7 @@
             <h2>Vos informations personnelles</h2>
             <form action="index.php?action=editUser" method="post">
                 <label for="email">Adresse email</label>
-                <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8') ?>" disabled readonly required>
+                <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8') ?>" disabled required>
 
                 <label for="password">Mot de passe</label>
                 <input type="password" id="password" name="password" placeholder="••••••••••••" disabled>

@@ -11,8 +11,8 @@ class UserManager extends AbstractEntityManager
         $sql = "SELECT * FROM user";
         $result = $this->db->query($sql);
         $users = [];
-        while ($user = $result->fetch()) {
-            $users[] = new User($user);
+        while ($userData = $result->fetch(PDO::FETCH_ASSOC)) {
+            $users[] = new User($userData);
         }
         return $users;
     }
@@ -23,24 +23,16 @@ class UserManager extends AbstractEntityManager
      */
     public function getUserById(int $id): ?User
     {
+        $sql = "SELECT * FROM user WHERE id = :id";
         try {
-            // Exécution directe de la requête SQL avec l'ID spécifié
-            $sql = "SELECT * FROM user WHERE id = :id";
             $result = $this->db->query($sql, [":id" => $id]);
-            $user = $result->fetch();
-            // Vérification des résultats
-            if ($user) {
-
-
-                return new User($user);
-            } else {
-                return null;
-            }
+            $userData = $result->fetch(PDO::FETCH_ASSOC);
+            return $userData ? new User($userData) : null;
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la recherche de l'utilisateur : " . $e->getMessage());
+            error_log("Erreur lors de la recherche de l'utilisateur : " . $e->getMessage());
+            return null;
         }
     }
-
 
     /**
      * Récupère un utilisateur par son email.
@@ -49,18 +41,17 @@ class UserManager extends AbstractEntityManager
      */
     public function getUserByEmail(string $email): ?User
     {
+        $sql = "SELECT * FROM user WHERE email = :email";
         try {
-
-            $sql = "SELECT * FROM user WHERE email = :email";
             $stmt = $this->db->query($sql, [':email' => $email]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            // var_dump($user);
-
-            return $user ? new User($user) : null;
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $userData ? new User($userData) : null;
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
+            error_log("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
+            return null;
         }
     }
+
 
     /**
      * Crée un nouvel utilisateur.
@@ -106,13 +97,15 @@ class UserManager extends AbstractEntityManager
     public function getUserByUsername(string $username): ?User
     {
         $sql = "SELECT * FROM user WHERE username = :username";
-        $stmt = $this->db->query($sql);
-        $stmt->execute([':username' => $username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $user ? new User($user) : null;
+        try {
+            $stmt = $this->db->query($sql, [':username' => $username]);
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $userData ? new User($userData) : null;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la récupération de l'utilisateur : " . $e->getMessage());
+            return null;
+        }
     }
-
 
     /**
      * Met à jour les informations d'un utilisateur.
@@ -121,44 +114,48 @@ class UserManager extends AbstractEntityManager
      */
     public function editUser(User $user): bool
     {
-        // Accès à l'instance PDO via getPDO()
-        $pdo = DBManager::getInstance()->getPDO();
 
         // Construction de la requête SQL avec les données échappées
-        $sql = "UPDATE user SET username = " . $pdo->quote($user->getUsername()) .
-            ", email = " . $pdo->quote($user->getEmail());
-
+        $sql = "UPDATE user SET username = :username, email = :email";
+        $params = [
+            ':username' => $user->getUsername(),
+            ':email' => $user->getEmail(),
+            ':id' => $user->getId()
+        ];
         // Mettre à jour le mot de passe uniquement s'il a été modifié
         if (!empty($user->getPassword())) {
-            $sql .= ", password = " . $pdo->quote($user->getPassword());
+            $sql .= ", password = :password";
+            $params[':password'] = $user->getPassword();
         }
-        $sql .= " WHERE id = " . (int)$user->getId();
 
-        // Exécuter la requête avec query()
-        return $pdo->query($sql) !== false;
+        $sql .= " WHERE id = :id";
+
+        try {
+            return $this->db->query($sql, $params) !== false;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour de l'utilisateur : " . $e->getMessage());
+            return false;
+        }
     }
 
     public function emailExists($email, $userId = null): bool
     {
-        // Vérification de l'ID utilisateur et email pour éviter les injections
-        $email = htmlspecialchars($email, ENT_QUOTES);
-        $userId = intval($userId);
+        $sql = "SELECT COUNT(*) FROM user WHERE email = :email";
+        $params = [':email' => $email];
 
-        // Construction de la requête SQL
-        $sql = "SELECT COUNT(*) FROM user WHERE email = '{$email}'";
-
-        // Si un userId est fourni, on exclut cet utilisateur
         if ($userId !== null) {
-            $sql .= " AND id != {$userId}";
+            $sql .= " AND id != :userId";
+            $params[':userId'] = $userId;
         }
 
-        // Exécution de la requête avec query()
-        $stmt = $this->db->query($sql);
-
-        // Retourner true si l'email existe déjà
-        return $stmt->fetchColumn() > 0;
+        try {
+            $stmt = $this->db->query($sql, $params);
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la vérification de l'email : " . $e->getMessage());
+            return false;
+        }
     }
-
 
     /**
      * Recherche un utilisateur existant par un critère.
@@ -167,22 +164,24 @@ class UserManager extends AbstractEntityManager
      */
     public function findExistingUser(array $criteria): bool
     {
-        $sql = "SELECT * FROM user";
+        $sql = "SELECT COUNT(*) FROM user WHERE ";
+        $conditions = [];
         $params = [];
 
-        if (!empty($criteria)) {
-            $conditions = [];
-            foreach ($criteria as $key => $value) {
-                $conditions[] = "$key = :$key";
-                $params[$key] = $value;
-            }
-            $sql .= " WHERE " . implode(" AND ", $conditions);
+        foreach ($criteria as $key => $value) {
+            $conditions[] = "$key = :$key";
+            $params[":$key"] = $value;
         }
-        // var_dump($params, $sql);
-        $stmt = $this->db->query($sql, $params);
-        $stmt->execute();
 
-        return $stmt->rowCount() > 0;
+        $sql .= implode(" AND ", $conditions);
+
+        try {
+            $stmt = $this->db->query($sql, $params);
+            return $stmt->fetchColumn() > 0;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la recherche d'un utilisateur existant : " . $e->getMessage());
+            return false;
+        }
     }
     /**
      * Met à jour la photo de profil d'un utilisateur.
@@ -195,17 +194,14 @@ class UserManager extends AbstractEntityManager
         // Préparation de la requête SQL pour mettre à jour l'image de profil
         $sql = "UPDATE user SET profilePicture = :profilePicture WHERE id = :id";
 
-        // Récupération de l'instance PDO via DBManager
-        $db = DBManager::getInstance()->getPDO();
-
-        // Préparation de la requête
-        $stmt = $db->prepare($sql);
-
-        // Liaison des paramètres
-        $stmt->bindParam(':profilePicture', $profilePicturePath, PDO::PARAM_STR);
-        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
-
-        // Exécution de la requête et retour du succès ou de l'échec
-        return $stmt->execute();
+        try {
+            return $this->db->query($sql, [
+                ':profilePicture' => $profilePicturePath,
+                ':id' => $userId
+            ]) !== false;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour de la photo de profil : " . $e->getMessage());
+            return false;
+        }
     }
 }

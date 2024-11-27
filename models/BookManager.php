@@ -15,8 +15,8 @@ class bookManager extends AbstractEntityManager
         $result = $this->db->query($sql);
         $books = [];
 
-        while ($book = $result->fetch()) {
-            $books[] = new Book($book);
+        while ($bookData = $result->fetch(PDO::FETCH_ASSOC)) {
+            $books[] = new Book($bookData);
         }
         return $books;
     }
@@ -52,12 +52,13 @@ class bookManager extends AbstractEntityManager
 
         if ($limit > 0) {
             $sql .= " LIMIT $limit";
+            $params[':limit'] = $limit;
         }
 
         $result = $this->db->query($sql, $params);
         $books = [];
-        while ($book = $result->fetch()) {
-            $books[] = new Book($book);
+        while ($bookData = $result->fetch(PDO::FETCH_ASSOC)) {
+            $books[] = new Book($bookData);
         }
 
         return $books;
@@ -79,8 +80,8 @@ class bookManager extends AbstractEntityManager
         $sql = "SELECT * FROM book WHERE user_id = :id_user";
         $result = $this->db->query($sql, ['id_user' => $userId]);
         $books = [];
-        while ($book = $result->fetch()) {
-            $books[] = new Book($book);
+        while ($bookData = $result->fetch(PDO::FETCH_ASSOC)) {
+            $books[] = new Book($bookData);
         }
         return $books;
     }
@@ -91,19 +92,14 @@ class bookManager extends AbstractEntityManager
      */
     public function addOrUpdateBook(Book $book): void
     {
-        if ($book->getId() == -1) {
-            $this->addBook($book);
-        } else {
-            $this->editBook($book);
-        }
+        $book->getId() == -1 ? $this->addBook($book) : $this->editBook($book);
     }
 
     public function addBook(Book $book): void
     {
-        $sql = "INSERT INTO book (user_id, title, author, description, img, available) 
-            VALUES (:userId, :title, :author, :description, :img, :available)";
+        $sql = "INSERT INTO book (id_user, title, description, date_creation) VALUES (:id_user, :title, :description, NOW())";
         $this->db->query($sql, [
-            'userId' => $book->getUserId(),
+            'id_user' => $book->getUserId(),
             'title' => $book->getTitle(),
             'author' => $book->getAuthor(),
             'description' => $book->getDescription(),
@@ -130,47 +126,35 @@ class bookManager extends AbstractEntityManager
 
     public function getBookWithSellerInfo(int $bookId): ?array
     {
-        $sql = "
-            SELECT 
-                book.id AS book_id, 
-                book.title AS book_title, 
-                book.author AS book_author, 
-                book.img AS book_img, 
-                book.available AS book_availability, 
-                user.username AS seller_username, 
-                user.profilePicture AS seller_profilePicture
-            FROM 
-                book 
-            INNER JOIN 
-                user 
-            ON 
-                book.user_id = user.id
-            WHERE 
-                book.id = :bookId
-        ";
+        $sql = "SELECT  b.id AS book_id, 
+                        b.title AS book_title, 
+                        b.author AS book_author, 
+                        b.img AS book_img, 
+                        b.available AS book_availability, 
+                        u.username AS seller_username, 
+                        u.profilePicture AS seller_profilePicture
+                FROM book b
+                INNER JOIN user u ON b.user_id = u.id
+                WHERE b.id = :bookId";
 
-        $stmt = $this->db->query($sql, [
-            ':bookId' => $bookId,
-        ]);
+        $stmt = $this->db->query($sql, [':bookId' => $bookId]);
+        $bookData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $bookData = [];  // Création d'un tableau pour stocker les données du livre et du vendeur
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $bookData[] = [
-                'id' => $row['book_id'],
-                'title' => $row['book_title'],
-                'author' => $row['book_author'],
-                'img' => $row['book_img'],
-                'is_available' => $row['book_availability'],
-                'seller' => [
-                    'username' => $row['seller_username'],
-                    'profilePicture' => $row['seller_profilePicture'],
-                ],
-            ];
+        if (!$bookData) {
+            return null;
         }
 
-        // Retourne soit un tableau avec les informations, soit null si aucun résultat n'a été trouvé
-        return !empty($bookData) ? $bookData[0] : null;
+        return [
+            'id' => $bookData['book_id'],
+            'title' => $bookData['book_title'],
+            'author' => $bookData['book_author'],
+            'img' => $bookData['book_img'],
+            'is_available' => $bookData['book_availability'],
+            'seller' => [
+                'username' => $bookData['seller_username'],
+                'profilePicture' => $bookData['seller_profilePicture'],
+            ],
+        ];
     }
 
 
@@ -187,26 +171,9 @@ class bookManager extends AbstractEntityManager
     public function countUserBooks(int $userId): int
     {
         // Préparation de la requête SQL pour compter les livres de l'utilisateur
-        $sql = "SELECT COUNT(*) as total_books FROM book";
-        $params = [];
-
-        // Ajout de la condition pour l'ID de l'utilisateur
-        $criteria = ['user_id' => $userId];
-
-        if (!empty($criteria)) {
-            $conditions = [];
-            foreach ($criteria as $key => $value) {
-                $conditions[] = "$key = :$key";
-                $params[$key] = $value;
-            }
-            $sql .= " WHERE " . implode(" AND ", $conditions);
-        }
-
-        // Exécution de la requête
-        $stmt = $this->db->query($sql, $params);
-        $result = $stmt->fetch();
-
-        // Retourner le nombre total de livres
-        return $result['total_books'];
+        $sql = "SELECT COUNT(*) as total_books FROM book WHERE user_id = :userId";
+        $stmt = $this->db->query($sql, ['userId' => $userId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)$result['total_books'];
     }
 }

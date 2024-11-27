@@ -5,22 +5,27 @@ class UserController
     const ROLE_ADMIN = 'admin';
     const ROLE_USER = 'user';
 
+    private $userManager;
+    private $bookManager;
+
+    public function __construct()
+    {
+        $this->userManager = new UserManager();
+        $this->bookManager = new BookManager();
+    }
+
     public function showMyAccount(): void
     {
         $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
         // var_dump($_SESSION);
         $userId = $_SESSION['user']['id'];
+        $books = $this->bookManager->getAllBooksByUserId($userId);
+        $totalBooks = $this->bookManager->countUserBooks($userId);
 
-        $bookManager = new BookManager();
-        $books = $bookManager->getAllBooksByUserId($userId);
-        // Compter les livres de l'utilisateur
-        $totalBooks = $bookManager->countUserBooks($userId);
-        $dateFormatter = new DateFormatter();
         $this->renderView('myAccount', "Mon Compte", [
-            'user' => (array)$_SESSION['user'],
+            'user' => $_SESSION['user'],
             'books' => $books,
-            'totalBooks' => $totalBooks,
-            'dateFormatter' => $dateFormatter,
+            'totalBooks' => $totalBooks
         ]);
     }
 
@@ -44,34 +49,14 @@ class UserController
         $email = Utils::request("email");
         $password = Utils::request("password");
 
-        // On vérifie que les données sont valides.
-        if (empty($email) || empty($password)) {
-            throw new Exception("Tous les champs sont obligatoires.");
+        $this->validateRequiredFields([$email, $password]);
+
+        $user = $this->userManager->getUserByEmail($email);
+        if (!$user || !password_verify($password, $user->getPassword())) {
+            throw new Exception("Identifiants incorrects.");
         }
 
-        // On vérifie que l'utilisateur existe.
-        $userManager = new UserManager();
-        $user = $userManager->getUserByEmail($email);
-        if (!$user) {
-            throw new Exception("L'utilisateur demandé n'existe pas.");
-        }
-
-        // On vérifie que le mot de passe est correct.
-        if (!password_verify($password, $user->getPassword())) {
-            $hash = password_hash($password, PASSWORD_DEFAULT);
-            throw new Exception("Le mot de passe est incorrect : $hash");
-        }
-        // Assurez-vous que createdAt est un DateTime
-        $_SESSION['user'] = [
-            'id' => $user->getId(),
-            "role" => $user->getRole(),
-            "email" => $user->getEmail(),
-            "username" => $user->getUsername(),
-            'createdAt' => $user->getCreatedAt(),
-            "profilePicture" => $user->getProfilePicture()
-        ];
-
-        // On redirige vers la page d'administration.
+        $this->setUserSession($user);
         Utils::redirect("myAccount");
     }
 
@@ -109,21 +94,9 @@ class UserController
 
         $this->validateRequiredFields([$username, $email, $password]);
 
-        $userManager = new UserManager();
-
-        try {
-            $user = $userManager->createUser($username, $email, $password);
-            $_SESSION['user'] = [
-                'id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'role' => $user->getRole()
-            ];
-            Utils::redirect("myAccount", ["message" => "Inscription réussie !"]);
-        } catch (Exception $e) {
-            // Gérer l'erreur, par exemple en la transmettant à la vue
-            Utils::redirect("registrationForm", ["error" => $e->getMessage()]);
-        }
+        $user = $this->userManager->createUser($username, $email, $password);
+        $this->setUserSession($user);
+        Utils::redirect("myAccount", ["message" => "Inscription réussie !"]);
     }
 
     /**
@@ -136,12 +109,8 @@ class UserController
         $this->ensureUserHasRole(self::ROLE_ADMIN);
 
         $bookId = Utils::request("id", -1);
-        $bookManager = new BookManager();
-        $book = $bookManager->getBookById($bookId) ?? new Book();
-
-        $this->renderView('updateBookForm', "Édition d'un Livre", [
-            'book' => $book
-        ]);
+        $book = $this->bookManager->getBookById($bookId) ?? new Book();
+        $this->renderView('updateBookForm', "Édition d'un Livre", ['book' => $book]);
     }
 
     /**
@@ -152,25 +121,20 @@ class UserController
     public function updateBook(): void
     {
         $this->ensureUserIsConnected();
+        $this->ensureUserHasRole(self::ROLE_ADMIN);
 
-        $id = Utils::request("id", -1);
-        $title = Utils::request("title");
-        $author = Utils::request("author");
-        $description = Utils::request("description");
-
-        $this->validateRequiredFields([$title, $author]);
-
-        $book = new Book([
-            'id' => $id,
-            'title' => $title,
-            'author' => $author,
-            'description' => $description,
+        $bookData = [
+            'id' => Utils::request("id", -1),
+            'title' => Utils::request("title"),
+            'author' => Utils::request("author"),
+            'description' => Utils::request("description"),
             'added_by' => $_SESSION['idUser']
-        ]);
+        ];
 
-        $bookManager = new BookManager();
-        $bookManager->addOrUpdateBook($book);
+        $this->validateRequiredFields([$bookData['title'], $bookData['author']]);
 
+        $book = new Book($bookData);
+        $this->bookManager->addOrUpdateBook($book);
         Utils::redirect("admin");
     }
 
@@ -185,14 +149,11 @@ class UserController
         $this->ensureUserHasRole(self::ROLE_ADMIN);
 
         $id = Utils::request("id", -1);
-
         if ($id <= 0) {
             throw new Exception("ID du livre invalide.");
         }
 
-        $bookManager = new BookManager();
-        $bookManager->deleteBook($id);
-
+        $this->bookManager->deleteBook($id);
         Utils::redirect("admin");
     }
 
@@ -202,21 +163,14 @@ class UserController
      */
     private function ensureUserIsConnected(): void
     {
-        if (!isset($_SESSION['user'])) { // Vérification de la session utilisateur
-            Utils::redirect("connectionForm"); // Redirection si l'utilisateur n'est pas connecté
-            exit; // On arrête l'exécution pour éviter tout comportement indésirable
+        if (!isset($_SESSION['user'])) {
+            Utils::redirect("connectionForm");
         }
     }
 
-
-    /**
-     * Vérifie que l'utilisateur a un rôle spécifique.
-     * @param string $role
-     * @throws Exception
-     */
     private function ensureUserHasRole(string $role): void
     {
-        if (isset($_SESSION['user']) || $_SESSION['user']->getRole() !== $role) {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== $role) {
             throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
         }
     }
@@ -252,164 +206,82 @@ class UserController
         }
     }
 
-    /**
-     * Crée un nouvel utilisateur.
-     * @param string $username
-     * @param string $email
-     * @param string $password
-     * @return User
-     */
-
-    public function updateProfilePicture()
+    private function setUserSession(User $user): void
     {
-        // Vérifier si un fichier est téléchargé
-        if (($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
-            $fileTmpPath = $_FILES['profilePicture']['tmp_name'];
-            $fileName = $_FILES['profilePicture']['name'];
-            $fileSize = $_FILES['profilePicture']['size'];
-            $fileNameCmps = explode(".", $fileName);
-            $fileExtension = strtolower(end($fileNameCmps));
-            var_dump($fileTmpPath);
-            // Générer un nom de fichier unique pour éviter les conflits
-            $newFileName = uniqid('profile_', true) . '.' . $fileExtension;
+        $_SESSION['user'] = [
+            'id' => $user->getId(),
+            "role" => $user->getRole(),
+            "email" => $user->getEmail(),
+            "username" => $user->getUsername(),
+            "createdAt" => $user->getCreatedAt(),
+            "profilePicture" => $user->getProfilePicture()
+        ];
+        $_SESSION['idUser'] = $user->getId();
+    }
 
-            // Taille maximale autorisée (exemple : 5 Mo)
-            $maxFileSize = 5 * 1024 * 1024; // 5 Mo
+    private function updateUserSession(User $user): void
+    {
+        $_SESSION['user'] = [
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'username' => $user->getUsername(),
+            'role' => $user->getRole(),
+            'profilePicture' => $user->getProfilePicture(),
+            'createdAt' => $user->getCreatedAt(),
+        ];
+    }
 
-            // Définir les extensions autorisées
-            $allowedfileExtensions = ['jpg', 'jpeg', 'png', 'svg'];
+    private function validateProfilePicture(array $file): void
+    {
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
+        $maxFileSize = 5 * 1024 * 1024; // 5 Mo
 
-            // Vérifier l'extension du fichier
-            if (!in_array($fileExtension, $allowedfileExtensions)) {
-                $error = "Type de fichier non autorisé. Veuillez télécharger un fichier au format jpg, jpeg, png ou svg.";
-                header('Location: index.php?action=myAccount&status=invalid_file_type&error=' . urlencode($error));
-                exit;
-            }
+        $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-            // Vérifier la taille du fichier
-            if ($fileSize > $maxFileSize) {
-                $error = "Le fichier est trop volumineux. La taille maximale autorisée est de 5 Mo.";
-                header('Location: index.php?action=myAccount&status=invalid_file_size&error=' . urlencode($error));
-                exit;
-            }
+        if (!in_array($fileExtension, $allowedExtensions)) {
+            Utils::redirect("myAccount", ["error" => "Type de fichier non autorisé."]);
+        }
 
-            // Dossier de stockage de l'image
-            $uploadFileDir = '/assets/img/users/';
-            $dest_path = $uploadFileDir . $newFileName;
-            // Déplacer le fichier téléchargé dans le dossier de destination
-            if (move_uploaded_file($fileTmpPath, __DIR__ . "/.."  . $dest_path)) {
-
-
-                // var_dump(__DIR__ . "/.." . $dest_path);
-                // Afficher la nouvelle image dans la page
-
-
-                // Mettre à jour la photo de profil dans la base de données
-                $userId = $_SESSION['user']['id']; // L'utilisateur est authentifié
-                $userModel = new UserManager();
-
-                // Appel à la méthode qui met à jour la photo de profil
-                if ($userModel->updateProfilePicture($userId, $dest_path)) {
-                    // Mettre à jour la session avec la nouvelle image
-                    $_SESSION['user']['profilePicture'] = $dest_path;
-
-                    // Redirection avec succès
-                    header('Location: index.php?action=myAccount&status=success');
-                    exit;
-                } else {
-                    $error = "Erreur lors de la mise à jour de la base de données.";
-                    header('Location: index.php?action=myAccount&status=db_error&error=' . urlencode($error));
-                    exit;
-                }
-            } else {
-                $error = "Erreur lors du déplacement du fichier. Veuillez réessayer.";
-                header('Location: index.php?action=myAccount&status=move_error&error=' . urlencode($error));
-                exit;
-            }
-        } else {
-            // Gérer les différentes erreurs de téléchargement
-            switch ($_FILES['profilePicture']['error']) {
-                case UPLOAD_ERR_INI_SIZE:
-                case UPLOAD_ERR_FORM_SIZE:
-                    $error = "Le fichier est trop volumineux.";
-                    break;
-                case UPLOAD_ERR_PARTIAL:
-                    $error = "Le fichier n'a été que partiellement téléchargé.";
-                    break;
-                case UPLOAD_ERR_NO_FILE:
-                    $error = "Aucun fichier n'a été téléchargé.";
-                    break;
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    $error = "Dossier temporaire manquant.";
-                    break;
-                case UPLOAD_ERR_CANT_WRITE:
-                    $error = "Erreur d'écriture du fichier sur le disque.";
-                    break;
-                case UPLOAD_ERR_EXTENSION:
-                    $error = "Téléchargement de fichier arrêté par une extension PHP.";
-                    break;
-                default:
-                    $error = "Erreur inconnue lors du téléchargement.";
-                    break;
-            }
-
-            header('Location: index.php?action=myAccount&status=upload_error&error=' . urlencode($error));
-            exit;
+        if ($file['size'] > $maxFileSize) {
+            Utils::redirect("myAccount", ["error" => "Le fichier est trop volumineux."]);
         }
     }
-    public function editUser(): void
+
+    private function moveUploadedFile(array $file): string
     {
-        // ID de l'utilisateur connecté
+        $uploadDir = '/assets/img/users/';
+        $newFileName = uniqid('profile_', true) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+        $destPath = $uploadDir . $newFileName;
+
+        if (!move_uploaded_file($file['tmp_name'], __DIR__ . "/.." . $destPath)) {
+            Utils::redirect("myAccount", ["error" => "Erreur lors du déplacement du fichier."]);
+        }
+
+        return $destPath;
+    }
+
+    private function updateUserProfilePicture(string $newFileName): void
+    {
         $userId = $_SESSION['user']['id'];
-
-        // Récupérer les données du formulaire
-        $email = $_POST['email'] ?? '';
-        $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
-        $username = $_POST['username'] ?? '';
-
-        // Vérifier si l'email existe déjà
-        $userManager = new UserManager();
-        if ($userManager->emailExists($email, $userId)) {
-            $error = "Cette adresse email est déjà utilisée.";
-            header('Location: index.php?action=myAccount&error=' . urlencode($error));
-            exit;
+        if (!$this->userManager->updateProfilePicture($userId, $newFileName)) {
+            Utils::redirect("myAccount", ["error" => "Erreur lors de la mise à jour de la base de données."]);
         }
+        $_SESSION['user']['profilePicture'] = $newFileName;
+    }
 
-        // Récupérer l'utilisateur à partir de son ID
-        $user = $userManager->getUserById($userId);
+    private function handleUploadError(int $errorCode): void
+    {
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE => "Le fichier est trop volumineux.",
+            UPLOAD_ERR_FORM_SIZE => "Le fichier est trop volumineux.",
+            UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement téléchargé.",
+            UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été téléchargé.",
+            UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant.",
+            UPLOAD_ERR_CANT_WRITE => "Erreur d'écriture du fichier sur le disque.",
+            UPLOAD_ERR_EXTENSION => "Téléchargement de fichier arrêté par une extension PHP.",
+        ];
 
-        if ($user) {
-            // Mettre à jour les informations de l'utilisateur
-            $user->setEmail($email);
-            if (!empty($password)) {
-                $user->setPassword($password);
-            }
-            $user->setUsername($username);
-
-            // Sauvegarder les modifications
-            if ($userManager->editUser($user)) {
-                // Mise à jour des données de session
-                $_SESSION['user'] = [
-                    'id' => $user->getId(),
-                    'email' => $user->getEmail(),
-                    'username' => $user->getUsername(),
-                    'role' => $user->getRole(),
-                    'profilePicture' => $user->getProfilePicture(),
-                    'createdAt' => $user->getCreatedAt(),
-                ];
-
-                // Rediriger avec un message de succès
-                header('Location: index.php?action=myAccount&status=success');
-                exit;
-            } else {
-                // Message d'erreur si la mise à jour échoue
-                header('Location: index.php?action=myAccount&error=Erreur lors de la mise à jour');
-                exit;
-            }
-        } else {
-            // Message d'erreur si l'utilisateur n'est pas trouvé
-            header('Location: index.php?action=myAccount&error=Utilisateur introuvable');
-            exit;
-        }
+        $errorMessage = $errorMessages[$errorCode] ?? "Erreur inconnue lors du téléchargement.";
+        Utils::redirect("myAccount", ["error" => $errorMessage]);
     }
 }
