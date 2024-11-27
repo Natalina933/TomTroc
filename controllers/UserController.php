@@ -118,44 +118,44 @@ class UserController
      * @return void
      * @throws Exception
      */
-    public function updateBook(): void
-    {
-        $this->ensureUserIsConnected();
-        $this->ensureUserHasRole(self::ROLE_ADMIN);
+    // public function updateBook(): void
+    // {
+    //     $this->ensureUserIsConnected();
+    //     $this->ensureUserHasRole(self::ROLE_ADMIN);
 
-        $bookData = [
-            'id' => Utils::request("id", -1),
-            'title' => Utils::request("title"),
-            'author' => Utils::request("author"),
-            'description' => Utils::request("description"),
-            'added_by' => $_SESSION['idUser']
-        ];
+    //     $bookData = [
+    //         'id' => Utils::request("id", -1),
+    //         'title' => Utils::request("title"),
+    //         'author' => Utils::request("author"),
+    //         'description' => Utils::request("description"),
+    //         'added_by' => $_SESSION['idUser']
+    //     ];
 
-        $this->validateRequiredFields([$bookData['title'], $bookData['author']]);
+    //     $this->validateRequiredFields([$bookData['title'], $bookData['author']]);
 
-        $book = new Book($bookData);
-        $this->bookManager->addOrUpdateBook($book);
-        Utils::redirect("admin");
-    }
+    //     $book = new Book($bookData);
+    //     $this->bookManager->addOrUpdateBook($book);
+    //     Utils::redirect("book-detail");
+    // }
 
     /**
      * Supprime un livre.
      * @return void
      * @throws Exception
      */
-    public function deleteBook(): void
-    {
-        $this->ensureUserIsConnected();
-        $this->ensureUserHasRole(self::ROLE_ADMIN);
+    // public function deleteBook(): void
+    // {
+    //     $this->ensureUserIsConnected();
+    //     $this->ensureUserHasRole(self::ROLE_ADMIN);
 
-        $id = Utils::request("id", -1);
-        if ($id <= 0) {
-            throw new Exception("ID du livre invalide.");
-        }
+    //     $id = Utils::request("id", -1);
+    //     if ($id <= 0) {
+    //         throw new Exception("ID du livre invalide.");
+    //     }
 
-        $this->bookManager->deleteBook($id);
-        Utils::redirect("admin");
-    }
+    //     $this->bookManager->deleteBook($id);
+    //     Utils::redirect("book-detail");
+    // }
 
     /**
      * Vérifie que l'utilisateur est connecté.

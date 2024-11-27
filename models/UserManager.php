@@ -61,7 +61,7 @@ class UserManager extends AbstractEntityManager
      * @return ?User
      * @throws Exception
      */
-    public function createUser(string $username,  string $email, string $password): ?User
+    public function createUser(string $username,  string $email, string $password): User
 
     {
         try {
@@ -71,8 +71,8 @@ class UserManager extends AbstractEntityManager
             }
             // var_dump('toto');
             // Inscription de l'utilisateur
-            $sql = "INSERT INTO user (username, email, password, profilePicture, role, is_active)
-                    VALUES (:username, :email, :password, :profilePicture, :role, :is_active)";
+            $sql = "INSERT INTO user (username, email, password, profilePicture, role, is_active, created_at, updated_at)
+                    VALUES (:username, :email, :password, :profilePicture, :role, :is_active, :created_at, :updated_at)";
             $stmt = $this->db->query($sql, [
                 ':username' => $username,
                 ':email' => $email,

@@ -16,7 +16,7 @@
                     <a href="index.php?action=showMessaging" class="nav-link">
                         Messagerie
                         <?php if (isset($unreadCount) && $unreadCount > 0) : ?>
-                            <span class="unread-count"><?= $unreadCount ?></span>
+                            <span class="unread-count"><?php echo $unreadCount; ?></span>
                         <?php endif; ?>
                     </a>
 
