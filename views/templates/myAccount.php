@@ -26,17 +26,15 @@
                     <p><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></p>
                     <p>Membre depuis :
                         <?php
-                        if (isset($_SESSION['user']['createdAt'])) {
-                            $createdAt = new DateTime($_SESSION['user']['createdAt']);
-                            echo htmlspecialchars($dateFormatter->formatMemberSince($createdAt), ENT_QUOTES, 'UTF-8');
+                        if (isset($user['createdAt']) && isset($dateFormatter)) {
+                            $createdAtDateTime = new DateTime($user['createdAt']);
+                            echo htmlspecialchars($dateFormatter->formatMemberSince($createdAtDateTime), ENT_QUOTES, 'UTF-8');
                         } else {
                             echo 'Date inconnue';
                         }
                         ?>
                     </p>
 
-
-                    <p>Membre depuis : <?= htmlspecialchars(Utils::formatMemberSince(new DateTime($user['createdAt'])), ENT_QUOTES, 'UTF-8') ?></p>
                     <p>BIBLIOTHÈQUE</p>
                     <div class="library-info">
                         <img src="/assets/img/icon_books.svg" alt="Icône de livres">

@@ -16,16 +16,19 @@ class UserController
 
     public function showMyAccount(): void
     {
-        $this->ensureUserIsConnected(); // Vérifie d'abord si l'utilisateur est connecté
-        // var_dump($_SESSION);
+        $this->ensureUserIsConnected();
         $userId = $_SESSION['user']['id'];
-        $books = $this->bookManager->getAllBooksByUserId($userId);
-        $totalBooks = $this->bookManager->countUserBooks($userId);
-
+        $bookManager = new BookManager();
+        $books = $bookManager->getAllBooksByUserId($userId);
+        $totalBooks = $bookManager->countUserBooks($userId);
+    
+        $dateFormatter = new DateFormatter();
+    
         $this->renderView('myAccount', "Mon Compte", [
-            'user' => $_SESSION['user'],
+            'user' => (array)$_SESSION['user'],
             'books' => $books,
-            'totalBooks' => $totalBooks
+            'totalBooks' => $totalBooks,
+            'dateFormatter' => $dateFormatter
         ]);
     }
 
@@ -118,44 +121,44 @@ class UserController
      * @return void
      * @throws Exception
      */
-    // public function updateBook(): void
-    // {
-    //     $this->ensureUserIsConnected();
-    //     $this->ensureUserHasRole(self::ROLE_ADMIN);
+    public function updateBook(): void
+    {
+        $this->ensureUserIsConnected();
+        $this->ensureUserHasRole(self::ROLE_ADMIN);
 
-    //     $bookData = [
-    //         'id' => Utils::request("id", -1),
-    //         'title' => Utils::request("title"),
-    //         'author' => Utils::request("author"),
-    //         'description' => Utils::request("description"),
-    //         'added_by' => $_SESSION['idUser']
-    //     ];
+        $bookData = [
+            'id' => Utils::request("id", -1),
+            'title' => Utils::request("title"),
+            'author' => Utils::request("author"),
+            'description' => Utils::request("description"),
+            'added_by' => $_SESSION['idUser']
+        ];
 
-    //     $this->validateRequiredFields([$bookData['title'], $bookData['author']]);
+        $this->validateRequiredFields([$bookData['title'], $bookData['author']]);
 
-    //     $book = new Book($bookData);
-    //     $this->bookManager->addOrUpdateBook($book);
-    //     Utils::redirect("book-detail");
-    // }
+        $book = new Book($bookData);
+        $this->bookManager->addOrUpdateBook($book);
+        Utils::redirect("book-detail");
+    }
 
     /**
      * Supprime un livre.
      * @return void
      * @throws Exception
      */
-    // public function deleteBook(): void
-    // {
-    //     $this->ensureUserIsConnected();
-    //     $this->ensureUserHasRole(self::ROLE_ADMIN);
+    public function deleteBook(): void
+    {
+        $this->ensureUserIsConnected();
+        $this->ensureUserHasRole(self::ROLE_ADMIN);
 
-    //     $id = Utils::request("id", -1);
-    //     if ($id <= 0) {
-    //         throw new Exception("ID du livre invalide.");
-    //     }
+        $id = Utils::request("id", -1);
+        if ($id <= 0) {
+            throw new Exception("ID du livre invalide.");
+        }
 
-    //     $this->bookManager->deleteBook($id);
-    //     Utils::redirect("book-detail");
-    // }
+        $this->bookManager->deleteBook($id);
+        Utils::redirect("book-detail");
+    }
 
     /**
      * Vérifie que l'utilisateur est connecté.
@@ -174,7 +177,31 @@ class UserController
             throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
         }
     }
-
+    public function editUser(): void
+    {
+        $this->ensureUserIsConnected();
+        
+        $userId = $_SESSION['user']['id'];
+        $username = Utils::request("username");
+        $email = Utils::request("email");
+        
+        $this->validateRequiredFields([$username, $email]);
+        
+        $user = $this->userManager->getUserById($userId);
+        if (!$user) {
+            throw new Exception("Utilisateur non trouvé.");
+        }
+        
+        $user->setUsername($username);
+        $user->setEmail($email);
+        
+        if ($this->userManager->editUser($user)) {
+            $this->updateUserSession($user);
+            Utils::redirect("myAccount", ["message" => "Profil mis à jour avec succès."]);
+        } else {
+            throw new Exception("Erreur lors de la mise à jour du profil.");
+        }
+    }
     /**
      * Rend une vue.
      * @param string $viewName
