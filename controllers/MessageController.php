@@ -51,10 +51,8 @@ class MessageController
             // Rendre la vue avec les données de conversation
             $view = new View('Messagerie');
             $view->render('messaging', [
-                'messages' => $messageManager->getMessagesByUserId($userId),
-                'conversation' => $conversation,
-                'receiverId' => $receiverId,
-                'receiverName' => $receiverName,
+                'messages' => $conversation,
+                'receiverName' => htmlspecialchars($receiver['username'], ENT_QUOTES, 'UTF-8'),
                 'unreadCount' => $unreadCount
             ]);
         } else {
