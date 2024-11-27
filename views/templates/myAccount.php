@@ -1,5 +1,3 @@
-
-
 <?php if (!empty($_GET['error'])) : ?>
     <div class="error-message">
         <?= htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') ?>
@@ -13,14 +11,12 @@
                 <!-- Carré 1 : Profil -->
                 <div class="account-card profile-card">
                     <div class="account-profile">
-                        <!-- Vérification et affichage de la photo de profil -->
                         <?php if (!empty($user['profilePicture'])) : ?>
                             <img src="<?= htmlspecialchars($user['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
                         <?php else : ?>
                             <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
                         <?php endif; ?>
 
-                        <!-- Formulaire pour modifier l'image de profil -->
                         <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
                             <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
                             <button type="button" id="changePictureButton">Modifier</button>
@@ -28,7 +24,18 @@
                         </form>
                     </div>
                     <p><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></p>
-                    <p>Membre depuis : <?= htmlspecialchars(DateFormatter::formatMemberSince($user['createdAt']), ENT_QUOTES, 'UTF-8') ?></p>
+                    <p>Membre depuis :
+                        <?php
+                        if (isset($_SESSION['user']['createdAt'])) {
+                            $createdAt = new DateTime($_SESSION['user']['createdAt']);
+                            echo htmlspecialchars($dateFormatter->formatMemberSince($createdAt), ENT_QUOTES, 'UTF-8');
+                        } else {
+                            echo 'Date inconnue';
+                        }
+                        ?>
+                    </p>
+
+
                     <p>BIBLIOTHÈQUE</p>
                     <div class="library-info">
                         <img src="/assets/img/icon_books.svg" alt="Icône de livres">
@@ -73,30 +80,33 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($books as $book) : ?>
+            <?php if (!empty($books)) : ?>
+                <?php foreach ($books as $book) : ?>
+                    <tr>
+                        <td><img src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/book-default.svg', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre"></td>
+                        <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($book->getAuthor(), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($book->getDescription(), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= $book->isAvailable() ? 'Oui' : 'Non' ?></td>
+                        <td>
+                            <a href="index.php?action=editbook&id=<?= (int)$book->getId() ?>">Éditer</a>
+                            <a href="index.php?action=deleteBook&id=<?= (int)$book->getId() ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else : ?>
                 <tr>
-                    <td><img src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/book-default.svg', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre"></td>
-                    <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($book->getAuthor(), ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($book->getDescription(), ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= $book->isAvailable() ? 'Oui' : 'Non' ?></td>
+                    <td colspan="5">Aucun livre trouvé.</td>
                     <td>
-                        <a href="index.php?action=editbook&id=<?= (int)$book->getId() ?>">Éditer</a>
-                        <a href="index.php?action=deleteBook&id=<?= (int)$book->getId() ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
+                        <a href="index.php?action=addBook" class="btn">Ajouter un livre</a>
                     </td>
-                </tr>
-            <?php endforeach; ?>
-
-            <?php if (empty($books)) : ?>
-                <tr>
-                    <td colspan="6">Aucun livre trouvé.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
 </div>
 
-<!-- Script pour gérer la sélection et la prévisualisation de l'image -->
+
 <script>
     document.getElementById('changePictureButton').addEventListener('click', () => {
         document.getElementById('profilePictureInput').click();

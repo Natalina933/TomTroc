@@ -1,6 +1,6 @@
 <?php if (isset($_GET['error'])) : ?>
     <div class="error-message">
-        <?= htmlspecialchars($_GET['error']) ?>
+        <?= htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') ?>
     </div>
 <?php endif; ?>
 
@@ -18,13 +18,13 @@
                         <?php
                         $sender = $message->getSender()->getId() != $_SESSION['user']['id'] ? $message->getSender() : $message->getReceiver();
                         ?>
-                        <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId()) ?>" data-receiver-id="<?= htmlspecialchars($sender->getId()) ?>">
-                            <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($sender->getId()) ?>">
-                                <img src="<?= htmlspecialchars($sender->getProfilePicture() ?? 'default-profile.png') ?>" alt="Photo de profil">
+                        <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId(), ENT_QUOTES, 'UTF-8') ?>" data-receiver-id="<?= htmlspecialchars($sender->getId(), ENT_QUOTES, 'UTF-8') ?>">
+                            <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($sender->getId(), ENT_QUOTES, 'UTF-8') ?>">
+                                <img src="<?= htmlspecialchars($sender->getProfilePicture() ?? 'default-profile.png', ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
                                 <div class="conversation-info">
-                                    <p class="name"><?= htmlspecialchars($sender->getUsername()) ?></p>
-                                    <span class="description"><?= htmlspecialchars($message->getContent()) ?></span>
-                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
+                                    <p class="name"><?= htmlspecialchars($sender->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
+                                    <span class="description"><?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i'), ENT_QUOTES, 'UTF-8') ?></span>
                                 </div>
                             </a>
                         </li>
@@ -43,8 +43,8 @@
                             ? $conversation[0]->getSender()
                             : $conversation[0]->getReceiver();
                         ?>
-                        <img src="<?= htmlspecialchars($chatUser->getProfilePicture() ?? 'default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($chatUser->getUsername()) ?>">
-                        <span class="chat-title"><?= htmlspecialchars($chatUser->getUsername()) ?></span>
+                        <img src="<?= htmlspecialchars($chatUser->getProfilePicture() ?? 'default-profile.png', ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($chatUser->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
+                        <span class="chat-title"><?= htmlspecialchars($chatUser->getUsername(), ENT_QUOTES, 'UTF-8') ?></span>
                     </div>
                 </div>
 
@@ -54,13 +54,13 @@
                         <?php foreach ($conversation as $message) : ?>
                             <div class="message <?= $message->getSender()->getId() == $_SESSION['user']['id'] ? 'sent' : 'received' ?>">
                                 <?php if ($message->getSender()->getId() != $_SESSION['user']['id']) : ?>
-                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture() ?? 'default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername()) ?>">
+                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture() ?? 'default-profile.png', ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
                                 <?php endif; ?>
                                 <div class="message-content">
-                                    <?= htmlspecialchars($message->getContent()) ?>
+                                    <?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?>
                                 </div>
                                 <div class="message-footer">
-                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('d/m/Y H:i')) ?></span>
+                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('d/m/Y H:i'), ENT_QUOTES, 'UTF-8') ?></span>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -70,8 +70,8 @@
                 <!-- Champ de texte pour envoyer un message -->
                 <div class="chat-input">
                     <form action="index.php?action=sendMessage" method="post">
-                        <textarea name="content" placeholder="Votre message..."></textarea>
-                        <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($chatUser->getId()) ?>">
+                        <textarea name="content" placeholder="Votre message..." required></textarea>
+                        <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($chatUser->getId(), ENT_QUOTES, 'UTF-8') ?>">
                         <button type="submit">Envoyer</button>
                     </form>
                 </div>

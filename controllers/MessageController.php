@@ -45,10 +45,6 @@ class MessageController
                 // Recharger la conversation pour inclure le message initial
                 $conversation = $messageManager->getConversationBetweenUsers($userId, $receiverId);
             }
-
-            $receiverName = $receiver['username'];
-
-            // Rendre la vue avec les données de conversation
             $view = new View('Messagerie');
             $view->render('messaging', [
                 'messages' => $conversation,
@@ -56,7 +52,7 @@ class MessageController
                 'unreadCount' => $unreadCount
             ]);
         } else {
-            // Afficher les messages de l'utilisateur si aucun `receiver_id` n'est passé
+            // Afficher tous les messages si aucun `receiver_id` n'est passé
             $messages = $messageManager->getMessagesByUserId($userId);
             $view = new View('Messagerie');
             $view->render('messaging', ['messages' => $messages]);

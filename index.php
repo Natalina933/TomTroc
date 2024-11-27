@@ -43,6 +43,10 @@ try {
             }
             break;
 
+        case 'addbook':
+            $bookController->addBook();
+            break;
+
         case 'deletebook':
             if ($bookId > 0) {
                 $bookController->deleteBook($bookId);

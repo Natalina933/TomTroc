@@ -70,36 +70,32 @@ class UserManager extends AbstractEntityManager
      * @return ?User
      * @throws Exception
      */
-    public function createUser(string $username,  string $email, string $password): ?User
-
-    {
-        try {
-            // Vérification si l'utilisateur avec le email existe déjà
-            if ($this->findExistingUser(['email' => $email])) {
-                throw new Exception("Un utilisateur avec ce email existe déjà.");
-            }
-            // var_dump('toto');
-            // Inscription de l'utilisateur
-            $sql = "INSERT INTO user (username, email, password, profilePicture, role, is_active)
-                    VALUES (:username, :email, :password, :profilePicture, :role, :is_active)";
-            $stmt = $this->db->query($sql, [
-                ':username' => $username,
-                ':email' => $email,
-                ':password' => password_hash($password, PASSWORD_DEFAULT),
-                ':profilePicture' => '/assets/img/users/profile-default.svg',
-                ':role' => 'user',
-                ':is_active' => 1,
-                ':createdAt' => date('Y-m-d H:i:s'),
-                ':updatedAt' => date('Y-m-d H:i:s')
-            ]);
-            $stmt->execute();
-
-            // Récupérer l'utilisateur créé après insertion
-            return $this->getUserByEmail($email);
-        } catch (PDOException $e) {
-            throw new Exception("Erreur lors de l'inscription: " . $e->getMessage());
+    public function createUser(string $username, string $email, string $password): User
+{
+    try {
+        if ($this->findExistingUser(['email' => $email])) {
+            throw new Exception("Un utilisateur avec cet email existe déjà.");
         }
+
+        $sql = "INSERT INTO user (username, email, password, role, is_active, created_at, updated_at)
+                VALUES (:username, :email, :password, :role, :is_active, :created_at, :updated_at)";
+        $params = [
+            ':username' => $username,
+            ':email' => $email,
+            ':password' => password_hash($password, PASSWORD_DEFAULT),
+            ':role' => 'user',
+            ':is_active' => 1,
+            ':created_at' => date('Y-m-d H:i:s'),
+            ':updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        $this->db->query($sql, $params);
+
+        return $this->getUserByEmail($email);
+    } catch (PDOException $e) {
+        throw new Exception("Erreur lors de l'inscription: " . $e->getMessage());
     }
+}
 
 
     /**

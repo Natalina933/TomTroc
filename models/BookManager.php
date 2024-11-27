@@ -98,40 +98,36 @@ class bookManager extends AbstractEntityManager
         }
     }
 
-    /**
-     * Ajoute un book.
-     * @param Book $book : book à ajouter.
-     * @return void
-     */
     public function addBook(Book $book): void
     {
-        $sql = "INSERT INTO book (id_user, title, description, date_creation) VALUES (:id_user, :title, :description, NOW())";
+        $sql = "INSERT INTO book (user_id, title, author, description, img, available) 
+            VALUES (:userId, :title, :author, :description, :img, :available)";
         $this->db->query($sql, [
-            'id_user' => $book->getUserId(),
+            'userId' => $book->getUserId(),
             'title' => $book->getTitle(),
+            'author' => $book->getAuthor(),
             'description' => $book->getDescription(),
+            'img' => $book->getImg(),
+            'available' => $book->isAvailable()
         ]);
     }
 
-    /**
-     * Modifie un book.
-     * @param Book $book : le book à modifier.
-     * @return void
-     */
     public function editBook(Book $book): void
     {
-        $sql = "UPDATE book SET title = :title, description = :description, author = :author, updatedAt = NOW(), img = :img, available = :available, user_id = :userId WHERE id = :id";
+        $sql = "UPDATE book SET title = :title, author = :author, description = :description, 
+            img = :img, available = :available, user_id = :userId, 
+            WHERE id = :id";
         $this->db->query($sql, [
             'id' => $book->getId(),
             'userId' => $book->getUserId(),
             'title' => $book->getTitle(),
             'author' => $book->getAuthor(),
-            'img' => $book->getImg(),
             'description' => $book->getDescription(),
-            'available' => $book->isAvailable(),
-
+            'img' => $book->getImg(),
+            'available' => $book->isAvailable()
         ]);
     }
+
     public function getBookWithSellerInfo(int $bookId): ?array
     {
         $sql = "

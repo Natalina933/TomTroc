@@ -15,10 +15,12 @@ class UserController
         $books = $bookManager->getAllBooksByUserId($userId);
         // Compter les livres de l'utilisateur
         $totalBooks = $bookManager->countUserBooks($userId);
+        $dateFormatter = new DateFormatter();
         $this->renderView('myAccount', "Mon Compte", [
             'user' => (array)$_SESSION['user'],
             'books' => $books,
-            'totalBooks' => $totalBooks
+            'totalBooks' => $totalBooks,
+            'dateFormatter' => $dateFormatter,
         ]);
     }
 
@@ -59,15 +61,15 @@ class UserController
             $hash = password_hash($password, PASSWORD_DEFAULT);
             throw new Exception("Le mot de passe est incorrect : $hash");
         }
+        // Assurez-vous que createdAt est un DateTime
         $_SESSION['user'] = [
             'id' => $user->getId(),
             "role" => $user->getRole(),
             "email" => $user->getEmail(),
             "username" => $user->getUsername(),
-            "createdAt" => $user->getCreatedAt(),
+            'createdAt' => $user->getCreatedAt(),
             "profilePicture" => $user->getProfilePicture()
         ];
-        $_SESSION['idUser'] = $user->getId();
 
         // On redirige vers la page d'administration.
         Utils::redirect("myAccount");
@@ -109,10 +111,19 @@ class UserController
 
         $userManager = new UserManager();
 
-        $user = $userManager->createUser($username, $email, $password);
-        $_SESSION['user'] = $user;
-
-        Utils::redirect("myAccount", ["message" => "Inscription réussie !"]);
+        try {
+            $user = $userManager->createUser($username, $email, $password);
+            $_SESSION['user'] = [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+                'role' => $user->getRole()
+            ];
+            Utils::redirect("myAccount", ["message" => "Inscription réussie !"]);
+        } catch (Exception $e) {
+            // Gérer l'erreur, par exemple en la transmettant à la vue
+            Utils::redirect("registrationForm", ["error" => $e->getMessage()]);
+        }
     }
 
     /**
@@ -141,7 +152,6 @@ class UserController
     public function updateBook(): void
     {
         $this->ensureUserIsConnected();
-        $this->ensureUserHasRole(self::ROLE_ADMIN);
 
         $id = Utils::request("id", -1);
         $title = Utils::request("title");
