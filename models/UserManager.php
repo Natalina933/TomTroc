@@ -85,12 +85,13 @@ class UserManager extends AbstractEntityManager
             ]);
             $stmt->execute();
 
-            // Récupérer l'utilisateur créé après insertion
-            return $this->getUserByEmail($email);
-        } catch (PDOException $e) {
-            throw new Exception("Erreur lors de l'inscription: " . $e->getMessage());
-        }
+        $this->db->query($sql, $params);
+
+        return $this->getUserByEmail($email);
+    } catch (PDOException $e) {
+        throw new Exception("Erreur lors de l'inscription: " . $e->getMessage());
     }
+}
 
 
     /**

@@ -1,6 +1,6 @@
 <?php if (isset($_GET['error'])) : ?>
     <div class="error-message">
-        <?= htmlspecialchars($_GET['error']) ?>
+        <?= htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') ?>
     </div>
 <?php endif; ?>
 
@@ -55,10 +55,10 @@
                                     <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($message->getSender()->getUsername()) ?>" class="profile-picture">
                                 <?php endif; ?>
                                 <div class="message-content">
-                                    <?= htmlspecialchars($message->getContent()) ?>
+                                    <?= htmlspecialchars($message->getContent(), ENT_QUOTES, 'UTF-8') ?>
                                 </div>
                                 <div class="message-footer">
-                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('d/m/Y H:i')) ?></span>
+                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('d/m/Y H:i'), ENT_QUOTES, 'UTF-8') ?></span>
                                 </div>
                             </div>
                         <?php endforeach; ?>

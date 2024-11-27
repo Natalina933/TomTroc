@@ -109,7 +109,59 @@ class BookController
         $view->render('book-edit', ['book' => $book]);
     }
 
-
+    /**
+     * Ajoute un nouveau livre.
+     * @return void
+     */
+    public function addBook(): void
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $title = Utils::request('title');
+                $author = Utils::request('author');
+                $description = Utils::request('description');
+                $available = Utils::request('available', 1);
+                $userId = $_SESSION['user']['id'];
+    
+                
+    
+                $newBook = new Book([
+                    'title' => $title,
+                    'author' => $author,
+                    'description' => $description,
+                    'available' => $available,
+                    'added_by' => $userId
+                ]);
+    
+                if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
+                    $uploadDir = './assets/img/books/';
+                    $newFileName = uniqid('book_', true) . '.' . pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+                    $destPath = $uploadDir . $newFileName;
+    
+                    if (move_uploaded_file($_FILES['img']['tmp_name'], $destPath)) {
+                        $newBook->setImg($newFileName);
+                    }
+                }
+    
+                $bookManager = new BookManager();
+                if ($bookManager->addOrUpdateBook($newBook)) {
+                    Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès"]);
+                } else {
+                    throw new Exception("Erreur lors de l'ajout du livre");
+                }
+            } catch (Exception $e) {
+                Utils::redirect("addBook", ["status" => "error", "message" => $e->getMessage()]);
+            }
+        } else {
+            $view = new View('Ajouter un livre');
+            $view->render('book-edit', ['book' => new Book()]);
+        }
+    }
     public function deleteBook()
     {
         // Récupérer les IDs des books à supprimer à partir des données POST
