@@ -67,6 +67,7 @@
 <!-- Section 3 : Tableau des livres -->
 <div class="books-section">
     <h2>Vos livres</h2>
+    <a href="index.php?action=addBook" class="btn btn-primary">Ajouter un livre</a>
     <table class="table-books">
         <thead>
             <tr>
@@ -97,7 +98,7 @@
                 <tr>
                     <td colspan="5">Aucun livre trouvé.</td>
                     <td>
-                        <a href="index.php?action=addBook" class="btn">Ajouter un livre</a>
+                        <a href="index.php?action=addBook" class="btn btn-primary">Ajouter un livre</a>
                     </td>
                 </tr>
             <?php endif; ?>

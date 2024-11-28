@@ -25,11 +25,22 @@ class Book extends AbstractEntity
     {
         parent::__construct($data);
 
-        $userManager = new UserManager();
+        // Initialisation des propriétés
+        $this->id = $data['id'] ?? 0; // Valeur par défaut pour id
+        $this->userId = $data['added_by'] ?? 0; // Assurez-vous que userId est initialisé
+        $this->title = $data['title'] ?? '';
+        $this->author = $data['author'] ?? '';
+        $this->description = $data['description'] ?? '';
+        $this->img = isset($data['img']) ? $data['img'] : '/assets/img/defaultBook.png';
+        $this->available = isset($data['available']) ? (bool)$data['available'] : true;
+
+        // Récupération de l'utilisateur si userId est défini
         if ($this->userId) {
+            $userManager = new UserManager();
             $this->user = $userManager->getUserById($this->userId);
         }
     }
+
 
     // Getter et Setter pour id
     public function getId(): int
@@ -173,5 +184,4 @@ class Book extends AbstractEntity
     {
         return $this->user;
     }
-
 }

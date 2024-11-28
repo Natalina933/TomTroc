@@ -43,7 +43,7 @@ try {
             }
             break;
 
-        case 'addbook':
+        case 'addBook':
             $bookController->addBook();
             break;
 
@@ -84,9 +84,9 @@ try {
             $bookController->displayBooksSection();
             break;
 
-        case 'updateProfilePicture':
-            $userController->updateProfilePicture();
-            break;
+        // case 'updateProfilePicture':
+        //     $userController->updateProfilePicture();
+        //     break;
 
         case 'editUser':
             $userController->editUser();

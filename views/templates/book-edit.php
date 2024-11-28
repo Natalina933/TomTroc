@@ -11,7 +11,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
 
     <div class="book-edit-content">
         <div class="book-image-section">
-            <img src="<?php echo $book->getImg(); ?>" alt="Image du livre" class="book-image">
+            <img src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/defaultBook.png', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre">
             <div class="image-upload">
                 <label for="img" class="upload-label">Modifier la photo</label>
                 <input type="file" id="img" name="img" class="file-input">

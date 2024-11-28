@@ -20,7 +20,6 @@ class bookManager extends AbstractEntityManager
         }
         return $books;
     }
-    // SELECT b.*,u.username as name FROM book b JOIN user u ON b.user_id=u.id WHERE b.id = 5
     /**
      * Récupère les books selon les critères, les ordres et la limite spécifiés.
      * @param array $criteria : Critères de filtrage.
@@ -92,28 +91,48 @@ class bookManager extends AbstractEntityManager
      */
     public function addOrUpdateBook(Book $book): void
     {
-        $book->getId() == -1 ? $this->addBook($book) : $this->editBook($book);
+
+        if ($book->getId() == -1 || $book->getId() === null) {
+            $this->addBook($book); // Ajout d'un nouveau livre
+        } else {
+            $this->editBook($book); // Modification du livre existant
+        }
     }
 
-    public function addBook(Book $book): void
+    public function addBook(Book $book): bool
     {
-        $sql = "INSERT INTO book (id_user, title, description, date_creation) VALUES (:id_user, :title, :description, NOW())";
-        $this->db->query($sql, [
-            'id_user' => $book->getUserId(),
-            'title' => $book->getTitle(),
-            'author' => $book->getAuthor(),
-            'description' => $book->getDescription(),
-            'img' => $book->getImg(),
-            'available' => $book->isAvailable()
-        ]);
+
+        try {
+            $sql = "INSERT INTO book (user_id, title, author, description, img, available, date_creation) 
+                VALUES (:user_id, :title, :author, :description, :img, :available, NOW())";
+            $result = $this->db->query($sql, [
+                'user_id' => $book->getUserId(),
+                'title' => $book->getTitle(),
+                'author' => $book->getAuthor(),
+                'description' => $book->getDescription(),
+                'img' => $book->getImg(),
+                'available' => $book->isAvailable()
+            ]);
+            if ($result === false) {
+                var_dump("Erreur SQL lors de l'ajout du livre.");
+            }
+            return $result !== false; // Retourne true si l'insertion a réussi
+        } catch (Exception $e) {
+
+            var_dump("Erreur SQL: " . $e->getMessage());
+            error_log($e->getMessage());
+            return false;
+        }
     }
 
-    public function editBook(Book $book): void
+
+    public function editBook(Book $book): bool
     {
+
         $sql = "UPDATE book SET title = :title, author = :author, description = :description, 
-            img = :img, available = :available, user_id = :userId, 
-            WHERE id = :id";
-        $this->db->query($sql, [
+        img = :img, available = :available, user_id = :userId 
+        WHERE id = :id";
+        $result = $this->db->query($sql, [
             'id' => $book->getId(),
             'userId' => $book->getUserId(),
             'title' => $book->getTitle(),
@@ -122,8 +141,8 @@ class bookManager extends AbstractEntityManager
             'img' => $book->getImg(),
             'available' => $book->isAvailable()
         ]);
+        return $result !== false;
     }
-
     public function getBookWithSellerInfo(int $bookId): ?array
     {
         $sql = "SELECT  b.id AS book_id, 
