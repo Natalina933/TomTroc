@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 class BookController
 {
@@ -116,83 +119,58 @@ class BookController
 
     public function addBook(): void
     {
-        var_dump("Entering addBook method");
-
-        // Vérifier si l'utilisateur est connecté
-        if (!isset($_SESSION['user'])) {
-            Utils::redirect("login");
-            exit;
-        }
-
-        // Vérifier si la requête est de type POST
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
+        try {
+            $this->ensureUserIsConnected(); // Vérifie que l'utilisateur est connecté
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Récupération des données du formulaire
                 $title = Utils::request('title');
                 $author = Utils::request('author');
                 $description = Utils::request('description');
                 $available = Utils::request('available', 1);
-                $userId = $_SESSION['user']['id'];
-
+                $userId = $_SESSION['user']['id']; // Récupération de l'utilisateur connecté
+                // var_dump($userId); 
                 // Validation des données
                 $this->validateBookData([
                     'title' => $title,
                     'author' => $author,
                     'description' => $description
                 ]);
-
-                // Création d'un nouvel objet Book
+                
+                // Création de l'objet Book
                 $newBook = new Book([
                     'title' => $title,
                     'author' => $author,
                     'description' => $description,
                     'available' => (bool)$available,
-                    'added_by' => $userId // Assurez-vous que cette clé existe dans votre classe Book
+                    'userId' => $userId, 
                 ]);
-
-                // Gestion de l'image si elle est uploadée
+                
+                // Gestion de l'upload de l'image
                 if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
                     $newFileName = $this->handleImageUpload($_FILES['img']);
                     if ($newFileName) {
                         $newBook->setImg($newFileName);
                     }
                 } else {
-                    $newBook->setImg('/assets/img/defaultBook.png');
+                    $newBook->setImg('defaultBook.png'); // Nom par défaut
                 }
-                var_dump([
-                    'user_id' => $newBook->getUserId(),
-                    'title' => $newBook->getTitle(),
-                    'author' => $newBook->getAuthor(),
-                    'img' => $newBook->getImg(),
-                    'description' => $newBook->getDescription(),
-                    'available' => $newBook->isAvailable()
-                ]);
-                // Ajout du livre via le BookManager
+                
+                // Sauvegarde du livre via le BookManager
                 if ($this->bookManager->addOrUpdateBook($newBook)) {
-                    Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès"]);
+                    Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès."]);
                 } else {
                     throw new Exception("Erreur lors de l'ajout du livre.");
                 }
-            } catch (Exception $e) {
-                // Gérer l'exception en redirigeant avec un message d'erreur
-                Utils::redirect("addBook", ["status" => "error", "message" => $e->getMessage()]);
             }
-        } else {
-            // Afficher le formulaire d'ajout de livre si ce n'est pas une requête POST
-            $view = new View('Ajouter un livre');
+            
+            // Si ce n'est pas une requête POST, afficher le formulaire
+            $view = new View('Ajouter un Livre');
             $view->render('book-edit', ['book' => new Book()]);
+        } catch (Exception $e) {
+            echo "Erreur : " . $e->getMessage();
+            var_dump($e->getTrace());
         }
     }
-
-
-    // private function handleException(Exception $e): void
-    // {
-    //     // Log l'erreur si nécessaire
-    //     error_log($e->getMessage());
-
-    //     // Redirige l'utilisateur avec un message d'erreur
-    //     Utils::redirect("addBook", ["status" => "error", "message" => $e->getMessage()]);
-    // }
     public function deleteBook()
     {
         $bookIds = Utils::request('bookIds');

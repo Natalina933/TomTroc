@@ -10,13 +10,12 @@ class Book extends AbstractEntity
     private int $userId;
 
     // Pas relié a la base de donnée
-    private ?User $user;
+    private ?User $user = null;
     private string $title = "";
     private string $author = "";
     private ?string $img = null;
     private string $description = "";
     private bool $available = true;
-    private string $numberOfBook;
     private ?DateTime $createdAt = null;
     private ?DateTime $updatedAt = null;
 
@@ -131,14 +130,14 @@ class Book extends AbstractEntity
         return $this->available;
     }
 
-    public function getNumberOfBook(): string
-    {
-        return $this->numberOfBook;
-    }
-    public function setNumberOfBook(string $numberOfBook): void
-    {
-        $this->numberOfBook = $numberOfBook;
-    }
+    // public function getNumberOfBook(): string
+    // {
+    //     return $this->numberOfBook;
+    // }
+    // public function setNumberOfBook(string $numberOfBook): void
+    // {
+    //     $this->numberOfBook = $numberOfBook;
+    // }
 
     // Setter et Getter pour createdAt
     public function setCreatedAt(string|DateTime $createdAt, string $format = 'Y-m-d H:i:s'): void

@@ -19,8 +19,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
         </div>
 
         <div class="book-form-section">
-
-            <form action="index.php?action=<?= $isEditing ? 'editbook&id=' . $book->getId() : 'addBook' ?>" method="post" enctype="multipart/form-data" class="edit-form">
+            <form id="bookForm" action="index.php?action=<?= $isEditing ? 'editbook&id=' . $book->getId() : 'addBook' ?>" method="post" enctype="multipart/form-data" class="edit-form" onsubmit="return confirmSubmission();">
                 <?php if ($isEditing): ?>
                     <input type="hidden" name="id" value="<?= $book->getId(); ?>">
                 <?php endif; ?>
@@ -53,3 +52,21 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
         </div>
     </div>
 </div>
+
+<script>
+    function confirmSubmission() {
+        const title = document.getElementById('title').value;
+        const author = document.getElementById('author').value;
+        const description = document.getElementById('description').value;
+        const available = document.getElementById('available').value;
+
+        const message = `Vous êtes sur le point d'enregistrer les informations suivantes :\n\n` +
+            `Titre: ${title}\n` +
+            `Auteur: ${author}\n` +
+            `Description: ${description}\n` +
+            `Disponibilité: ${available === '1' ? 'Disponible' : 'Non disponible'}\n\n` +
+            `Confirmez-vous l'enregistrement ?`;
+
+        return confirm(message);
+    }
+</script>

@@ -50,8 +50,7 @@ class bookManager extends AbstractEntityManager
         }
 
         if ($limit > 0) {
-            $sql .= " LIMIT $limit";
-            $params[':limit'] = $limit;
+            $sql .= " LIMIT " . (int)$limit;
         }
 
         $result = $this->db->query($sql, $params);
@@ -65,19 +64,17 @@ class bookManager extends AbstractEntityManager
 
     public function getBookById(int $id): ?Book
     {
-        $sql = "SELECT * FROM book WHERE id = :id";
-
-        $stmt = $this->db->query($sql, ['id' => $id]);
-
-        $bookData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM book WHERE id = " . (int)$id;
+        $result = $this->db->query($sql);
+        $bookData = $result->fetch(PDO::FETCH_ASSOC);
 
         return $bookData ? new Book($bookData) : null;
     }
 
     public function getAllBooksByUserId(int $userId): array
     {
-        $sql = "SELECT * FROM book WHERE user_id = :id_user";
-        $result = $this->db->query($sql, ['id_user' => $userId]);
+        $sql = "SELECT * FROM book WHERE user_id = " . (int)$userId;
+        $result = $this->db->query($sql);
         $books = [];
         while ($bookData = $result->fetch(PDO::FETCH_ASSOC)) {
             $books[] = new Book($bookData);
@@ -92,35 +89,39 @@ class bookManager extends AbstractEntityManager
     public function addOrUpdateBook(Book $book): void
     {
 
-        if ($book->getId() == -1 || $book->getId() === null) {
-            $this->addBook($book); // Ajout d'un nouveau livre
+        if ($book->getId() === null || $book->getId() == -1) {
+            $this->addBook($book);
         } else {
-            $this->editBook($book); // Modification du livre existant
+            $this->editBook($book);
         }
     }
 
     public function addBook(Book $book): bool
     {
-
         try {
-            $sql = "INSERT INTO book (user_id, title, author, description, img, available, date_creation) 
-                VALUES (:user_id, :title, :author, :description, :img, :available, NOW())";
-            $result = $this->db->query($sql, [
-                'user_id' => $book->getUserId(),
-                'title' => $book->getTitle(),
-                'author' => $book->getAuthor(),
-                'description' => $book->getDescription(),
-                'img' => $book->getImg(),
-                'available' => $book->isAvailable()
-            ]);
-            if ($result === false) {
-                var_dump("Erreur SQL lors de l'ajout du livre.");
-            }
-            return $result !== false; // Retourne true si l'insertion a réussi
-        } catch (Exception $e) {
+            $sql = "INSERT INTO book (user_id, title, author, description, img, available) 
+                VALUES (:user_id, :title, :author, :description, :img, :available)";
 
-            var_dump("Erreur SQL: " . $e->getMessage());
-            error_log($e->getMessage());
+            $params = [
+                ':user_id' => $book->getUserId(),
+                ':title' => $book->getTitle(),
+                ':author' => $book->getAuthor(),
+                ':description' => $book->getDescription(),
+                ':img' => $book->getImg(),
+                ':available' => $book->isAvailable() ? 1 : 0
+            ];
+
+            // Exécution de la requête
+            $stmt = $this->db->query($sql, $params);
+            if ($stmt === false) {
+                // Si l'exécution échoue, récupérer les erreurs
+                error_log("Erreur SQL : " . implode(', ',));
+                throw new Exception("Erreur lors de l'exécution de la requête SQL.");
+            }
+
+            return true; // Succès de l'insertion
+        } catch (Exception $e) {
+            error_log("Exception lors de l'ajout du livre : " . $e->getMessage());
             return false;
         }
     }
@@ -129,18 +130,16 @@ class bookManager extends AbstractEntityManager
     public function editBook(Book $book): bool
     {
 
-        $sql = "UPDATE book SET title = :title, author = :author, description = :description, 
-        img = :img, available = :available, user_id = :userId 
-        WHERE id = :id";
-        $result = $this->db->query($sql, [
-            'id' => $book->getId(),
-            'userId' => $book->getUserId(),
-            'title' => $book->getTitle(),
-            'author' => $book->getAuthor(),
-            'description' => $book->getDescription(),
-            'img' => $book->getImg(),
-            'available' => $book->isAvailable()
-        ]);
+        $sql = "UPDATE book SET
+            title = '" . addslashes($book->getTitle()) . "',
+            author = '" . addslashes($book->getAuthor()) . "',
+            description = '" . addslashes($book->getDescription()) . "',
+            img = '" . addslashes($book->getImg()) . "',
+            available = " . ($book->isAvailable() ? 1 : 0) . ",
+            user_id = " . (int)$book->getUserId() . "
+            WHERE id = " . (int)$book->getId();
+
+        $result = $this->db->query($sql);
         return $result !== false;
     }
     public function getBookWithSellerInfo(int $bookId): ?array
@@ -154,10 +153,10 @@ class bookManager extends AbstractEntityManager
                         u.profilePicture AS seller_profilePicture
                 FROM book b
                 INNER JOIN user u ON b.user_id = u.id
-                WHERE b.id = :bookId";
+                WHERE b.id = " . (int)$bookId;
 
-        $stmt = $this->db->query($sql, [':bookId' => $bookId]);
-        $bookData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $this->db->query($sql);
+        $bookData = $result->fetch(PDO::FETCH_ASSOC);
 
         if (!$bookData) {
             return null;
@@ -184,8 +183,8 @@ class bookManager extends AbstractEntityManager
      */
     public function deleteBook(int $id): void
     {
-        $sql = "DELETE FROM book WHERE id = :id";
-        $this->db->query($sql, ['id' => $id]);
+        $sql = "DELETE FROM book WHERE id = " . (int)$id;
+        $this->db->query($sql);
     }
     public function countUserBooks(int $userId): int
     {
