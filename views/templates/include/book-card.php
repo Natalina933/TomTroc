@@ -23,7 +23,7 @@
     <?php if ($book->getUser()) { ?>
         <p class="seller">
             Vendu par :
-            <a href="index.php?action=showPublicAccount&id=<?= htmlspecialchars($book->getUser()->getId()) ?>">
+            <a href="index.php?action=showPublicAccount&user_id=<?= htmlspecialchars($book->getUser()->getId()) ?>">
                 <?= htmlspecialchars($book->getUser()->getUsername()) ?>
             </a>
         </p>

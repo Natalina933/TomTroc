@@ -135,8 +135,7 @@ class bookManager extends AbstractEntityManager
             author = '" . addslashes($book->getAuthor()) . "',
             description = '" . addslashes($book->getDescription()) . "',
             img = '" . addslashes($book->getImg()) . "',
-            available = " . ($book->isAvailable() ? 1 : 0) . ",
-            user_id = " . (int)$book->getUserId() . "
+            available = " . ($book->isAvailable() ? 1 : 0) . "
             WHERE id = " . (int)$book->getId();
 
         $result = $this->db->query($sql);
