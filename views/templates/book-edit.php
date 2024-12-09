@@ -11,7 +11,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
 
     <div class="book-edit-content">
         <div class="book-image-section">
-            <img src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/defaultBook.png', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre">
+            <img id="bookImage" src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/defaultBook.png', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre">
             <div class="image-upload">
                 <label for="img" class="upload-label">Modifier la photo</label>
                 <input type="file" id="img" name="img" class="file-input">
@@ -68,5 +68,17 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
             `Confirmez-vous l'enregistrement ?`;
 
         return confirm(message);
+    }
+
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                document.getElementById('bookImage').src = e.target.result;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 </script>

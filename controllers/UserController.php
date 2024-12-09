@@ -4,7 +4,9 @@ class UserController
 {
     const ROLE_ADMIN = 'admin';
     const ROLE_USER = 'user';
-
+    const UPLOAD_DIR = '/assets/img/users/';
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 Mo
+   
     private $userManager;
 
     public function __construct()
@@ -150,59 +152,87 @@ class UserController
             'createdAt' => $user->getCreatedAt(),
         ];
     }
+    public function updateProfilePicture(): void
+    {
+        try {
+            $this->ensureUserIsConnected();
+
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception("Méthode non autorisée.");
+            }
+
+            if (!isset($_FILES['profilePicture']) || $_FILES['profilePicture']['error'] === UPLOAD_ERR_NO_FILE) {
+                throw new Exception("Aucun fichier n'a été téléchargé.");
+            }
+
+            if ($_FILES['profilePicture']['error'] !== UPLOAD_ERR_OK) {
+                $this->handleUploadError($_FILES['profilePicture']['error']);
+            }
+
+            $this->validateProfilePicture($_FILES['profilePicture']);
+
+            $newFileName = $this->moveUploadedFile($_FILES['profilePicture']);
+
+            $this->updateUserProfilePicture($newFileName);
+
+            Utils::redirect("myAccount", ["success" => "Photo de profil mise à jour avec succès."]);
+        } catch (Exception $e) {
+            Utils::redirect("myAccount", ["error" => $e->getMessage()]);
+        }
+    }
     // private function ensureUserHasRole(string $role): void 
     // {
     //     if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== $role) {
     //         throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
     //     }
     // }
-    // private function validateProfilePicture(array $file): void 
-    // {
-    //     $allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
-    //     $maxFileSize = 5 * 1024 * 1024; // 5 Mo
-    //     $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    private function validateProfilePicture(array $file): void 
+    {
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
+        $maxFileSize = 5 * 1024 * 1024; // 5 Mo
+        $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-    //     if (!in_array($fileExtension, $allowedExtensions)) {
-    //         Utils::redirect("myAccount", ["error" => "Type de fichier non autorisé."]);
-    //     }
-    //     if ($file['size'] > $maxFileSize) {
-    //         Utils::redirect("myAccount", ["error" => "Le fichier est trop volumineux."]);
-    //     }
-    // }
+        if (!in_array($fileExtension, $allowedExtensions)) {
+            Utils::redirect("myAccount", ["error" => "Type de fichier non autorisé."]);
+        }
+        if ($file['size'] > $maxFileSize) {
+            Utils::redirect("myAccount", ["error" => "Le fichier est trop volumineux."]);
+        }
+    }
 
-    // private function moveUploadedFile(array $file): string 
-    // {
-    //     $uploadDir = '/assets/img/users/';
-    //     $newFileName = uniqid('profile_', true) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
-    //     $destPath = $uploadDir . $newFileName;
+    private function moveUploadedFile(array $file): string 
+    {
+        $uploadDir = '/assets/img/users/';
+        $newFileName = uniqid('profile_', true) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+        $destPath = $uploadDir . $newFileName;
 
-    //     if (!move_uploaded_file($file['tmp_name'], __DIR__ . "/.." . $destPath)) {
-    //         Utils::redirect("myAccount", ["error" => "Erreur lors du déplacement du fichier."]);
-    //     }
-    //     return $destPath;
-    // }
+        if (!move_uploaded_file($file['tmp_name'], __DIR__ . "/.." . $destPath)) {
+            Utils::redirect("myAccount", ["error" => "Erreur lors du déplacement du fichier."]);
+        }
+        return $destPath;
+    }
 
-    // private function updateUserProfilePicture(string $newFileName): void 
-    // {
-    //     $userId = $_SESSION['user']['id'];
-    //     if (!$this->userManager->updateProfilePicture($userId, $newFileName)) {
-    //         Utils::redirect("myAccount", ["error" => "Erreur lors de la mise à jour de la base de données."]);
-    //     }
-    //     $_SESSION['user']['profilePicture'] = $newFileName;
-    // }
+    private function updateUserProfilePicture(string $newFileName): void 
+    {
+        $userId = $_SESSION['user']['id'];
+        if (!$this->userManager->updateProfilePicture($userId, $newFileName)) {
+            Utils::redirect("myAccount", ["error" => "Erreur lors de la mise à jour de la base de données."]);
+        }
+        $_SESSION['user']['profilePicture'] = $newFileName;
+    }
 
-    //     private function handleUploadError(int $errorCode): void 
-    //     {
-    //         $errorMessages = [
-    //             UPLOAD_ERR_INI_SIZE => "Le fichier est trop volumineux.",
-    //             UPLOAD_ERR_FORM_SIZE => "Le fichier est trop volumineux.",
-    //             UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement téléchargé.",
-    //             UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été téléchargé.",
-    //             UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant.",
-    //             UPLOAD_ERR_CANT_WRITE => "Erreur d'écriture du fichier sur le disque.",
-    //             UPLOAD_ERR_EXTENSION => "Téléchargement de fichier arrêté par une extension PHP.",
-    //         ];
-    //         $errorMessage = $errorMessages[$errorCode] ?? "Erreur inconnue lors du téléchargement.";
-    //         Utils::redirect("myAccount", ["error" => $errorMessage]);
-    //     }
+        private function handleUploadError(int $errorCode): void 
+        {
+            $errorMessages = [
+                UPLOAD_ERR_INI_SIZE => "Le fichier est trop volumineux.",
+                UPLOAD_ERR_FORM_SIZE => "Le fichier est trop volumineux.",
+                UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement téléchargé.",
+                UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été téléchargé.",
+                UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant.",
+                UPLOAD_ERR_CANT_WRITE => "Erreur d'écriture du fichier sur le disque.",
+                UPLOAD_ERR_EXTENSION => "Téléchargement de fichier arrêté par une extension PHP.",
+            ];
+            $errorMessage = $errorMessages[$errorCode] ?? "Erreur inconnue lors du téléchargement.";
+            Utils::redirect("myAccount", ["error" => $errorMessage]);
+        }
 }

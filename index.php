@@ -85,9 +85,9 @@ try {
             $bookController->displayBooksSection();
             break;
 
-            // case 'updateProfilePicture':
-            //     $userController->updateProfilePicture();
-            //     break;
+            case 'updateProfilePicture':
+                $userController->updateProfilePicture();
+                break;
 
         case 'editUser':
             $userController->editUser();
