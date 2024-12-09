@@ -117,81 +117,52 @@ class BookController
         }
     }
 
-    public function addBook(): void
+    public function addBook()
     {
-        try {
-            $this->ensureUserIsConnected(); // Vérifie que l'utilisateur est connecté
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                try {
-                    // Récupération des données du formulaire
-                    $title = Utils::request('title');
-                    $author = Utils::request('author');
-                    $description = Utils::request('description');
-                    $available = Utils::request('available', 1);
-                    $userId = $_SESSION['user']['id']; // Récupération de l'utilisateur connecté
-                    error_log("Données reçues : " . print_r([
-                        'title' => $title,
-                        'author' => $author,
-                        'description' => $description,
-                        'available' => $available,
-                        'userId' => $userId
-                    ], true));
+     
     
-                    // Validation des données
-                    $this->validateBookData([
-                        'title' => $title,
-                        'author' => $author,
-                        'description' => $description
-                    ]);
-
-                    // Création de l'objet Book
-                    $newBook = new Book([
-                        'title' => $title,
-                        'author' => $author,
-                        'description' => $description,
-                        'available' => (bool)$available,
-                        'userId' => $userId,
-                    ]);
-
-                    // Gestion de l'upload de l'image
-                    if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
-                        $newFileName = $this->handleImageUpload($_FILES['img']);
-                        if ($newFileName) {
-                            $newBook->setImg($newFileName);
-                        }
-                    } else {
-                        $newBook->setImg('/assets/img/defaultBook.png'); // Nom par défaut
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $title = Utils::request('title');
+                $author = Utils::request('author');
+                $description = Utils::request('description');
+                $available = Utils::request('available', 1);
+                $userId = $_SESSION['user']['id'];
+    
+                $this->validateBookData([
+                    'title' => $title,
+                    'author' => $author,
+                    'description' => $description
+                ]);
+    
+                $newBook = new Book([
+                    'title' => $title,
+                    'author' => $author,
+                    'description' => $description,
+                    'available' => (bool)$available,
+                    'userId' => $userId,
+                ]);
+    
+                if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
+                    $newFileName = $this->handleImageUpload($_FILES['img']);
+                    if ($newFileName) {
+                        $newBook->setImg($newFileName);
                     }
-
-                    // Vérifiez les données avant l'insertion
-                    var_dump([
-                        'user_id' => $newBook->getUserId(),
-                        'title' => $newBook->getTitle(),
-                        'author' => $newBook->getAuthor(),
-                        'img' => $newBook->getImg(),
-                        'description' => $newBook->getDescription(),
-                        'available' => $newBook->isAvailable()
-                    ]);
-
-                    // Sauvegarde du livre via le BookManager
-                    if ($this->bookManager->addOrUpdateBook($newBook)) {
-                        Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès."]);
-                    } else {
-                        throw new Exception("Erreur lors de l'ajout du livre.");
-                        die();
-                    }
-                } catch (Exception $e) {
-                    var_dump("Exception: " . $e->getMessage());
-                    Utils::redirect("addBook", ["status" => "error", "message" => $e->getMessage()]);
+                } else {
+                    $newBook->setImg('/assets/img/defaultBook.png');
                 }
-            } else {
-                // Afficher le formulaire d'ajout de livre si ce n'est pas une requête POST
-                $view = new View('Ajouter un livre');
-                $view->render('book-edit', ['book' => new Book()]);
+    
+                if ($this->bookManager->addOrUpdateBook($newBook)) {
+                    Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès."]);
+                } else {
+                    throw new Exception("Erreur lors de l'ajout du livre.");
+                }
+            } catch (Exception $e) {
+                Utils::redirect("addBook", ["status" => "error", "message" => $e->getMessage()]);
             }
-        } catch (Exception $e) {
-            // Gestion des exceptions non capturées
-            Utils::redirect("error", ["message" => "Une erreur inattendue s'est produite."]);
+        } else {
+            $view = new View('Ajouter un livre');
+            $view->render('book-edit', ['book' => new Book()]);
         }
     }
 
@@ -227,5 +198,9 @@ class BookController
         $book = $this->bookManager->getBookById($bookId) ?? new Book();
         $view = new View('Édition d\'un Livre');
         $view->render('updateBookForm', ['book' => $book]);
+    }
+    public function displayAddBookForm() {
+        $view = new View('Ajouter un livre');
+        $view->render('book-edit', ['book' => new Book()]);
     }
 }

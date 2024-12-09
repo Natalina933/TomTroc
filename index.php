@@ -13,9 +13,8 @@ try {
     $bookController = new BookController();
     $userController = new UserController();
     $messageController = new MessageController();
-    $publicAccountController = new PublicAccountController(); // Instancier le contrôleur manquant
-
-    // Gestion des différentes actions
+    $publicAccountController = new PublicAccountController();
+    
     switch ($action) {
             // ****Pages accessibles à tous****
         case 'home':
@@ -43,9 +42,9 @@ try {
             }
             break;
 
-        case 'addBook':
-            $bookController->addBook();
-            break;
+            case 'addBook':
+                $bookController->displayAddBookForm();
+                break;
 
         case 'deletebook':
             if ($bookId > 0) {
@@ -54,7 +53,9 @@ try {
                 throw new Exception("ID du livre invalide.");
             }
             break;
-
+            case 'displayAddBookForm':
+                $userController->displayAddBookForm();
+                break;
             // ****Gestion des utilisateurs****
         case 'registerUser':
             $userController->registerUser();

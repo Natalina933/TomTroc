@@ -2,7 +2,7 @@
 
 /**
  * Entité User : un utilisateur est défini par les champs
- * id, username, login, password, profilePicture, isAvailable, role, is_active, created_at, updated_at, last_email, activation_token, reset_token
+ * id, username, login, password, profilePicture, isAvailable, role, is_active, created_at, updated_at
  */
 
 class User extends AbstractEntity

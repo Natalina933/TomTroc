@@ -67,8 +67,8 @@
 <!-- Section 3 : Tableau des livres -->
 <div class="books-section">
     <h2>Vos livres</h2>
-    <a href="index.php?action=addBook" class="btn btn-primary">Ajouter un livre</a>
-    <table class="table-books">
+    <a href="index.php?action=displayAddBookForm" class="btn btn-primary">Ajouter un livre</a>
+        <table class="table-books">
         <thead>
             <tr>
                 <th>Photo</th>
