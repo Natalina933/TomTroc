@@ -119,43 +119,21 @@ class BookController
 
     public function addBook()
     {
-     
-    
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $newBook = new Book([
+                'userId' => $_SESSION['user']['id'],
+                'title' => Utils::request('title'),
+                'author' => Utils::request('author'),
+                'description' => Utils::request('description'),
+                'available' => Utils::request('available', 1),
+                'img' => '/assets/img/defaultBook.png',
+                'createdAt' => date('Y-m-d H:i:s'),
+                'updatedAt' => date('Y-m-d H:i:s')
+            ]);
+
             try {
-                $title = Utils::request('title');
-                $author = Utils::request('author');
-                $description = Utils::request('description');
-                $available = Utils::request('available', 1);
-                $userId = $_SESSION['user']['id'];
-    
-                $this->validateBookData([
-                    'title' => $title,
-                    'author' => $author,
-                    'description' => $description
-                ]);
-    
-                $newBook = new Book([
-                    'title' => $title,
-                    'author' => $author,
-                    'description' => $description,
-                    'available' => (bool)$available,
-                    'userId' => $userId,
-                ]);
-    
-                if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
-                    $newFileName = $this->handleImageUpload($_FILES['img']);
-                    if ($newFileName) {
-                        $newBook->setImg($newFileName);
-                    }
-                } else {
-                    $newBook->setImg('/assets/img/defaultBook.png');
-                }
-    
-                if ($this->bookManager->addOrUpdateBook($newBook)) {
+                if ($this->bookManager->addBook($newBook)) {
                     Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès."]);
-                } else {
-                    throw new Exception("Erreur lors de l'ajout du livre.");
                 }
             } catch (Exception $e) {
                 Utils::redirect("addBook", ["status" => "error", "message" => $e->getMessage()]);
@@ -165,7 +143,6 @@ class BookController
             $view->render('book-edit', ['book' => new Book()]);
         }
     }
-
 
     public function deleteBook()
     {
@@ -199,7 +176,8 @@ class BookController
         $view = new View('Édition d\'un Livre');
         $view->render('updateBookForm', ['book' => $book]);
     }
-    public function displayAddBookForm() {
+    public function displayAddBookForm()
+    {
         $view = new View('Ajouter un livre');
         $view->render('book-edit', ['book' => new Book()]);
     }

@@ -14,7 +14,7 @@ try {
     $userController = new UserController();
     $messageController = new MessageController();
     $publicAccountController = new PublicAccountController();
-    
+
     switch ($action) {
             // ****Pages accessibles à tous****
         case 'home':
@@ -42,9 +42,9 @@ try {
             }
             break;
 
-            case 'addBook':
-                $bookController->displayAddBookForm();
-                break;
+        case 'addBook':
+            $bookController->addBook();
+            break;
 
         case 'deletebook':
             if ($bookId > 0) {
@@ -53,9 +53,9 @@ try {
                 throw new Exception("ID du livre invalide.");
             }
             break;
-            case 'displayAddBookForm':
-                $userController->displayAddBookForm();
-                break;
+        case 'displayAddBookForm':
+            $userController->displayAddBookForm();
+            break;
             // ****Gestion des utilisateurs****
         case 'registerUser':
             $userController->registerUser();
@@ -85,9 +85,9 @@ try {
             $bookController->displayBooksSection();
             break;
 
-        // case 'updateProfilePicture':
-        //     $userController->updateProfilePicture();
-        //     break;
+            // case 'updateProfilePicture':
+            //     $userController->updateProfilePicture();
+            //     break;
 
         case 'editUser':
             $userController->editUser();

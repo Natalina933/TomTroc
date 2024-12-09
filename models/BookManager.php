@@ -98,44 +98,32 @@ class bookManager extends AbstractEntityManager
 
     public function addBook(Book $book): bool
     {
-        $sql = "INSERT INTO book (user_id, title, author, img, description, available) VALUES (:user_id, :title, :author, :img, :description, :available)";
-
-        // Logique d'insertion
         try {
-            $stmt = $this->db->query($sql);
-            $result = $this->db->query($sql, [
-                'user_id' => $book->getUserId(),
-                'title' => $book->getTitle(),
-                'author' => $book->getAuthor(),
-                'img' => $book->getImg(),
-                'description' => $book->getDescription(),
-                'available' => $book->isAvailable() ? 1 : 0,
-            ]);
-            // Journalisation des données transmises pour débogage
-            error_log("Données insérées : " . print_r([
-                'user_id' => $book->getUserId(),
-                'title' => $book->getTitle(),
-                'author' => $book->getAuthor(),
-                'img' => $book->getImg(),
-                'description' => $book->getDescription(),
-                'available' => $book->isAvailable(),
-            ], true));
+            $sql = "INSERT INTO book (user_id, title, author, img, description, available, createdAt, updatedAt) 
+        VALUES (:user_id, :title, :author, :img, :description, :available, :createdAt, :updatedAt)";
+            $params = [
+                ':user_id' => $book->getUserId(),
+                ':title' => $book->getTitle(),
+                ':author' => $book->getAuthor(),
+                ':img' => $book->getImg(),
+                ':description' => $book->getDescription(),
+                ':available' => $book->isAvailable() ? 1 : 0,
+                ':createdAt' => date('Y-m-d H:i:s'),
+                ':updatedAt' => date('Y-m-d H:i:s')
+            ];
 
-            // Vérification des erreurs SQL
-            if (!$result) {
-                $errorInfo = $stmt->errorInfo();
-                error_log("Erreur SQL : " . print_r($errorInfo, true));
-                return false;
+            $result = $this->db->query($sql, $params);
+
+            if ($result === false) {
+                throw new Exception("Erreur lors de l'insertion du livre dans la base de données.");
             }
 
             return true;
         } catch (PDOException $e) {
-            // Journalisation de l'exception
-            error_log("Erreur lors de l'insertion : " . $e->getMessage());
-            return false;
+            error_log("Erreur lors de l'ajout du livre : " . $e->getMessage());
+            throw new Exception("Erreur lors de l'ajout du livre : " . $e->getMessage());
         }
     }
-
     public function editBook(Book $book): bool
     {
 
