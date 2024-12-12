@@ -2,7 +2,7 @@
 
 /**
  * Entité Book, un livre est défini par les champs
- * id, user_id, title, author, image, description, available, created_at, updated_at
+ * id, user_id, title, author, image, description, available, createdAt, updatedAt
  */
 class Book extends AbstractEntity
 {
