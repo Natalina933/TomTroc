@@ -14,7 +14,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
             <img id="bookImage" src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/defaultBook.png', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre">
             <div class="image-upload">
                 <label for="img" class="upload-label">Modifier la photo</label>
-                <input type="file" id="img" name="img" class="file-input">
+                <input type="file" id="img" name="img" class="file-input" accept="image/*" onchange="previewImage(this);">
             </div>
         </div>
 
@@ -71,11 +71,12 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
     }
 
     function previewImage(input) {
+        const bookImage = document.getElementById('bookImage');
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            const reader = new FileReader();
 
             reader.onload = function(e) {
-                document.getElementById('bookImage').src = e.target.result;
+                bookImage.src = e.target.result;
             }
 
             reader.readAsDataURL(input.files[0]);

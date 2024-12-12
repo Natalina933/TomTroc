@@ -100,7 +100,7 @@ class bookManager extends AbstractEntityManager
     {
         try {
             $sql = "INSERT INTO book (user_id, title, author, img, description, available, createdAt, updatedAt) 
-        VALUES (:user_id, :title, :author, :img, :description, :available, :createdAt, :updatedAt)";
+            VALUES (:user_id, :title, :author, :img, :description, :available, :createdAt, :updatedAt)";
             $params = [
                 ':user_id' => $book->getUserId(),
                 ':title' => $book->getTitle(),
@@ -111,6 +111,8 @@ class bookManager extends AbstractEntityManager
                 ':createdAt' => date('Y-m-d H:i:s'),
                 ':updatedAt' => date('Y-m-d H:i:s')
             ];
+
+            error_log("Paramètres de la requête : " . print_r($params, true));
 
             $result = $this->db->query($sql, $params);
 
@@ -126,17 +128,33 @@ class bookManager extends AbstractEntityManager
     }
     public function editBook(Book $book): bool
     {
-
         $sql = "UPDATE book SET
-            title = '" . addslashes($book->getTitle()) . "',
-            author = '" . addslashes($book->getAuthor()) . "',
-            description = '" . addslashes($book->getDescription()) . "',
-            img = '" . addslashes($book->getImg()) . "',
-            available = " . ($book->isAvailable() ? 1 : 0) . "
-            WHERE id = " . (int)$book->getId();
+            title = :title,
+            author = :author,
+            description = :description,
+            img = :img,
+            available = :available,
+            updated_at = :updated_at
+            WHERE id = :id";
 
-        $result = $this->db->query($sql);
-        return $result !== false;
+        $params = [
+            ':title' => $book->getTitle(),
+            ':author' => $book->getAuthor(),
+            ':description' => $book->getDescription(),
+            ':img' => $book->getImg(),
+            ':available' => $book->isAvailable(),
+            ':updated_at' => $book->getUpdatedAt(),
+            ':id' => $book->getId()
+        ];
+
+        return $this->db->query($sql, $params) !== false;
+    }
+    public function countUserBooks(int $userId): int
+    {
+        $sql = "SELECT COUNT(*) as total_books FROM book WHERE user_id = :userId";
+        $stmt = $this->db->query($sql, ['userId' => $userId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)$result['total_books'];
     }
     public function getBookWithSellerInfo(int $bookId): ?array
     {
@@ -177,17 +195,24 @@ class bookManager extends AbstractEntityManager
      * @param int $id : l'id du book à supprimer.
      * @return void
      */
-    public function deleteBook(int $id): void
+    public function deleteBook($bookIds): bool
     {
-        $sql = "DELETE FROM book WHERE id = " . (int)$id;
-        $this->db->query($sql);
-    }
-    public function countUserBooks(int $userId): int
-    {
-        // Préparation de la requête SQL pour compter les livres de l'utilisateur
-        $sql = "SELECT COUNT(*) as total_books FROM book WHERE user_id = :userId";
-        $stmt = $this->db->query($sql, ['userId' => $userId]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (int)$result['total_books'];
+        if (!is_array($bookIds)) {
+            $bookIds = [$bookIds];
+        }
+
+        // Sécurisation des IDs
+        $bookIds = array_map('intval', $bookIds);
+        $idList = implode(',', $bookIds);
+
+        $sql = "DELETE FROM book WHERE id IN ($idList)";
+
+        try {
+            $result = $this->db->query($sql);
+            return $result !== false && $result->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la suppression du/des livre(s) : " . $e->getMessage());
+            return false;
+        }
     }
 }

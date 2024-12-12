@@ -26,7 +26,7 @@ class Book extends AbstractEntity
 
         // Initialisation des propriétés
         $this->id = $data['id'] ?? 0; // Valeur par défaut pour id
-        $this->userId = $data['user_id'] ?? 0; // Assurez-vous que userId est initialisé
+        $this->userId = $data['user_id'] ?? 0; // Valeur par défaut pour userId
         $this->title = $data['title'] ?? '';
         $this->author = $data['author'] ?? '';
         $this->description = $data['description'] ?? '';
