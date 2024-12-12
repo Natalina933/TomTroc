@@ -128,27 +128,50 @@ class bookManager extends AbstractEntityManager
     }
     public function editBook(Book $book): bool
     {
-        $sql = "UPDATE book SET
-            title = :title,
-            author = :author,
-            description = :description,
-            img = :img,
-            available = :available,
-            updated_at = :updated_at
-            WHERE id = :id";
+        try {
+            // Validation des données avant l'exécution de la requête
+            if (empty($book->getTitle()) || empty($book->getAuthor())) {
+                throw new InvalidArgumentException('Le titre et l\'auteur du livre doivent être renseignés.');
+            }
 
-        $params = [
-            ':title' => $book->getTitle(),
-            ':author' => $book->getAuthor(),
-            ':description' => $book->getDescription(),
-            ':img' => $book->getImg(),
-            ':available' => $book->isAvailable(),
-            ':updated_at' => $book->getUpdatedAt(),
-            ':id' => $book->getId()
-        ];
+            // Requête SQL pour mettre à jour le livre
+            $sql = "UPDATE book SET
+                title = :title,
+                author = :author,
+                description = :description,
+                img = :img,
+                available = :available,
+                updatedAt = :updatedAt
+                WHERE id = :id";
 
-        return $this->db->query($sql, $params) !== false;
+            // Paramètres de la requête
+            $params = [
+                ':title' => $book->getTitle(),
+                ':author' => $book->getAuthor(),
+                ':description' => $book->getDescription(),
+                ':img' => $book->getImg(),
+                ':available' => $book->isAvailable(),
+                ':updatedAt' => $book->getUpdatedAt() ? $book->getUpdatedAt()->format('Y-m-d H:i:s') : null,
+                ':id' => $book->getId()
+            ];
+
+            // Exécution de la requête
+            return $this->db->query($sql, $params) !== false;
+        } catch (InvalidArgumentException $e) {
+            // Erreur de validation des données
+            error_log("Erreur de validation des données du livre : " . $e->getMessage());
+            throw $e; // Relancer l'exception pour gérer au niveau supérieur
+        } catch (PDOException $e) {
+            // Erreur lors de l'exécution de la requête SQL
+            error_log("Erreur SQL lors de la mise à jour du livre (ID: " . $book->getId() . ") : " . $e->getMessage());
+            throw new Exception("Erreur lors de la mise à jour du livre : " . $e->getMessage());
+        } catch (Exception $e) {
+            // Toute autre exception générique
+            error_log("Erreur générale lors de la mise à jour du livre (ID: " . $book->getId() . ") : " . $e->getMessage());
+            throw new Exception("Erreur générale lors de la mise à jour du livre : " . $e->getMessage());
+        }
     }
+
     public function countUserBooks(int $userId): int
     {
         $sql = "SELECT COUNT(*) as total_books FROM book WHERE user_id = :userId";

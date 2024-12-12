@@ -9,10 +9,10 @@ $backUrl = "index.php?action=myAccount";
 
     <div class="book-edit-content">
         <div class="book-image-section">
-            <img src="/assets/img/defaultBook.png" alt="Photo du livre">
+            <img id="bookImagePreview" src="/assets/img/defaultBook.png" alt="Photo du livre" class="image-preview">
             <div class="image-upload">
                 <label for="img" class="upload-label">Ajouter une photo</label>
-                <input type="file" id="img" name="img" class="file-input">
+                <input type="file" id="img" name="img" class="file-input" onchange="previewBookImage(event)">
             </div>
         </div>
 
@@ -48,6 +48,24 @@ $backUrl = "index.php?action=myAccount";
 </div>
 
 <script>
+    function previewBookImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('bookImagePreview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            // Afficher l'image par défaut si aucun fichier n'est sélectionné
+            preview.src = "/assets/img/defaultBook.png";
+        }
+    }
+
     function confirmSubmission() {
         const title = document.getElementById('title').value;
         const author = document.getElementById('author').value;

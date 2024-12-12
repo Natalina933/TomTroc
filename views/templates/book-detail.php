@@ -27,9 +27,7 @@
 
                 <!-- Informations sur le propriétaire du livre -->
                 <p class="owner-title">PROPRIÉTAIRE</p>
-                <?php
-                var_dump($book);
-                ?>
+
                 <?php if ($book->getUser()) : ?>
                     <?php $user = $book->getUser(); ?>
 

@@ -157,17 +157,41 @@ class BookController
             if (!$userId) {
                 throw new Exception("Utilisateur non connecté.");
             }
-            error_log("ID utilisateur récupéré : " . $userId);
+
+            $imagePath = '/assets/img/defaultBook.png'; // Valeur par défaut
+
+            // Vérification si une image a été téléchargée
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = 'assets/img/books/'; 
+                $uploadFile = $uploadDir . basename($_FILES['image']['name']);
+
+                // Vérifiez que l'extension du fichier est une image
+                $imageFileType = pathinfo($uploadFile, PATHINFO_EXTENSION);
+                $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+                if (in_array(strtolower($imageFileType), $allowedTypes)) {
+                    // Déplacer l'image dans le dossier
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+                        $imagePath = '/' . $uploadFile; // Mettre à jour le chemin de l'image
+                    } else {
+                        throw new Exception("Erreur lors du téléchargement de l'image.");
+                    }
+                } else {
+                    throw new Exception("Le fichier téléchargé n'est pas une image valide.");
+                }
+            }
+            // Création du nouvel objet Book avec les données du formulaire
             $newBook = new Book([
                 'user_id' => $userId,
                 'title' => Utils::request('title'),
                 'author' => Utils::request('author'),
                 'description' => Utils::request('description'),
                 'available' => Utils::request('available', 1),
-                'img' => '/assets/img/defaultBook.png',
+                'img' => $imagePath,
                 'createdAt' => date('Y-m-d H:i:s'),
                 'updatedAt' => date('Y-m-d H:i:s')
             ]);
+
             error_log("Nouvel objet Book: " . print_r($newBook, true));
             try {
                 if ($this->bookManager->addBook($newBook)) {
