@@ -158,21 +158,17 @@ class BookController
                 throw new Exception("Utilisateur non connecté.");
             }
 
-            $imagePath = '/assets/img/defaultBook.png'; // Valeur par défaut
+            $imagePath = '/assets/img/defaultBook.png'; // Image par défaut
 
-            // Vérification si une image a été téléchargée
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = 'assets/img/books/'; 
-                $uploadFile = $uploadDir . basename($_FILES['image']['name']);
-
-                // Vérifiez que l'extension du fichier est une image
-                $imageFileType = pathinfo($uploadFile, PATHINFO_EXTENSION);
+                $uploadDir = 'assets/img/books/';
+                $uploadFile = $uploadDir . uniqid() . '_' . basename($_FILES['image']['name']);
+                $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
                 $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
 
-                if (in_array(strtolower($imageFileType), $allowedTypes)) {
-                    // Déplacer l'image dans le dossier
+                if (in_array($imageFileType, $allowedTypes)) {
                     if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-                        $imagePath = '/' . $uploadFile; // Mettre à jour le chemin de l'image
+                        $imagePath = '/' . $uploadFile;
                     } else {
                         throw new Exception("Erreur lors du téléchargement de l'image.");
                     }
@@ -180,7 +176,7 @@ class BookController
                     throw new Exception("Le fichier téléchargé n'est pas une image valide.");
                 }
             }
-            // Création du nouvel objet Book avec les données du formulaire
+
             $newBook = new Book([
                 'user_id' => $userId,
                 'title' => Utils::request('title'),
@@ -192,7 +188,6 @@ class BookController
                 'updatedAt' => date('Y-m-d H:i:s')
             ]);
 
-            error_log("Nouvel objet Book: " . print_r($newBook, true));
             try {
                 if ($this->bookManager->addBook($newBook)) {
                     Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès."]);
