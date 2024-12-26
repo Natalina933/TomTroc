@@ -46,9 +46,10 @@ class MessageController
             // Marquer les messages comme lus
             $this->messageManager->markMessagesAsRead($userId, $receiverId);
         }
+        $_SESSION['unreadCount'] = $this->messageManager->getUnreadMessagesCount($userId);
 
-        $viewData['unreadCount'] = $this->messageManager->getUnreadMessagesCount($userId);
-
+        var_dump($viewData['unreadCount']);
+        var_dump($this->messageManager->getUnreadMessagesCount($userId));
         $view = new View('Messagerie');
         $view->render('messaging', $viewData);
     }

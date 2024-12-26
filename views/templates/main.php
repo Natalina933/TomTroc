@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Ce fichier est le template principal qui "contient" ce qui aura été généré par les autres vues.  
  * 
@@ -21,7 +22,9 @@
 </head>
 
 <body>
-    <?php include 'include/header.php'; ?>
+    <?php
+
+    include 'include/header.php'; ?>
 
     <main>
         <?= $description /* Ici est affiché le contenu réel de la page. */ ?>

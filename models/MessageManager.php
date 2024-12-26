@@ -131,12 +131,17 @@
         $sql = "SELECT COUNT(*) FROM message WHERE receiver_id = :userId AND is_read = 0";
         try {
             $stmt = $this->db->query($sql, ['userId' => $userId]);
-            return (int) $stmt->fetchColumn();
+            $count = (int) $stmt->fetchColumn();
+
+            error_log("User ID : $userId - Messages non lus : $count");
+
+            return $count;
         } catch (PDOException $e) {
             error_log("Erreur dans la requête SQL : " . $e->getMessage());
             return 0;
         }
     }
+
 
     public function createNewConversation(int $userId, int $receiverId): void
     {
