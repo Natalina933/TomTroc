@@ -35,19 +35,17 @@ class MessageController
             // Vérifie si une conversation existe déjà entre l'utilisateur et le destinataire
             $conversation = $this->messageManager->getConversationBetweenUsers($userId, $receiverId);
 
-            // Si aucune conversation n'existe, créer un message initial pour démarrer la conversation
+            // Si aucune conversation n'existe, on prépare une conversation vide
             if (empty($conversation)) {
-                // $this->messageManager->createNewConversation($userId, $receiverId);
-                // Recharger la conversation pour inclure le message initial
-                $conversation = $this->messageManager->getConversationBetweenUsers($userId, $receiverId);
+                $conversation = [];
             }
 
             $unreadCount = $this->messageManager->getUnreadMessagesCount($userId);
 
             $view = new View('Messagerie');
             $view->render('messaging', [
-                'messages' => $conversation,
-                'receiverName' => htmlspecialchars($receiver['username'], ENT_QUOTES, 'UTF-8'),
+                'conversation' => $conversation,
+                'receiver' => $receiver,
                 'unreadCount' => $unreadCount
             ]);
         } else {
@@ -57,7 +55,6 @@ class MessageController
             $view->render('messaging', ['messages' => $messages]);
         }
     }
-
     /**
      * Affiche les messages envoyés par l'utilisateur.
      * @return void

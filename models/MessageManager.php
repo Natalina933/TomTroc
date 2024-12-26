@@ -90,7 +90,7 @@
     {
         $sql = "SELECT * FROM message
                 WHERE (sender_id = :userId AND receiver_id = :receiverId)
-                   OR (sender_id = :receiverId AND receiver_id = :userId)
+                OR (sender_id = :receiverId AND receiver_id = :userId)
                 ORDER BY created_at ASC";
         try {
             $stmt = $this->db->query($sql, [
@@ -137,16 +137,28 @@
             return 0;
         }
     }
-    // public function markMessagesAsRead(int $userId, int $senderId): void
-    // {
-    //     $sql = "UPDATE message SET is_read = 1 WHERE receiver_id = :userId AND sender_id = :senderId AND is_read = 0";
-    //     try {
-    //         $this->db->query($sql, ['userId' => $userId, 'senderId' => $senderId]);
-    //     } catch (PDOException $e) {
-    //         error_log("Erreur lors du marquage des messages comme lus : " . $e->getMessage());
-    //     }
-    // }
 
+    public function createNewConversation(int $userId, int $receiverId): void
+    {
+        // Vérifier si une conversation existe déjà
+        $existingConversation = $this->getConversationBetweenUsers($userId, $receiverId);
+        
+        if (empty($existingConversation)) {
+            // Si aucune conversation n'existe, créer un message initial vide
+            $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at) 
+                    VALUES (:senderId, :receiverId, '', NOW())";
+            try {
+                $this->db->query($sql, [
+                    'senderId' => $userId,
+                    'receiverId' => $receiverId
+                ]);
+            } catch (PDOException $e) {
+                error_log("Erreur lors de la création d'une nouvelle conversation : " . $e->getMessage());
+                throw new Exception("Impossible de créer une nouvelle conversation.");
+            }
+        }
+    }
+    
     /**
      * Envoie un message.
      * @param Message $message : le message à envoyer.
