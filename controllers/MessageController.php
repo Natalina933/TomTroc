@@ -23,6 +23,9 @@ class MessageController
 
         $viewData = $this->getCommonViewData($userId);
 
+        // Toujours récupérer la liste des conversations
+        $viewData['conversations'] = $this->messageManager->getLastMessagesByUserId($userId);
+
         if (isset($_GET['receiver_id'])) {
             $receiverId = (int) $_GET['receiver_id'];
             $receiver = $this->messageManager->getUserById($receiverId);
@@ -32,29 +35,24 @@ class MessageController
                 exit;
             }
 
-            // Vérifie si une conversation existe déjà entre l'utilisateur et le destinataire
+            // Récupérer la conversation complète
             $conversation = $this->messageManager->getConversationBetweenUsers($userId, $receiverId);
 
-            // Si aucune conversation n'existe, on prépare une conversation vide
-            if (empty($conversation)) {
-                $conversation = [];
-            }
-
-            $unreadCount = $this->messageManager->getUnreadMessagesCount($userId);
-
-            $view = new View('Messagerie');
-            $view->render('messaging', [
-                'conversation' => $conversation,
+            $viewData['activeConversation'] = [
                 'receiver' => $receiver,
-                'unreadCount' => $unreadCount
-            ]);
-        } else {
-            // Afficher tous les messages si aucun `receiver_id` n'est passé
-            $messages = $this->messageManager->getMessagesByUserId($userId);
-            $view = new View('Messagerie');
-            $view->render('messaging', ['messages' => $messages]);
+                'messages' => $conversation
+            ];
+
+            // Marquer les messages comme lus
+            $this->messageManager->markMessagesAsRead($userId, $receiverId);
         }
+
+        $viewData['unreadCount'] = $this->messageManager->getUnreadMessagesCount($userId);
+
+        $view = new View('Messagerie');
+        $view->render('messaging', $viewData);
     }
+
     /**
      * Affiche les messages envoyés par l'utilisateur.
      * @return void

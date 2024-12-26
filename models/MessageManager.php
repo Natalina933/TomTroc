@@ -142,7 +142,7 @@
     {
         // Vérifier si une conversation existe déjà
         $existingConversation = $this->getConversationBetweenUsers($userId, $receiverId);
-        
+
         if (empty($existingConversation)) {
             // Si aucune conversation n'existe, créer un message initial vide
             $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at) 
@@ -158,7 +158,7 @@
             }
         }
     }
-    
+
     /**
      * Envoie un message.
      * @param Message $message : le message à envoyer.
@@ -195,6 +195,36 @@
             $messages[] = new Message($messageData);
         }
         return $messages;
+    }
+    public function markMessagesAsRead(int $userId, int $senderId): void
+    {
+        $sql = "UPDATE message 
+                SET is_read = 1 
+                WHERE receiver_id = :userId AND sender_id = :senderId AND is_read = 0";
+        try {
+            $this->db->query($sql, ['userId' => $userId, 'senderId' => $senderId]);
+        } catch (PDOException $e) {
+            error_log("Erreur lors du marquage des messages comme lus : " . $e->getMessage());
+        }
+    }
+
+    public function getUnreadMessagesCountByConversation(int $userId): array
+    {
+        $sql = "SELECT sender_id, COUNT(*) as unread_count 
+                FROM message 
+                WHERE receiver_id = :userId AND is_read = 0 
+                GROUP BY sender_id";
+        try {
+            $result = $this->db->query($sql, ['userId' => $userId]);
+            $unreadCounts = [];
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $unreadCounts[$row['sender_id']] = $row['unread_count'];
+            }
+            return $unreadCounts;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la récupération du nombre de messages non lus : " . $e->getMessage());
+            return [];
+        }
     }
 
     /**

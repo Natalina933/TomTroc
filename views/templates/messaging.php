@@ -6,7 +6,7 @@
 
 <main class="messaging-container">
     <div class="messenger-container">
-        <!-- Section 1 : Conversations -->
+        <!-- Section 1 : Liste des conversations -->
         <section class="sidebar">
             <h2>Messagerie</h2>
             <ul class="conversations">
@@ -15,13 +15,13 @@
                 <?php else : ?>
                     <?php foreach ($lastMessages as $message) : ?>
                         <?php
-                        $sender = $message->getSender()->getId() != $_SESSION['user']['id'] ? $message->getSender() : $message->getReceiver();
+                        $otherUser = $message->getSender()->getId() != $_SESSION['user']['id'] ? $message->getSender() : $message->getReceiver();
                         ?>
-                        <li class="conversation" data-message-id="<?= htmlspecialchars($message->getId()) ?>" data-receiver-id="<?= htmlspecialchars($sender->getId()) ?>">
-                            <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($sender->getId()) ?>">
-                                <img src="<?= htmlspecialchars($sender->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil" class="profile-picture">
+                        <li class="conversation <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>">
+                            <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
+                                <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil" class="profile-picture">
                                 <div class="conversation-info">
-                                    <p class="name"><?= htmlspecialchars($sender->getUsername()) ?></p>
+                                    <p class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></p>
                                     <span class="description"><?= htmlspecialchars(substr($message->getContent(), 0, 30)) ?>...</span>
                                     <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
                                 </div>
@@ -32,40 +32,46 @@
             </ul>
         </section>
 
-        <!-- Section 2 : Chat -->
-        <?php if (isset($receiver)) : ?>
-            <div class="chat">
+        <!-- Section 2 : Conversation active ou message par défaut -->
+        <section class="chat">
+            <?php if (isset($activeConversation)) : ?>
                 <div class="chat-header">
                     <div class="chat-user-info">
-                        <img src="<?= htmlspecialchars($receiver['profilePicture'] ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($receiver['username']) ?>" class="profile-picture">
-                        <span class="chat-title"><?= htmlspecialchars($receiver['username']) ?></span>
+                        <img src="<?= htmlspecialchars($activeConversation['receiver']['profilePicture'] ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil" class="profile-picture">
+                        <span class="chat-title"><?= htmlspecialchars($activeConversation['receiver']['username']) ?></span>
                     </div>
                 </div>
 
                 <div class="messages-container">
                     <div class="messages">
-                        <?php if (!empty($conversation)) : ?>
-                            <?php foreach ($conversation as $message) : ?>
-                                <!-- ... (affichage des messages existants) ... -->
-                            <?php endforeach; ?>
-                        <?php else : ?>
-                            <p class="no-messages">Aucun message. Commencez la conversation !</p>
-                        <?php endif; ?>
+                        <?php foreach ($activeConversation['messages'] as $message) : ?>
+                            <div class="message <?= $message->getSender()->getId() == $_SESSION['user']['id'] ? 'sent' : 'received' ?>">
+                                <?php if ($message->getSender()->getId() != $_SESSION['user']['id']) : ?>
+                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil" class="profile-picture">
+                                <?php endif; ?>
+                                <div class="message-content">
+                                    <?= htmlspecialchars($message->getContent()) ?>
+                                </div>
+                                <div class="message-footer">
+                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('d/m/Y H:i')) ?></span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
                 <div class="chat-input">
                     <form action="index.php?action=sendMessage" method="post" class="message-form">
                         <textarea name="content" placeholder="Votre message..." class="message-textarea"></textarea>
-                        <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($receiver['id']) ?>">
+                        <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($activeConversation['receiver']['id']) ?>">
                         <button type="submit" class="btn send-button">Envoyer</button>
                     </form>
                 </div>
-            </div>
-        <?php else : ?>
-            <div class="no-conversation">
-                <p>Sélectionnez une conversation pour commencer à chatter.</p>
-            </div>
-        <?php endif; ?>
+            <?php else : ?>
+                <div class="no-conversation">
+                    <p>Sélectionnez une conversation pour commencer à chatter.</p>
+                </div>
+            <?php endif; ?>
+        </section>
     </div>
 </main>
