@@ -12,44 +12,27 @@
                     <a href="index.php?action=home" class="nav-link">Accueil</a>
                     <a href="index.php?action=books" class="nav-link">Nos livres à l'échange</a>
                 </div>
-                <?php
-                $unreadCount = isset($_SESSION['unreadCount']) ? $_SESSION['unreadCount'] : 0;
-                ?>
-                <a href="index.php?action=showMessaging" class="nav-link messagerie-link">
-                    Messagerie
-
-                    <?php if ($unreadCount > 0) : ?>
-                        <span class="unread-bubble"><?php echo $unreadCount; ?></span>
-                    <?php endif; ?>
-                </a>
-
-                <style>
-                    .unread-bubble {
-                        background-color: red;
-                        color: white;
-                        border-radius: 50%;
-                        font-size: 12px;
-                        padding: 2px 6px;
-                        position: absolute;
-                        top: 5px;
-                        right: 5px;
-                    }
-                </style>
-
-                <a href="index.php?action=myAccount" class="nav-link">Mon compte</a>
-                <?php if (isset($_SESSION['user'])) { ?>
-                    <a href="index.php?action=disconnectUser" class="nav-link">Déconnexion</a>
-                <?php } else { ?>
-                    <a href="index.php?action=connectionForm" class="nav-link">Connexion</a>
-                <?php } ?>
+                <div class="nav-group nav-group--right">
+                    <?php
+                    $unreadCount = isset($_SESSION['unreadCount']) ? $_SESSION['unreadCount'] : 0;
+                    ?>
+                    <a href="index.php?action=showMessaging" class="nav-link messagerie-link">
+                        Messagerie
+                        <?php if ($unreadCount > 0) : ?>
+                            <span class="unread-bubble"><?php echo $unreadCount; ?></span>
+                        <?php endif; ?>
+                    </a>
+                    <a href="index.php?action=myAccount" class="nav-link">Mon compte</a>
+                    <?php if (isset($_SESSION['user'])) { ?>
+                        <a href="index.php?action=disconnectUser" class="nav-link">Déconnexion</a>
+                    <?php } else { ?>
+                        <a href="index.php?action=connectionForm" class="nav-link">Connexion</a>
+                    <?php } ?>
+                </div>
             </div>
-        </div>
-
         </div>
     </nav>
 </header>
-
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

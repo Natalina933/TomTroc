@@ -2,39 +2,49 @@
     .hamburger {
         display: none;
     }
+
     .menu {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         background-color: var(--backgroundColor);
+        width: 100%;
     }
+
     .btn {
         width: 152px;
         margin: 0;
     }
+
     .nav-group {
         flex-direction: row;
         padding: 0;
     }
+
     .nav-group--left {
         margin-left: 4px;
     }
+
     .nav-group--right {
         margin-left: auto;
     }
+
     .nav-link {
         font-size: 14px;
         margin-left: 20px;
     }
+
     .nav-link:hover {
         font-weight: bolder;
     }
+
     /** * Styles pour la section d'introduction * **/
     .intro-container {
         display: flex;
         flex-direction: row-reverse;
         margin: auto 0;
     }
+
     .intro-wrapper {
         max-width: 329px;
         display: flex;
@@ -42,33 +52,40 @@
         justify-content: center;
         margin: 0 20px;
     }
+
     .intro-text {
         padding-bottom: 30px;
     }
+
     /*style search bar */
     .search-wrapper {
         display: flex;
         flex-direction: row;
     }
+
     .account-info {
         flex-direction: column;
     }
+
     .profile-card,
     .info-card {
         max-width: none;
     }
 
 }
+
 footer {
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
 }
+
 footer a,
 footer img {
     margin-bottom: 0;
     margin-right: 20px;
 }
+
 footer a:last-child,
 footer img:last-child {
     margin-right: 0;
