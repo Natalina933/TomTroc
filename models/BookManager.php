@@ -41,17 +41,11 @@ class bookManager extends AbstractEntityManager
             $sql .= " WHERE " . implode(" AND ", $conditions);
         }
 
-        if (!empty($orders)) {
-            $orderConditions = [];
-            foreach ($orders as $key => $value) {
-                $orderConditions[] = "$key $value";
-            }
-            $sql .= " ORDER BY " . implode(", ", $orderConditions);
-        }
+        // Tri par date de création pour récupérer les derniers livres ajoutés
+        $sql .= " ORDER BY createdAt DESC";
 
-        if ($limit > 0) {
-            $sql .= " LIMIT " . (int)$limit;
-        }
+        // Limiter les résultats aux 4 derniers livres
+        $sql .= " LIMIT 4"; // Limite à 4 livres
 
         $result = $this->db->query($sql, $params);
         $books = [];

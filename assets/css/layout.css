@@ -12,7 +12,7 @@
 /** * Styles pour le bouton * **/
 .btn {
     display: inline-block;
-    width: 335px;
+    width: 152px;
     padding: 22px 38px;
     border-radius: 10px;
     background-color: var(--buttonDefaultColor);
@@ -20,7 +20,7 @@
     font-size: 16px;
     font-weight: 600;
     text-align: center;
-    color: white;
+    color: #ffffff;
     border: none;
     cursor: pointer;
     transition: opacity 0.3s;

@@ -1,11 +1,11 @@
 <section class="intro-container">
-    <img src="../../assets/img/hero.png" alt="Hero image">
+    <img src="../../assets/img/hero.png" alt="Image représentant un livre et des lecteurs">
     <div class="intro-wrapper">
         <h2 class="title">Rejoignez nos lecteurs passionnés</h2>
         <p class="intro-text">
             Donnez une nouvelle vie à vos livres en les échangeant avec d'autres amoureux de la lecture. Nous croyons en la magie du partage de connaissances et d'histoires à travers les livres.
         </p>
-        <a href="index.php?action=books" class="btn">Découvrir</a>
+        <a href="index.php?action=books" class="btn" alt = "Découvrir nos livres">Découvrir</a>
     </div>
 </section>
 
@@ -20,7 +20,10 @@
             <p>Aucun livre disponible pour le moment.</p>
         <?php } ?>
     </div>
+    <button class="btn">Voir tous les livres</button>
+
 </section>
+
 <section class="how-it-works">
     <h2 class="section-title">Comment ça marche ?</h2>
     <p class="intro-text">
@@ -42,15 +45,16 @@
     </div>
     <button class="btn view-all-books">Voir tous les livres</button>
 </section>
+
 <section class="values-section">
     <div class="banner-image">
-        <img src="../../assets/img/banner.png" alt="Bandeau Tom Troc">
+        <img src="../../assets/img/banner.png" alt="Bandeau représentant les valeurs de TomTroc">
     </div>
     <div class="values-content">
         <h2 class="values-title">Nos valeurs</h2>
         <p class="values-paragraph">
-            Chez Tom Troc, nous mettons l'accent sur le partage, la découverte et la communauté. Nos valeurs sont ancrées dans notre passion pour les livres et notre désir de créer des liens entre les lecteurs. Nous croyons en la puissance des histoires pour rassembler les gens et inspirer des conversations enrichissantes.
-
+            Chez TomTroc, nous mettons l'accent sur le partage, la découverte et la communauté. Nos valeurs sont ancrées dans notre passion pour les livres et notre désir de créer des liens entre les lecteurs. Nous croyons en la puissance des histoires pour rassembler les gens et inspirer des conversations enrichissantes.
+        </p>
         <p class="values-paragraph">
             Notre association a été fondée avec une conviction profonde : chaque livre mérite d'être lu et partagé.
         </p>
@@ -59,8 +63,9 @@
         </p>
         <div class="values-footer">
             <div class="values-signature">
-                L’équipe Tom Troc.
+                L’équipe TomTroc.
             </div>
-            <img class="vector-image" src="/assets/img/Vector 2.svg" alt="Décoration Vector 2">
+            <img class="vector-image" src="/assets/img/Vector_2.svg" alt="Décoration Vector 2">
         </div>
+    </div>
 </section>

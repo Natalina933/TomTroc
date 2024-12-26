@@ -17,14 +17,20 @@
                     $unreadCount = isset($_SESSION['unreadCount']) ? $_SESSION['unreadCount'] : 0;
                     ?>
                     <a href="index.php?action=showMessaging" class="nav-link messagerie-link">
+                        <!-- Icône de bulle -->
+                        <img src="../../../assets/img/icons/bubble-icon.png" alt="Bulle" class="bubble-icon">
                         Messagerie
                         <?php if ($unreadCount > 0) : ?>
                             <span class="unread-bubble"><?php echo $unreadCount; ?></span>
                         <?php endif; ?>
                     </a>
-                    <a href="index.php?action=myAccount" class="nav-link">Mon compte</a>
+                    <a href="index.php?action=myAccount" class="nav-link">
+                        <!-- Icône de compte -->
+                        <img src="../../../assets/img/icons/account-icon.png" alt="Compte" class="account-icon">
+                        Mon compte</a>
                     <?php if (isset($_SESSION['user'])) { ?>
-                        <a href="index.php?action=disconnectUser" class="nav-link">Déconnexion</a>
+                        <a href="index.php?action=disconnectUser" class="nav-link">
+                            Déconnexion</a>
                     <?php } else { ?>
                         <a href="index.php?action=connectionForm" class="nav-link">Connexion</a>
                     <?php } ?>
