@@ -9,6 +9,7 @@
 .book-list {
     background-color: var(--backgroundColor);
     padding: 40px 20px;
+    display: contents;
 }
 .section-title {
     text-align: center;

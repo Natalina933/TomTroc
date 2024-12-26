@@ -12,7 +12,7 @@
 /** * Styles pour le bouton * **/
 .btn {
     display: inline-block;
-    width: 152px;
+    width: auto;
     padding: 22px 38px;
     border-radius: 10px;
     background-color: var(--buttonDefaultColor);
