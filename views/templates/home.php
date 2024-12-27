@@ -1,5 +1,5 @@
 <section class="intro-container">
-    <img src="../../assets/img/hero.png" alt="Image représentant un livre et des lecteurs">
+    <img src="../../assets/img/hero.webp" alt="Image représentant un livre et des lecteurs">
     <div class="intro-wrapper">
         <h2 class="title">Rejoignez nos lecteurs passionnés</h2>
         <p class="intro-text">

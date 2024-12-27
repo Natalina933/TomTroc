@@ -20,6 +20,6 @@
         Déjà inscrit ? <a href="index.php?action=connectionForm">Connectez-vous</a>
     </p>
     <div class="home-image">
-        <img src="../../assets/img/hero.png" alt="Image d'accueil">
+        <img src="../../assets/img/hero.webp" alt="Image d'accueil">
     </div>
 </div>
