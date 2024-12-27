@@ -14,15 +14,11 @@
         $sql = "SELECT * FROM message WHERE receiver_id = :userId ORDER BY created_at DESC";
         try {
             $result = $this->db->query($sql, ['userId' => $userId]);
+            return $this->createMessageObjects($result);
         } catch (PDOException $e) {
-            echo "Erreur dans la requête SQL : " . $e->getMessage();
+            $this->logError("Erreur dans la requête SQL : " . $e->getMessage());
+            return [];
         }
-        $messages = [];
-
-        while ($messageData = $result->fetch()) {
-            $messages[] = new Message($messageData);
-        }
-        return $messages;
     }
 
     /**
@@ -41,7 +37,7 @@
             }
             return $sentMessages;
         } catch (PDOException $e) {
-            error_log("Erreur dans la requête SQL : " . $e->getMessage());
+            $this->logError("Erreur dans la requête SQL : " . $e->getMessage());
             return [];
         }
     }
@@ -58,7 +54,7 @@
             $messageData = $stmt->fetch(PDO::FETCH_ASSOC);
             return $messageData ? new Message($messageData) : null;
         } catch (PDOException $e) {
-            error_log("Erreur dans la requête SQL : " . $e->getMessage());
+            $this->logError("Erreur dans la requête SQL : " . $e->getMessage());
             return null;
         }
     }
@@ -169,19 +165,47 @@
      * @param Message $message : le message à envoyer.
      * @return void
      */
-    public function sendMessage(Message $message): void
+    public function sendMessage(Message $message): bool
     {
-        $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at) VALUES (:senderId, :receiverId, :content, NOW())";
+        $sql = "INSERT INTO message (sender_id, receiver_id, content, created_at) 
+                VALUES (:senderId, :receiverId, :content, NOW())";
         try {
             $this->db->query($sql, [
                 'senderId' => $message->getSenderId(),
                 'receiverId' => $message->getReceiverId(),
                 'content' => $message->getContent(),
             ]);
+            return true;
         } catch (PDOException $e) {
-            echo "Erreur lors de l'envoi du message : " . $e->getMessage();
+            $this->logError("Erreur lors de l'envoi du message : " . $e->getMessage());
+            return false;
         }
     }
+    
+
+    /**
+     * Crée des objets Message à partir des résultats de la requête.
+     * @param PDOStatement $result
+     * @return array
+     */
+    private function createMessageObjects($result): array
+    {
+        $messages = [];
+        while ($messageData = $result->fetch(PDO::FETCH_ASSOC)) {
+            $messages[] = new Message($messageData);
+        }
+        return $messages;
+    }
+
+    /**
+     * Journalise les erreurs.
+     * @param string $message
+     */
+    private function logError(string $message): void
+    {
+        error_log($message);
+    }
+
     public function getLastMessagesByUserId(int $userId): array
     {
         $sql = "SELECT m.* FROM message m

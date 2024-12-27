@@ -30,7 +30,7 @@ class Book extends AbstractEntity
         $this->title = $data['title'] ?? '';
         $this->author = $data['author'] ?? '';
         $this->description = $data['description'] ?? '';
-        $this->img = isset($data['img']) ? $data['img'] : '/assets/img/defaultBook.png';
+        $this->img = isset($data['img']) ? $data['img'] : '/assets/img/defaultBook.webp';
         $this->available = isset($data['available']) ? (bool)$data['available'] : true;
 
         // Récupération de l'utilisateur si userId est défini

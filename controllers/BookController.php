@@ -135,62 +135,48 @@ class BookController
         }
     }
 
-    private function handleImageUpload($file): ?string
-    {
-        $uploadDir = 'assets/img/books/';
-        $fileName = uniqid() . '_' . basename($file['name']);
-        $uploadFile = $uploadDir . $fileName;
-
-        if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
-            return '/' . $uploadFile;
-        }
-
-        return null;
-    }
-
+    
 
     public function addBook()
     {
         $this->ensureUserIsConnected();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userId = $_SESSION['user']['id'] ?? null;
             if (!$userId) {
                 throw new Exception("Utilisateur non connecté.");
             }
-
-            $imagePath = '/assets/img/defaultBook.png'; // Image par défaut
-
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = 'assets/img/books/';
-                $uploadFile = $uploadDir . uniqid() . '_' . basename($_FILES['image']['name']);
-                $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
-                $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-
-                if (in_array($imageFileType, $allowedTypes)) {
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-                        $imagePath = '/' . $uploadFile;
-                    } else {
-                        throw new Exception("Erreur lors du téléchargement de l'image.");
-                    }
-                } else {
-                    throw new Exception("Le fichier téléchargé n'est pas une image valide.");
-                }
+    
+            // Validation des données
+            $title = Utils::request('title');
+            $author = Utils::request('author');
+            $description = Utils::request('description');
+            $available = Utils::request('available', 1);
+    
+            if (empty($title) || empty($author) || empty($description)) {
+                Utils::redirect("addBook", ["status" => "error", "message" => "Veuillez remplir tous les champs obligatoires."]);
+                return;
             }
-
+    
+            // Traitement de l'image
+            $imagePath = $this->handleImageUpload($_FILES['image'] ?? null);
+    
             $newBook = new Book([
                 'user_id' => $userId,
-                'title' => Utils::request('title'),
-                'author' => Utils::request('author'),
-                'description' => Utils::request('description'),
-                'available' => Utils::request('available', 1),
+                'title' => $title,
+                'author' => $author,
+                'description' => $description,
+                'available' => $available,
                 'img' => $imagePath,
                 'createdAt' => date('Y-m-d H:i:s'),
                 'updatedAt' => date('Y-m-d H:i:s')
             ]);
-
+    
             try {
                 if ($this->bookManager->addBook($newBook)) {
                     Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès."]);
+                } else {
+                    throw new Exception("Erreur lors de l'ajout du livre.");
                 }
             } catch (Exception $e) {
                 Utils::redirect("addBook", ["status" => "error", "message" => $e->getMessage()]);
@@ -200,7 +186,31 @@ class BookController
             $view->render('book-edit', ['book' => new Book()]);
         }
     }
-
+    
+    private function handleImageUpload($file): string
+    {
+        $imagePath = '/assets/img/defaultBook.webp'; // Image par défaut
+    
+        if ($file && $file['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = 'assets/img/books/';
+            $uploadFile = $uploadDir . uniqid() . '_' . basename($file['name']);
+            $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
+            $allowedTypes = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    
+            if (in_array($imageFileType, $allowedTypes)) {
+                if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
+                    $imagePath = '/' . $uploadFile;
+                } else {
+                    throw new Exception("Erreur lors du téléchargement de l'image.");
+                }
+            } else {
+                throw new Exception("Le fichier téléchargé n'est pas une image valide.");
+            }
+        }
+    
+        return $imagePath;
+    }
+    
 
     public function deleteBook()
     {
