@@ -5,7 +5,7 @@
         <p class="intro-text">
             Donnez une nouvelle vie à vos livres en les échangeant avec d'autres amoureux de la lecture. Nous croyons en la magie du partage de connaissances et d'histoires à travers les livres.
         </p>
-        <a href="index.php?action=books" class="btn" alt = "Découvrir nos livres">Découvrir</a>
+        <a href="index.php?action=books" class="btn" alt="Découvrir nos livres">Découvrir</a>
     </div>
 </section>
 
@@ -48,7 +48,7 @@
 
 <section class="values-section">
     <div class="banner-image">
-        <img src="../../assets/img/banner.png" alt="Bandeau représentant les valeurs de TomTroc">
+        <img src="../../assets/img/banner.webp" alt="Bandeau représentant les valeurs de TomTroc">
     </div>
     <div class="values-content">
         <h2 class="values-title">Nos valeurs</h2>
