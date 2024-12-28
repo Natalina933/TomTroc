@@ -42,11 +42,11 @@
     .intro-container {
         display: flex;
         flex-direction: row-reverse;
-        margin: auto 0;
+        justify-content: center;
     }
 
     .intro-wrapper {
-        max-width: 329px;
+        max-width: 400px;
         display: flex;
         flex-direction: column;
         justify-content: center;
