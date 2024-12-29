@@ -52,13 +52,13 @@ try {
                 throw new Exception("ID du livre invalide.");
             }
             break;
-            case 'updateBookImage':
-                if ($bookId > 0) {
-                    $bookController->updateBookImage($bookId);
-                } else {
-                    throw new Exception("ID du livre invalide.");
-                }
-                break;
+        case 'updateBookImage':
+            if ($bookId > 0) {
+                $bookController->updateBookImage($bookId);
+            } else {
+                throw new Exception("ID du livre invalide.");
+            }
+            break;
         case 'displayAddBookForm':
             $userController->displayAddBookForm();
             break;
@@ -91,9 +91,9 @@ try {
             $bookController->displayBooksSection();
             break;
 
-            case 'updateProfilePicture':
-                $userController->updateProfilePicture();
-                break;
+        case 'updateProfilePicture':
+            $userController->updateProfilePicture();
+            break;
 
         case 'editUser':
             $userController->editUser();

@@ -14,12 +14,14 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
+  height: 700px;
+  justify-content: center;
 }
 .section-title {
   text-align: center;
   font-size: 36px;
   font-weight: 700;
-  margin-bottom: 40px;
+  margin: 55px auto;
   color: var(--headerColor);
 }
 .books {
@@ -30,13 +32,13 @@
 }
 .book-card {
   width: 200px;
-  height: 324px;
   background-color: var(--PaleColor);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease;
   position: relative;
+  cursor: pointer;
 }
 .text-book-card {
   margin: 10px;
@@ -58,8 +60,9 @@
 }
 .book-card p {
   font-weight: 400;
+  line-height: 16.94px;
   font-size: 14px;
-  color: #a6a6a6;
+  color: var(--hamburgerColor);
   margin-bottom: 8px;
 }
 .book-card .info {
@@ -78,7 +81,6 @@
 }
 .section-title {
   font-size: 2em;
-  margin-bottom: 20px;
 }
 .intro-text {
   font-size: 1.2em;

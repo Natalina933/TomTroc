@@ -30,7 +30,7 @@
     <section class="how-it-works">
         <h2 class="section-title">Comment ça marche ?</h2>
         <p class="intro-text">
-            Échanger des livres avec TomTroc c’est simple et amusant !
+            Échanger des livres avec TomTroc c’est simple et amusant ! Suivez ces étapes pour commencer :
         </p>
         <ol class="steps-wrapper">
             <li class="step-box">

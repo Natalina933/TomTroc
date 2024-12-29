@@ -3,16 +3,17 @@ $pageTitle = "Ajouter un nouveau livre";
 $backUrl = "index.php?action=myAccount";
 ?>
 
-<div class="book-edit-container">
-    <a href="<?= $backUrl ?>" class="back-button">Retour</a>
-    <h2 class="edit-title"><?= $pageTitle ?></h2>
+<main class="book-edit-container">
+    <nav>
+        <a href="<?= $backUrl ?>" class="back-button">Retour à mon compte</a>
+    </nav>
 
-    <div class="book-edit-content">
+    <section class="book-edit-content">
         <div class="book-image-section">
-            <img id="bookImagePreview" src="/assets/img/defaultBook.webp" alt="Photo du livre" class="image-preview">
+            <img id="bookImagePreview" src="/assets/img/defaultBook.webp" alt="Aperçu de la couverture du livre à ajouter" class="image-preview">
             <div class="image-upload">
                 <label for="img" class="upload-label">Ajouter une photo</label>
-                <input type="file" id="img" name="img" class="file-input" onchange="previewBookImage(event)">
+                <input type="file" id="img" name="img" class="file-input" onchange="previewBookImage(event)" aria-label="Sélectionner une image de couverture pour le livre">
             </div>
         </div>
 
@@ -44,10 +45,10 @@ $backUrl = "index.php?action=myAccount";
                 <button type="submit" class="submit-button">Ajouter</button>
             </form>
         </div>
-    </div>
-</div>
+    </section>
+</main>
 
-<script>
+<script defer>
     function previewBookImage(event) {
         const input = event.target;
         const preview = document.getElementById('bookImagePreview');
@@ -65,4 +66,5 @@ $backUrl = "index.php?action=myAccount";
             preview.src = "/assets/img/defaultBook.webp";
         }
     }
+    document.getElementById('img').addEventListener('change', previewBookImage);
 </script>
