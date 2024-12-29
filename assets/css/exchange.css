@@ -56,7 +56,7 @@ form input[type="text"] {
     border-radius: 5px;
     font-size: 14px;
 }
-form button {
+/* form button {
     align-self: center;
     background-color: #28a745;
     color: white;
@@ -66,10 +66,10 @@ form button {
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 16px;
-}
-form button:hover {
+} */
+/* form button:hover {
     background-color: #218838;
-}
+} */
 /* #my_file {
     display: none;
 }
