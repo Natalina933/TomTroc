@@ -73,6 +73,21 @@ button {
 button:hover {
   background-color: #ddd; /* Gris légèrement plus clair au survol */
 }
+/** * Styles pour le bouton * **/
+.btn {
+  display: inline-block;
+  width: auto;
+  padding: 22px 38px;
+  border-radius: 10px;
+  font-family: "Playfair Display", serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  margin: 20px auto;
+}
 
 #submitButton {
   display: none;
@@ -154,8 +169,8 @@ form input[type="text"] {
 
 .table-books th,
 .table-books td {
-  padding: 20px;
-  text-align: left;
+  padding: 5px;
+  text-align: center;
   font-size: 12px;
 }
 
@@ -180,27 +195,40 @@ form input[type="text"] {
 } */
 
 .available {
+  width: 70.63px;
+  height: 18.4px;
+  font-size: 8px;
   background-color: #6dc5a1;
+  justify-content: center;
   color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  display: inline-block;
+  padding: 3.7px 13.31px;
+  border-radius: 15px;
+  display: block;
+  margin: auto 0;
+  line-height: 18.4px;
 }
 
 .not-available {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 5px 10px;
-  border-radius: 5px;
-  display: inline-block;
+  width: 70.63px;
+  height: 18.4px;
+  font-size: 8px;
+  background-color: #c56d6d;
+  justify-content: center;
+  color: white;
+  padding: 3.7px 13.31px;
+  border-radius: 15px;
+  display: block;
+  line-height: 18.4px;
 }
 
 .edit-link {
-  color: black; /* Texte noir */
-  text-decoration: underline; /* Souligné */
+  color: black; 
+  text-decoration: underline; 
+  margin-right: 10px;
 }
 
 .delete-link {
-  color: red; /* Texte rouge */
-  text-decoration: underline; /* Souligné */
+  color: red; 
+  text-decoration: underline; 
+  margin-left: 10px
 }

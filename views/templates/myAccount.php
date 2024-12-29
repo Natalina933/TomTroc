@@ -62,7 +62,8 @@
 
 <!-- Section 3 : Tableau des livres -->
 <section class="books-section" aria-label="Bibliothèque de l'utilisateur">
-    <a href="index.php?action=displayAddBookForm" class="btn" aria-label="Ajouter un nouveau livre à votre bibliothèque">Ajouter un livre</a>
+<a href="index.php?action=displayAddBookForm" class="btn discreet-btn" aria-label="Ajouter un nouveau livre à votre bibliothèque">Ajouter un livre</a>
+
     <table class="table-books" aria-label="Liste de vos livres">
     <thead>
         <tr>
