@@ -7,9 +7,9 @@
 <main class="messaging-container">
     <div class="messenger-container">
         <!-- Section 1 : Liste des conversations -->
-        <section class="sidebar">
-            <h2>Messagerie</h2>
-            <ul class="conversations">
+        <section class="sidebar" aria-label="Liste des conversations">
+            <h1>Messagerie</h1>
+            <ul class="conversations" role="list">
                 <?php if (empty($lastMessages)) : ?>
                     <li>Aucune conversation trouvée.</li>
                 <?php else : ?>
@@ -19,7 +19,7 @@
                         ?>
                         <li class="conversation <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>">
                             <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
-                                <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil" class="profile-picture">
+                                <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
                                 <div class="conversation-info">
                                     <p class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></p>
                                     <span class="description"><?= htmlspecialchars(substr($message->getContent(), 0, 30)) ?>...</span>
@@ -33,7 +33,7 @@
         </section>
 
         <!-- Section 2 : Conversation active ou message par défaut -->
-        <section class="chat">
+        <section class="chat" aria-label="Conversation active">
             <?php if (isset($activeConversation)) : ?>
                 <div class="chat-header">
                     <div class="chat-user-info">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div class="messages-container">
+                <div class="messages-container" role="log" aria-live="polite">
                     <div class="messages">
                         <?php foreach ($activeConversation['messages'] as $message) : ?>
                             <div class="message <?= $message->getSender()->getId() == $_SESSION['user']['id'] ? 'sent' : 'received' ?>">
@@ -61,8 +61,9 @@
                 </div>
 
                 <div class="chat-input">
-                    <form action="index.php?action=sendMessage" method="post" class="message-form">
-                        <textarea name="content" placeholder="Votre message..." class="message-textarea"></textarea>
+                    <form action="index.php?action=sendMessage" method="post" class="message-form" aria-label="Envoyer un message">
+                        <label for="message-content" class="visually-hidden">Votre message</label>
+                        <textarea id="message-content" name="content" placeholder="Votre message..." class="message-textarea"></textarea>
                         <input type="hidden" name="receiver_id" value="<?= htmlspecialchars($activeConversation['receiver']['id']) ?>">
                         <button type="submit" class="btn send-button">Envoyer</button>
                     </form>

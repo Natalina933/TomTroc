@@ -3,16 +3,16 @@
         <?= htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8') ?>
     </div>
 <?php endif; ?>
-<div class="account-wrapper">
+<main class="account-wrapper">
     <h1 class="account-title">Mon Compte</h1>
     <div class="account-container">
         <div class="account-content">
-            <div class="account-info">
+            <section class="account-info" aria-label="Informations du profil">
                 <!-- Carré 1 : Profil -->
                 <div class="account-card profile-card">
                     <div class="account-profile">
                         <?php if (!empty($user['profilePicture'])) : ?>
-                            <img src="<?= htmlspecialchars($user['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
+                            <img src="<?= htmlspecialchars($user['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>">
                         <?php else : ?>
                             <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
                         <?php endif; ?>
@@ -41,11 +41,11 @@
                         <p>Nombre total de livres : <?= (int)$totalBooks ?></p>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
 
         <!-- Carré 2 : Informations personnelles -->
-        <div class="account-card info-card">
+        <section class="account-card info-card" aria-label="Informations personnelles">
             <h2>Vos informations personnelles</h2>
             <form action="index.php?action=editUser" method="post">
                 <label for="email">Adresse email</label>
@@ -60,15 +60,15 @@
                 <button type="button" id="editButton">Modifier</button>
                 <button type="submit" id="submitButton" style="display:none;">Enregistrer</button>
             </form>
-        </div>
+        </section>
     </div>
-</div>
+</main>
 
 <!-- Section 3 : Tableau des livres -->
-<div class="books-section">
+<section class="books-section" aria-label="Bibliothèque de l'utilisateur">
     <h2>Vos livres</h2>
-    <a href="index.php?action=displayAddBookForm" class="btn btn-primary">Ajouter un livre</a>
-        <table class="table-books">
+    <a href="index.php?action=displayAddBookForm" class="btn" aria-label="Ajouter un nouveau livre à votre bibliothèque">Ajouter un livre</a>
+    <table class="table-books" aria-label="Liste de vos livres">
         <thead>
             <tr>
                 <th>Photo</th>
@@ -104,10 +104,10 @@
             <?php endif; ?>
         </tbody>
     </table>
-</div>
+</section>
 
 
-<script>
+<script defer>
     document.getElementById('changePictureButton').addEventListener('click', () => {
         document.getElementById('profilePictureInput').click();
     });
