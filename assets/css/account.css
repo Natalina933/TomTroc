@@ -22,18 +22,19 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: auto;
   min-height: 451px;
-  min-width: 547px;
 }
+
 .profile-card,
 .info-card {
   max-width: 548px;
 }
+
 /* Text styles within the account card */
 .account-card p {
   margin: 20px 0;
 }
+
 .account-profile img {
   border-radius: 50%;
   width: 150px;
@@ -54,29 +55,26 @@
   font-weight: 400;
   font-size: 14px;
   cursor: pointer;
-  background: none;
-  border: none;
-  margin-top: 10px;
 }
 
 button {
   background-color: #f5f3ef;
-  color: #00ac66;
-  border: 1px solid #00ac66;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 10px;
-  width: 150px;
-  height: 63px;
+  color: #00ac66; /* Couleur du texte */
+  border: 1px solid #00ac66; /* Bordure */
+  padding: 10px 20px; /* Espacement interne */
+  cursor: pointer; /* Curseur en main */
+  border-radius: 10px; /* Coins arrondis */
+  width: 150px; /* Largeur fixe */
+  height: 63px; /* Hauteur fixe */
 }
 
 button:hover {
   background-color: #ddd; /* Gris légèrement plus clair au survol */
 }
-/** * Styles pour le bouton * **/
+
+/** * Styles pour les boutons * **/
 .btn {
   display: inline-block;
-  width: auto;
   padding: 22px 38px;
   border-radius: 10px;
   font-family: "Playfair Display", serif;
@@ -90,8 +88,10 @@ button:hover {
 }
 
 #submitButton {
-  display: none;
+  display: none; /* Cacher le bouton d'enregistrement par défaut */
 }
+
+/* Input styles */
 form input[type="email"],
 form input[type="password"],
 form input[type="text"] {
@@ -102,13 +102,16 @@ form input[type="text"] {
   font-size: 14px;
   background-color: #edf2f6;
 }
+
 .info-member {
   margin-top: 40px;
 }
+
 .info-name {
   font-weight: 400;
   font-size: 24px;
 }
+
 .member {
   font-size: 14px;
   color: #a6a6a6;
@@ -116,6 +119,8 @@ form input[type="text"] {
   font-weight: 400;
   font-family: "Inter";
 }
+
+/** * Library Info * **/
 .library-info {
   display: flex;
   align-items: center;
@@ -127,6 +132,7 @@ form input[type="text"] {
   width: 10.41px;
   height: 13.71px;
 }
+
 .library-info span {
   display: flex;
   align-items: center;
@@ -136,6 +142,8 @@ form input[type="text"] {
   line-height: 16.94px;
   text-align: center;
 }
+
+/** * Bibliothèque Title * **/
 .bibliotheque-title {
   font-family: "Inter", sans-serif;
   font-size: 8px;
@@ -144,21 +152,12 @@ form input[type="text"] {
   text-align: center;
 }
 
+/** * Books Section * **/
 .books-section {
   margin-top: 20px;
 }
-/** * table books * **/
-.table-books {
-  width: 100%;
-  border-collapse: collapse;
-}
 
-.table-books th,
-.table-books td {
-  padding: 8px;
-  text-align: left;
-}
-
+/** * Table Books * **/
 .table-books {
   width: 100%;
   border-collapse: collapse;
@@ -187,48 +186,44 @@ form input[type="text"] {
 .table-books a {
   transition: color 0.3s;
 }
+
 .table-books tr:nth-child(even) {
   background-color: #edf2f6;
 }
-/* .table-books a:hover {
-  color: #0056b3;
-} */
 
-.available {
-  width: 70.63px;
-  height: 18.4px;
-  font-size: 8px;
-  background-color: #6dc5a1;
-  justify-content: center;
-  color: white;
-  padding: 3.7px 13.31px;
-  border-radius: 15px;
-  display: block;
-  margin: auto 0;
-  line-height: 18.4px;
-}
-
+/** * Availability Styles * **/
+.available,
 .not-available {
   width: 70.63px;
   height: 18.4px;
-  font-size: 8px;
-  background-color: #c56d6d;
-  justify-content: center;
-  color: white;
-  padding: 3.7px 13.31px;
+  padding: 3.7px;
   border-radius: 15px;
-  display: block;
-  line-height: 18.4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
+/* Styles for available */
+.available {
+  background-color: #6dc5a1;
+  font-size: 8px;
+}
+
+/* Styles for not available */
+.not-available {
+  background-color: #c56d6d;
+  font-size: 8px;
+}
+
+/** * Edit and Delete Links * **/
 .edit-link {
-  color: black; 
-  text-decoration: underline; 
+  color: black;
+  text-decoration: underline;
   margin-right: 10px;
 }
 
 .delete-link {
-  color: red; 
-  text-decoration: underline; 
-  margin-left: 10px
+  color: red;
+  text-decoration: underline;
 }
