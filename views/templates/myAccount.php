@@ -6,43 +6,39 @@
 <main class="account-wrapper">
     <h1 class="account-title">Mon Compte</h1>
     <div class="account-container">
-        <div class="account-content">
-            <section class="account-info" aria-label="Informations du profil">
-                <!-- Carré 1 : Profil -->
-                <div class="account-card profile-card">
-                    <div class="account-profile">
-                        <?php if (!empty($user['profilePicture'])) : ?>
-                            <img src="<?= htmlspecialchars($user['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>">
-                        <?php else : ?>
-                            <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
-                        <?php endif; ?>
+        <!-- Carré 1 : Profil -->
+        <section class="account-card profile-card" aria-label="Informations du profil">
+            <div class="account-profile">
+                <?php if (!empty($user['profilePicture'])) : ?>
+                    <img src="<?= htmlspecialchars($user['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>">
+                <?php else : ?>
+                    <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
+                <?php endif; ?>
 
-                        <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
-                            <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
-                            <button type="button" id="changePictureButton">Modifier</button>
-                            <input type="submit" id="submitForm" style="display:none;">
-                        </form>
-                    </div>
-                    <p><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></p>
-                    <p>Membre depuis :
-                        <?php
-                        if (isset($user['createdAt']) && isset($dateFormatter)) {
-                            $createdAtDateTime = new DateTime($user['createdAt']);
-                            echo htmlspecialchars($dateFormatter->formatMemberSince($createdAtDateTime), ENT_QUOTES, 'UTF-8');
-                        } else {
-                            echo 'Date inconnue';
-                        }
-                        ?>
-                    </p>
+                <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
+                    <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
+                    <button type="button" id="changePictureButton">Modifier</button>
+                    <input type="submit" id="submitForm" style="display:none;">
+                </form>
+            </div>
+            <p><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></p>
+            <p>Membre depuis :
+                <?php
+                if (isset($user['createdAt']) && isset($dateFormatter)) {
+                    $createdAtDateTime = new DateTime($user['createdAt']);
+                    echo htmlspecialchars($dateFormatter->formatMemberSince($createdAtDateTime), ENT_QUOTES, 'UTF-8');
+                } else {
+                    echo 'Date inconnue';
+                }
+                ?>
+            </p>
 
-                    <p>BIBLIOTHÈQUE</p>
-                    <div class="library-info">
-                        <img src="/assets/img/icon_books.svg" alt="Icône de livres">
-                        <p>Nombre total de livres : <?= (int)$totalBooks ?></p>
-                    </div>
-                </div>
-            </section>
-        </div>
+            <p>BIBLIOTHÈQUE</p>
+            <div class="library-info">
+                <img src="/assets/img/icon_books.svg" alt="Icône de livres">
+                <p>Nombre total de livres : <?= (int)$totalBooks ?></p>
+            </div>
+        </section>
 
         <!-- Carré 2 : Informations personnelles -->
         <section class="account-card info-card" aria-label="Informations personnelles">
