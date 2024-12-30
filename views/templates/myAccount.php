@@ -17,9 +17,12 @@
 
                 <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
                     <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
-                    <button type="button" id="changePictureButton" class="profile-link">modifier</button>
+                    <div class="btn-profile">
+                        <button type="button" id="changePictureButton" class="profile-link">modifier</button>
+                    </div>
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
+
             </div>
             <div class="info-member">
                 <p class="info-name"><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></p>
@@ -62,44 +65,44 @@
 
 <!-- Section 3 : Tableau des livres -->
 <section class="books-section" aria-label="Bibliothèque de l'utilisateur">
-<a href="index.php?action=displayAddBookForm" class="btn discreet-btn" aria-label="Ajouter un nouveau livre à votre bibliothèque">Ajouter un livre</a>
+    <a href="index.php?action=displayAddBookForm" class="btn discreet-btn" aria-label="Ajouter un nouveau livre à votre bibliothèque">Ajouter un livre</a>
 
     <table class="table-books" aria-label="Liste de vos livres">
-    <thead>
-        <tr>
-            <th>Photo</th>
-            <th>Titre</th>
-            <th>Auteur</th>
-            <th>Description</th>
-            <th>Disponible</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if (!empty($books)) : ?>
-            <?php foreach ($books as $book) : ?>
-                <tr>
-                    <td><img src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/book-default.svg', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre"></td>
-                    <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($book->getAuthor(), ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><em><?= htmlspecialchars($book->getDescription(), ENT_QUOTES, 'UTF-8') ?></em></td>
-                    <td class="<?= $book->isAvailable() ? 'available' : 'not-available' ?>">
-                        <?= $book->isAvailable() ? 'Disponible' : 'Non disponible' ?>
-                    </td>
-                    <td>
-                        <a href="index.php?action=editbook&id=<?= (int)$book->getId() ?>" class="edit-link">Éditer</a>
-                        <a href="index.php?action=deleteBook&id=<?= (int)$book->getId() ?>" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php else : ?>
+        <thead>
             <tr>
-                <td colspan="5">Aucun livre trouvé.</td>
-                <td><a href="index.php?action=addBook" class="btn btn-primary">Ajouter un livre</a></td>
+                <th>Photo</th>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Description</th>
+                <th>Disponible</th>
+                <th>Action</th>
             </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php if (!empty($books)) : ?>
+                <?php foreach ($books as $book) : ?>
+                    <tr>
+                        <td><img src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/book-default.svg', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre"></td>
+                        <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($book->getAuthor(), ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><em><?= htmlspecialchars($book->getDescription(), ENT_QUOTES, 'UTF-8') ?></em></td>
+                        <td class="<?= $book->isAvailable() ? 'available' : 'not-available' ?>">
+                            <?= $book->isAvailable() ? 'Disponible' : 'Non dispo.' ?>
+                        </td>
+                        <td>
+                            <a href="index.php?action=editbook&id=<?= (int)$book->getId() ?>" class="edit-link">Éditer</a>
+                            <a href="index.php?action=deleteBook&id=<?= (int)$book->getId() ?>" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <tr>
+                    <td colspan="5">Aucun livre trouvé.</td>
+                    <td><a href="index.php?action=addBook" class="btn btn-primary">Ajouter un livre</a></td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 
 
 

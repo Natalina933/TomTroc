@@ -10,56 +10,107 @@
 }
 
 /** * Styles pour le bouton * **/
-.btn {
+/* .btn {
   display: inline-block;
   width: auto;
-  padding: 22px 38px; /* Espacement interne par défaut */
+  padding: 22px 38px;
   border-radius: 10px;
-  background-color: var(--buttonDefaultColor); /* Couleur de fond par défaut */
+  background-color: var(--buttonDefaultColor);
   font-family: "Playfair Display", serif;
   font-size: 16px;
   font-weight: 700;
   text-align: center;
-  color: #ffffff; /* Couleur du texte par défaut */
+  color: #ffffff;
   border: none;
   cursor: pointer;
-  transition: opacity 0.3s, background-color 0.3s ease; /* Ajout de la transition pour le fond */
-  margin: 20px auto; /* Marge automatique pour centrer */
+  transition: opacity 0.3s, background-color 0.3s ease;
+  margin: 20px auto;
 }
 
 .btn:hover {
-  opacity: 0.8; /* Opacité au survol */
-}
+  opacity: 0.8;
+} */
 
-/* Nouveau style pour le bouton discret */
+
+/* style pour le bouton ajouter */
 .btn.discreet-btn {
-  background-color: transparent; /* Fond transparent */
-  color: #555; /* Texte en gris foncé */
-  border: 1px solid #ccc; /* Bordure grise claire */
-  padding: 8px 16px; /* Espacement interne ajusté pour le bouton discret */
-  border-radius: 4px; /* Coins légèrement arrondis */
+  background-color: transparent;
+  /* Fond transparent */
+  color: #555;
+  /* Texte en gris foncé */
+  border: 1px solid #ccc;
+  /* Bordure grise claire */
+  padding: 8px 16px;
+  /* Espacement interne ajusté pour le bouton discret */
+  border-radius: 4px;
+  /* Coins légèrement arrondis */
 }
 
 .btn.discreet-btn:hover {
-  background-color: #f0f0f0; /* Fond gris clair au survol */
-  color: #333; /* Texte plus foncé au survol */
+  background-color: #f0f0f0;
+  /* Fond gris clair au survol */
+  color: #333;
+  /* Texte plus foncé au survol */
 }
 
 /* Styles spécifiques pour le bouton "Voir tous les livres" */
 .btn.view-all-books {
   width: 218px;
   height: 63px;
-  padding: 22px 38px; /* Espacement interne spécifique */
+  padding: 22px 38px;
   border-radius: 10px;
   border: 1px solid var(--buttonDefaultColor);
-  background-color: #f5f3ef; /* Couleur de fond spécifique */
+  background-color: #f5f3ef;
   opacity: 1;
-  color: var(--buttonDefaultColor); /* Couleur du texte spécifique */
-  font-size: 16px; /* Taille de police spécifique */
-  font-weight: 600; /* Épaisseur de police spécifique */
+  color: var(--buttonDefaultColor);
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .btn.view-all-books:hover {
-  background-color: #e2e0da; /* Couleur de fond au survol spécifique */
-  border-color: #008c4f; /* Couleur de bordure au survol spécifique */
+  background-color: #e2e0da;
+  border-color: #008c4f;
 }
+
+/** * Button styles * **/
+.profile-link {
+  text-decoration: underline;
+  font-weight: 400;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button {
+  background-color: #f5f3ef;
+  color: #00ac66;
+  border: 1px solid #00ac66;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 150px;
+  height: 63px;
+}
+
+button:hover {
+  background-color: #ddd;
+  /* Gris légèrement plus clair au survol */
+}
+
+/** * Styles pour les boutons * **/
+/* .btn {
+    display: inline-block;
+    padding: 22px 38px;
+    border-radius: 10px;
+    font-family: "Playfair Display", serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    margin: 20px auto;
+  }
+
+  #submitButton {
+    display: none;
+  } */
