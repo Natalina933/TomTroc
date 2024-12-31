@@ -5,6 +5,7 @@
     --backgroundColor: #F5F3EF;
     --lightGrayColor: #f0f0f0;
     --headerPaleColor: #ccc;
+    --wrapperColor: #FAF9F7;
     --quoteColor: #aaa;
     --grayColor: #a6a6a6;
     --dateColor: #888;
@@ -16,6 +17,6 @@
     --redColor: red;
     --blackColor: #000000;
     --titleColor: #000000;
-    --textColor: #000000;
+    --textColor: #292929;
     --headerColor: #000;
 }

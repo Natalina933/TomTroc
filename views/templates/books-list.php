@@ -6,9 +6,9 @@
         <input type="hidden" name="action" value="books">
         <div class="search-container">
             <div class="search-icon">
-                <i class="fas fa-search"></i>
+                <img src="../../assets/img/icons/Union.png" alt="Icone de recherche">
             </div>
-            <input type="text" name="query" placeholder="Rechercher un livre ou un auteur...">
+            <input type="text" name="query" placeholder="Rechercher un livre">
         </div>
     </form>
 </div>

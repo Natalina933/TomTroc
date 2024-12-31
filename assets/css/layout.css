@@ -60,7 +60,8 @@
 }
 
 .btn.view-all-books:hover {
-  background-color: var(--backgroundColor);
+  background-color: var(--buttonDefaultColor);
+  color: var(--whiteColor);
   border-color: var(--buttonHoverColor);
 }
 

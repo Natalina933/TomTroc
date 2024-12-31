@@ -49,17 +49,7 @@
 }
 
 
-/* Input styles */
-form input[type="email"],
-form input[type="password"],
-form input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--lightGrayColor);
-  border-radius: 6px;
-  font-size: 14px;
-  background-color: var(--lightGrayColor);
-}
+
 
 .info-member {
   margin-top: 40px;
