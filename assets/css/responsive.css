@@ -61,6 +61,8 @@
   .search-wrapper {
     display: flex;
     flex-direction: row;
+    margin-left: 70px;
+
   }
 
   .account-info {
