@@ -13,7 +13,7 @@
 
 .account-card {
   flex: 1;
-  background-color: #ffffff;
+  background-color: var(--backgroundColor);
   width: 547px;
   height: 508px;
   padding: 60px 20px;
@@ -55,10 +55,10 @@ form input[type="password"],
 form input[type="text"] {
   width: 100%;
   padding: 10px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--lightGrayColor);
   border-radius: 6px;
   font-size: 14px;
-  background-color: #edf2f6;
+  background-color: var(--lightGrayColor);
 }
 
 .info-member {
@@ -72,7 +72,7 @@ form input[type="text"] {
 
 .member {
   font-size: 14px;
-  color: #a6a6a6;
+  color: var(--grayColor);
   margin-bottom: 10px;
   font-weight: 400;
   font-family: "Inter";
@@ -120,7 +120,7 @@ form input[type="text"] {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background-color: white;
+  background-color: var(--backgroundColor);
   border-radius: 10px;
 }
 
@@ -146,7 +146,7 @@ form input[type="text"] {
 }
 
 .table-books tr:nth-child(even) {
-  background-color: #edf2f6;
+  background-color: var(--backgroundColor);
 }
 
 /** * Availability Styles * **/
@@ -159,29 +159,29 @@ form input[type="text"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: var(--whiteColor);
 }
 
 /* Styles for available */
 .available {
-  background-color: #6dc5a1;
+  background-color: var(--greenColor);
   font-size: 8px;
 }
 
 /* Styles for not available */
 .not-available {
-  background-color: #c56d6d;
+  background-color: var(var(--lightRedColor));
   font-size: 8px;
 }
 
 /** * Edit and Delete Links * **/
 .edit-link {
-  color: black;
+  color: var(--blackColor);
   text-decoration: underline;
   margin-right: 10px;
 }
 
 .delete-link {
-  color: red;
+  color: var(--redColor);
   text-decoration: underline;
 }

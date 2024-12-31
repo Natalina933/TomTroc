@@ -5,11 +5,12 @@
     align-items: center;
     width: 322px;
     height: 50px;
-    background-color: #fff;
+    background-color: var(--backgroundColor);
     border-radius: 6px;
     overflow: hidden;
     margin: 20px;
 }
+
 .search-icon {
     width: 50px;
     height: 100%;
@@ -17,10 +18,12 @@
     align-items: center;
     justify-content: center;
 }
+
 .search-icon i {
     font-size: 16px;
-    color: var(--hamburgerColor);
+    color: var(--grayColor);
 }
+
 .search-container input[type="text"] {
     flex: 1;
     height: 100%;
@@ -30,12 +33,14 @@
     border-radius: 0;
     box-sizing: border-box;
     font-size: 16px;
-    color: #333;
+    color: var(--grayColor);
 }
+
 .search-container input[type="text"]::placeholder {
-    color: #999;
+    color: var(--grayColor);
     font-style: italic;
 }
+
 /** * Style filtre * */
 form {
     display: flex;
@@ -43,23 +48,26 @@ form {
     gap: 15px;
     text-align: left;
 }
+
 form label {
     font-weight: bold;
-    color: #555;
+    color: var(--darkGrayColor);
 }
+
 form input[type="email"],
 form input[type="password"],
 form input[type="text"] {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--lightGrayColor);
     border-radius: 5px;
     font-size: 14px;
 }
+
 /* form button {
     align-self: center;
     background-color: #28a745;
-    color: white;
+    color: var(--whiteColor);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -79,4 +87,3 @@ form input[type="text"] {
     margin: 10px;
     cursor: pointer;
 } */
-

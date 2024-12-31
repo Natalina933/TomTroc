@@ -7,27 +7,34 @@ body {
     color: var(--textColor);
     /* width: 1440px; */
 }
-h1, h2 {
+
+h1,
+h2 {
     font-weight: 400;
-    color: var(--headerColor);
+    color: var(--blackColor);
 }
+
 h1 {
     font-size: 36px;
     line-height: 47.99px;
     margin: 20px;
 }
+
 h2 {
     font-size: 32px;
     line-height: 42.66px;
     margin: 20px 0;
 }
+
 ul {
     list-style: none;
 }
+
 a {
     text-decoration: none;
     color: inherit;
 }
+
 main {
     display: flex;
     flex-direction: column;

@@ -5,11 +5,13 @@
     justify-content: center;
     margin-top: 50px;
 }
+
 .error h2 {
     color: var(--titleColor);
 }
+
 .error a {
     margin: 20px;
-    color: var(--headerColor);
+    color: var(--var(--blackColor));
     font-weight: bold;
 }

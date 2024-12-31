@@ -35,32 +35,24 @@
 /* style pour le bouton ajouter */
 .btn.discreet-btn {
   background-color: transparent;
-  /* Fond transparent */
-  color: #555;
-  /* Texte en gris foncé */
-  border: 1px solid #ccc;
-  /* Bordure grise claire */
+  color: var(--darkGrayColor);
+  border: 1px solid var(--lightGrayColor);
   padding: 8px 16px;
-  /* Espacement interne ajusté pour le bouton discret */
   border-radius: 4px;
-  /* Coins légèrement arrondis */
 }
 
 .btn.discreet-btn:hover {
-  background-color: #f0f0f0;
-  /* Fond gris clair au survol */
-  color: #333;
-  /* Texte plus foncé au survol */
+  background-color: var(--lightGrayColor);
+  color: var(--grayColor);
 }
 
 /* Styles spécifiques pour le bouton "Voir tous les livres" */
 .btn.view-all-books {
   width: 218px;
   height: 63px;
-  padding: 22px 38px;
   border-radius: 10px;
   border: 1px solid var(--buttonDefaultColor);
-  background-color: #f5f3ef;
+  background-color: var(--backgroundColor);
   opacity: 1;
   color: var(--buttonDefaultColor);
   font-size: 16px;
@@ -68,8 +60,8 @@
 }
 
 .btn.view-all-books:hover {
-  background-color: #e2e0da;
-  border-color: #008c4f;
+  background-color: var(--backgroundColor);
+  border-color: var(--buttonHoverColor);
 }
 
 /** * Button styles * **/
@@ -81,36 +73,34 @@
 }
 
 button {
-  background-color: #f5f3ef;
-  color: #00ac66;
-  border: 1px solid #00ac66;
-  padding: 10px 20px;
+  background-color: var(--buttonDefaultColor);
+  color: var(--backgroundColor);
+  border: 1px solid var(--buttonDefaultColor);
   cursor: pointer;
   border-radius: 10px;
   width: 150px;
   height: 63px;
+  padding: 10px 20px;
 }
 
 button:hover {
-  background-color: #ddd;
-  /* Gris légèrement plus clair au survol */
+  background-color: var(--lightGrayColor);
+  color: var(--buttonDefaultColor);
 }
 
 /** * Styles pour les boutons * **/
-/* .btn {
-    display: inline-block;
-    padding: 22px 38px;
-    border-radius: 10px;
-    font-family: "Playfair Display", serif;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    border: none;
-    cursor: pointer;
-    transition: opacity 0.3s;
-    margin: 20px auto;
-  }
+.btn {
+  display: inline-block;
+  border-radius: 10px;
+  font-family: "Playfair Display", serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  margin-top: 20px;
+}
 
-  #submitButton {
-    display: none;
-  } */
+#submitButton {
+  display: none;
+}

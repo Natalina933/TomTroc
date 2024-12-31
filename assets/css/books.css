@@ -18,7 +18,7 @@
 .edit-title {
     margin-bottom: 20px;
     font-size: 24px;
-    color: #333;
+    color: var(--grayColor);
 }
 
 .book-edit-content {
@@ -29,12 +29,18 @@
 .book-image-section {
     flex: 1;
 }
+
 .book-image-section img {
-    width: 150px; /* Ajustez la taille selon vos besoins */
-    height: auto; /* Maintient le ratio d'aspect */
-    border-radius: 5px; /* Coins arrondis */
-    border: 2px solid #ddd; /* Bordure grise */
+    width: 150px;
+    /* Ajustez la taille selon vos besoins */
+    height: auto;
+    /* Maintient le ratio d'aspect */
+    border-radius: 5px;
+    /* Coins arrondis */
+    border: 2px solid var(--lightGrayColor);
+    /* Bordure grise */
 }
+
 .book-image {
     max-width: 100%;
     height: auto;
@@ -61,7 +67,7 @@
 
 .form-title {
     margin-bottom: 20px;
-    color: #333;
+    color: var(--grayColor);
 }
 
 .edit-form {
@@ -83,7 +89,7 @@
 .form-textarea {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--lightGrayColor);
     border-radius: 4px;
 }
 
@@ -109,8 +115,8 @@
 
 .submit-button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--buttonDefaultColor);
+    color: var(--whiteColor);
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -118,7 +124,7 @@
 }
 
 .submit-button:hover {
-    background-color: #0056b3;
+    background-color: var(--buttonHoverColor);
 }
 
 
@@ -127,7 +133,7 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: var(--backgroundColor);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -151,7 +157,7 @@
     font-size: 18px;
     font-weight: 400;
     margin-bottom: 20px;
-    color: #333333;
+    color: var(--grayColor)333;
 }
 
 .book-description {
@@ -180,7 +186,7 @@
 }
 
 .owner-photo.placeholder {
-    background-color: #ccc;
+    background-color: var(--backgroundColor);
 }
 
 .owner-name {
@@ -207,7 +213,7 @@
     padding: 3.96px;
     border-radius: 23.67px;
     background: #C56D6D;
-    color: #fff;
+    color: var(--whiteColor);
     opacity: 1;
     width: 68.3px;
     height: 14.92px;
@@ -225,7 +231,7 @@
 /** * Styles info propriétaire de detailbook * **/
 .owner-info {
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
+    border: 1px solid var(--lightGrayColor);
     padding: 15px;
     border-radius: 114px;
     max-width: 157px;
@@ -236,7 +242,7 @@
     font-size: 1.2em;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #333;
+    color: var(--grayColor);
 }
 
 .owner-photo {
@@ -248,13 +254,13 @@
 }
 
 .owner-photo.placeholder {
-    background-color: #ddd;
+    background-color: var(--lightGrayColor);
     display: inline-block;
 }
 
 .owner-name {
     font-size: 1em;
-    color: #555;
+    color: var(--darkGrayColor);
     margin-top: 5px;
     font-weight: 600;
 }
