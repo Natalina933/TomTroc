@@ -11,10 +11,10 @@
     width: 100%;
   }
 
-  .btn {
+  /* .btn {
     width: 152px;
     margin: 0;
-  }
+  } */
 
   .nav-group {
     flex-direction: row;
@@ -61,7 +61,8 @@
   .search-wrapper {
     display: flex;
     flex-direction: row;
-    margin-left: 70px;
+    margin: 20px 44px;
+    justify-content: space-around;
 
   }
 

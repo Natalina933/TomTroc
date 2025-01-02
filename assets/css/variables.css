@@ -1,22 +1,23 @@
 :root {
-    --darkGrayColor: #555;
-    --grayColor:#333;
     --whiteColor: white;
     --backgroundColor: #F5F3EF;
+    --wrapperColor: #FAF9F7;
+    --containerColor: #f9f9f9;
     --lightGrayColor: #f0f0f0;
     --headerPaleColor: #ccc;
-    --wrapperColor: #FAF9F7;
     --quoteColor: #aaa;
     --grayColor: #a6a6a6;
     --dateColor: #888;
-    --lightGreenColor: #6dc5a1;
+    --darkGrayColor: #555;
     --greenColor: #6dc5a1;
     --buttonDefaultColor: #00ac66;
     --buttonHoverColor: #006D41;
     --lightRedColor: #c56d6d;
     --redColor: red;
-    --blackColor: #000000;
-    --titleColor: #000000;
     --textColor: #292929;
+    --grayColor: #333;
+    --titleColor: #000000;
     --headerColor: #000;
+    --blackColor: #000000;
 }
+

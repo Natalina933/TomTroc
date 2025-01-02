@@ -38,6 +38,7 @@ a {
 main {
     display: flex;
     flex-direction: column;
-    margin-left: 70px;
+    margin: 38px;
+    align-items: stretch;
 
 }
