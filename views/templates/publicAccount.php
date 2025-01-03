@@ -10,43 +10,44 @@
     <div class="account-sections">
         <!-- Carré 1 : Profile -->
         <div class="account-card">
-            <div class="account-profile">
-                <!-- Vérification et affichage de la photo de profil -->
-                <?php if ($user->getProfilePicture() && !empty($user->getProfilePicture())) : ?>
-                    <img src="<?= htmlspecialchars($user->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
-                <?php else : ?>
-                    <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
-                <?php endif; ?>
+            <div class="account-profile-wrapper">
+                <div class="account-profile">
+                    <!-- Vérification et affichage de la photo de profil -->
+                    <?php if ($user->getProfilePicture() && !empty($user->getProfilePicture())) : ?>
+                        <img src="<?= htmlspecialchars($user->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
+                    <?php else : ?>
+                        <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
+                    <?php endif; ?>
+                </div>
+                <p class="username"><?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
+                <?php
+                // Créer un objet DateTime à partir de la date d'inscription
+                $createdAt = new DateTime($user->getCreatedAt());
+                $now = new DateTime();
+                // Calculer la différence
+                $diff = $createdAt->diff($now);
+                $memberSince = '';
+                if ($diff->y > 0) {
+                    $memberSince .= $diff->y . ' ' . ($diff->y > 1 ? 'ans' : 'an');
+                }
+                if ($diff->m > 0) {
+                    if (!empty($memberSince)) $memberSince .= ' et ';
+                    $memberSince .= $diff->m . ' ' . ($diff->m > 1 ? 'mois' : 'mois');
+                }
+                if ($diff->y === 0 && $diff->m === 0) {
+                    $memberSince = '1 mois';
+                }
+                ?>
+                <p class="member-since">Membre depuis : <?= htmlspecialchars($memberSince, ENT_QUOTES, 'UTF-8') ?></p>
+                <p class="bibliotheque">BIBLIOTHÈQUE</p>
+                <div class="library-info">
+                    <img src="/assets/img/icon_books.svg" alt="Icône de livres">
+                    <!-- Affichage du nombre de livres -->
+                    <?= htmlspecialchars($totalBooks, ENT_QUOTES, 'UTF-8') ?> livres
+                </div>
+                <button href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn view-all-books">Envoyer un message</button>
             </div>
-            <p><?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
-            <?php
-            // Créer un objet DateTime à partir de la date d'inscription
-            $createdAt = new DateTime($user->getCreatedAt());
-            $now = new DateTime();
-            // Calculer la différence
-            $diff = $createdAt->diff($now);
-
-            $memberSince = '';
-            if ($diff->y > 0) {
-                $memberSince .= $diff->y . ' ' . ($diff->y > 1 ? 'ans' : 'an');
-            }
-            if ($diff->m > 0) {
-                if (!empty($memberSince)) $memberSince .= ' et ';
-                $memberSince .= $diff->m . ' ' . ($diff->m > 1 ? 'mois' : 'mois');
-            }
-            if ($diff->y === 0 && $diff->m === 0) {
-                $memberSince = '1 mois';
-            }
-            ?>
-            <p>Membre depuis : <?= htmlspecialchars($memberSince, ENT_QUOTES, 'UTF-8') ?></p>
-            <p>BIBLIOTHÈQUE</p>
-            <div class="library-info">
-                <img src="/assets/img/icon_books.svg" alt="Icône de livres">
-                <!-- Affichage du nombre de livres -->
-                <?= htmlspecialchars($totalBooks, ENT_QUOTES, 'UTF-8') ?> livres
-            </div>
-            <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn">Envoyer un message</a>
-            </div>
+        </div>
     </div>
 
 

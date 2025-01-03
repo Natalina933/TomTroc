@@ -31,7 +31,6 @@
   opacity: 0.8;
 } */
 
-
 /* style pour le bouton ajouter */
 .btn.discreet-btn {
   background-color: transparent;
@@ -48,7 +47,7 @@
 
 /* Styles spécifiques pour le bouton "Voir tous les livres" */
 .btn.view-all-books {
-  width: 218px;
+  width: 227px;
   height: 63px;
   border-radius: 10px;
   border: 1px solid var(--buttonDefaultColor);
@@ -100,6 +99,11 @@ button:hover {
   cursor: pointer;
   transition: opacity 0.3s;
   margin-top: 20px;
+  padding: 22px 38px;
+  opacity: 1;
+  line-height: 19px;
+  background-color: var(--buttonDefaultColor);
+  color: var(--whiteColor);
 }
 
 #submitButton {
