@@ -40,7 +40,7 @@
 form input[type="email"],
 form input[type="password"],
 form input[type="text"] {
-    width: 100%;
+    width: 322px;
     border: 1px solid var(--lightGrayColor);
     border-radius: 6px;
     font-size: 14px;

@@ -99,7 +99,6 @@ button:hover {
   cursor: pointer;
   transition: opacity 0.3s;
   margin-top: 20px;
-  padding: 22px 38px;
   opacity: 1;
   line-height: 19px;
   background-color: var(--buttonDefaultColor);

@@ -1,0 +1,93 @@
+/* Styles communs pour les wrappers */
+.connection-wrapper,
+.registration-wrapper {
+  display: flex;
+  align-items: flex-start;
+  height: 100vh;
+}
+
+/* Styles communs pour les conteneurs */
+.connection-container,
+.registration-container,
+.registration-wrapper > div:first-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 50px;
+}
+
+/* Styles pour les titres */
+.connection-container h1,
+.registration-container h1,
+.registration-wrapper h1 {
+  font-size: 36px;
+  font-weight: 400;
+  margin-bottom: 30px;
+}
+
+/* Styles pour les formulaires */
+.connection-form,
+.registration-form {
+  margin-bottom: 20px;
+}
+
+.formGrid {
+  display: grid;
+  gap: 15px;
+}
+
+.formGrid label {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--grayColor);
+}
+
+.formGrid input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--grayColor);
+  border-radius: 5px;
+}
+
+/* Styles pour le bouton de soumission */
+.submit {
+  width: 322px;
+  height: 63px;
+  padding: 10px;
+  background-color: var(--buttonDefaultColor);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+/* Styles pour les liens de connexion/inscription */
+.login-link {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.login-link a {
+  text-decoration: underline;
+  color: var(--buttonDefaultColor);
+}
+
+.login-link a:hover {
+  color: var(--buttonHoverColor);
+}
+
+/* Styles pour l'image d'accueil */
+.home-image {
+  flex: 1;
+  overflow: hidden;
+}
+
+.home-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
