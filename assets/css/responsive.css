@@ -70,20 +70,11 @@
     flex-direction: column;
   }
 
-  .profile-card,
-  .info-card {
-    max-width: none;
-  }
+
 }
 
 /** * Styles pour mon compte * **/
-/* .account-container {
-  flex-direction: column;
-} */
 
-.account-card {
-  max-width: 100%;
-}
 
 /** * Styles pour le footer * **/
 footer {

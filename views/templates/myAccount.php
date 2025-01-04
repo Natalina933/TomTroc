@@ -18,7 +18,7 @@
                 <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
                     <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
                     <div class="btn-profile">
-                        <button type="button" id="changePictureButton" class="profile-link">modifier</button>
+                        <a type="button" id="changePictureButton" class="profile-link">modifier</a>
                     </div>
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
@@ -70,12 +70,12 @@
     <table class="table-books" aria-label="Liste de vos livres">
         <thead>
             <tr>
-                <th>Photo</th>
-                <th>Titre</th>
-                <th>Auteur</th>
-                <th>Description</th>
-                <th>Disponible</th>
-                <th>Action</th>
+                <th scope="col">Photo</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Auteur</th>
+                <th scope="col">Description</th>
+                <th scope="col">Disponible</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>

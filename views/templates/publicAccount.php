@@ -4,14 +4,13 @@
     </div>
 <?php endif; ?>
 
-
-<div class="account-container">
+<div class="public-account-container">
     <!-- Section 1 : Informations du compte -->
-    <div class="account-sections">
+    <section class="public-account-sections">
         <!-- Carré 1 : Profile -->
-        <div class="account-card">
-            <div class="account-profile-wrapper">
-                <div class="account-profile">
+        <div class="public-account-card">
+            <div class="public-profile-wrapper">
+                <div class="public-profile">
                     <!-- Vérification et affichage de la photo de profil -->
                     <?php if ($user->getProfilePicture() && !empty($user->getProfilePicture())) : ?>
                         <img src="<?= htmlspecialchars($user->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
@@ -19,7 +18,7 @@
                         <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
                     <?php endif; ?>
                 </div>
-                <p class="username"><?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
+                <h2 class="public-username"><?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></h2>
                 <?php
                 // Créer un objet DateTime à partir de la date d'inscription
                 $createdAt = new DateTime($user->getCreatedAt());
@@ -38,29 +37,26 @@
                     $memberSince = '1 mois';
                 }
                 ?>
-                <p class="member-since">Membre depuis : <?= htmlspecialchars($memberSince, ENT_QUOTES, 'UTF-8') ?></p>
-                <p class="bibliotheque">BIBLIOTHÈQUE</p>
-                <div class="library-info">
+                <p class="public-member-since">Membre depuis<?= htmlspecialchars($memberSince, ENT_QUOTES, 'UTF-8') ?></p>
+                <p class="public-bibliotheque">BIBLIOTHÈQUE</p>
+                <div class="public-library-info">
                     <img src="/assets/img/icon_books.svg" alt="Icône de livres">
                     <!-- Affichage du nombre de livres -->
                     <?= htmlspecialchars($totalBooks, ENT_QUOTES, 'UTF-8') ?> livres
                 </div>
-                <button href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn view-all-books">Envoyer un message</button>
+                <button href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn public-view-all-books">Envoyer un message</button>
             </div>
         </div>
-    </div>
-
-
+    </section>
 
     <!-- Section 3 : Tableau des livres -->
-
-    <table class="table-books">
+    <table class="public-table-books">
         <thead>
             <tr>
-                <th>Photo</th>
-                <th>Titre</th>
-                <th>Auteur</th>
-                <th>Description</th>
+                <th scope="col">Photo</th>
+                <th scope="col">Titre</th>
+                <th scope="col">Auteur</th>
+                <th scope="col">Description</th>
             </tr>
         </thead>
         <tbody>
@@ -75,8 +71,9 @@
                 <?php endforeach; ?>
             <?php else : ?>
                 <tr>
-                    <td colspan="6">Aucun livre trouvé.</td>
+                    <td colspan="4">Aucun livre trouvé.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
+</div>

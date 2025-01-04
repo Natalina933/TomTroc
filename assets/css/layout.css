@@ -9,33 +9,14 @@
   align-items: center;
 }
 
-/** * Styles pour le bouton * **/
-/* .btn {
-  display: inline-block;
-  width: auto;
-  padding: 22px 38px;
-  border-radius: 10px;
-  background-color: var(--buttonDefaultColor);
-  font-family: "Playfair Display", serif;
-  font-size: 16px;
-  font-weight: 700;
-  text-align: center;
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.3s, background-color 0.3s ease;
-  margin: 20px auto;
-}
 
-.btn:hover {
-  opacity: 0.8;
-} */
 
-/* style pour le bouton ajouter */
+
+/* style discret*/
 .btn.discreet-btn {
   background-color: transparent;
   color: var(--darkGrayColor);
-  border: 1px solid var(--lightGrayColor);
+  /* border: 1px solid var(--lightGrayColor); */
   padding: 8px 16px;
   border-radius: 4px;
 }
@@ -45,7 +26,7 @@
   color: var(--grayColor);
 }
 
-/* Styles spécifiques pour le bouton "Voir tous les livres" */
+/* Styles fond gris texte vert contour vert" */
 .btn.view-all-books {
   width: 227px;
   height: 63px;

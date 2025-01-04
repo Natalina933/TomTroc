@@ -181,3 +181,141 @@
   color: var(--redColor);
   text-decoration: underline;
 }
+/** * public-account * **/
+.public-account-container {
+  display: flex;
+  margin-top: 45px;
+  gap: 20px;
+  justify-content: center;
+}
+
+.public-account-card {
+  flex: 1;
+  background-color: var(--whiteColor);
+  width: 341px;
+  height: 579px;
+  padding: 60px 20px;
+  border-radius: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 451px;
+}
+
+.public-profile-wrapper {
+  width: 100%;
+}
+
+.public-account-card p {
+  margin: 20px 0;
+}
+
+.public-profile img {
+  border-radius: 50%;
+  width: 135px;
+  height: 135px;
+  object-fit: cover;
+}
+
+.public-profile {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.public-username {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.public-member-since {
+  font-size: 14px;
+  font-weight: 400;
+  color: #a6a6a6;
+}
+
+.public-bibliotheque {
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.public-library-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.public-library-info img {
+  width: 10.41px;
+  height: 13.71px;
+}
+
+.public-library-info span {
+  display: flex;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.94px;
+  text-align: center;
+}
+
+.public-books-section {
+  margin-top: 20px;
+  position: relative;
+}
+
+.public-table-books {
+  width: 1140px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: var(--whiteColor);
+  border-radius: 10px;
+  overflow: hidden;
+  border-top: 1px solid #F5F3EF;
+}
+
+.public-table-books th,
+.public-table-books td {
+  padding: 15px;
+  text-align: center;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.public-table-books th {
+  text-transform: uppercase;
+  background-color: var(--whiteColor);
+  color: var(--grayColor);
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.public-table-books img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.public-table-books tr:nth-child(even) {
+  background-color: var(--lightBlueColor);
+}
+
+
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
