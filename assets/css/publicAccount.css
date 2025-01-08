@@ -1,0 +1,139 @@
+/** * public-account * **/
+.public-account-container {
+  display: flex;
+  margin-top: 45px;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.public-account-card {
+  flex: 1;
+  background-color: var(--whiteColor);
+  width: 341px;
+  height: 579px;
+  padding: 60px 20px;
+  border-radius: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 451px;
+}
+
+.public-profile-wrapper {
+  width: 100%;
+}
+
+.public-account-card p {
+  margin: 20px 0;
+}
+
+.public-profile img {
+  border-radius: 50%;
+  width: 135px;
+  height: 135px;
+  object-fit: cover;
+}
+
+.public-profile {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.public-username {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.public-member-since {
+  font-size: 14px;
+  font-weight: 400;
+  color: #a6a6a6;
+}
+
+.public-bibliotheque {
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.public-library-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.public-library-info img {
+  width: 10.41px;
+  height: 13.71px;
+}
+
+.public-library-info span {
+  display: flex;
+  align-items: center;
+  font-family: "Inter";
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.94px;
+  text-align: center;
+}
+/** * Bibliothèque Title * **/
+
+.public-books-title {
+  font-family: "Inter", sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  line-height: 9.68px;
+}
+/** * Books Section * **/
+.public-table-container {
+  width: 771px;
+  height: 579px;
+  overflow-y: auto;
+  border-radius: 10px;
+  background-color: var(--whiteColor);
+}
+
+.public-books-section {
+  margin-top: 20px;
+}
+
+.public-table-books {
+  width: 771px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: var(--whiteColor);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.public-table-books tr {
+  height: 130px;
+}
+.public-table-books th,
+.public-table-books td {
+  padding: 5px;
+  text-align: left;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.public-table-books th {
+  text-transform: uppercase;
+  background-color: var(--whiteColor);
+  color: var(--grayColor);
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.public-table-books img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+.public-table-books tr:nth-child(even) {
+  background-color: var(--lightblueColor);
+}
