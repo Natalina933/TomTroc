@@ -45,6 +45,7 @@
   border-color: var(--buttonHoverColor);
 }
 
+
 /** * Button styles * **/
 .profile-link {
   text-decoration: underline;
