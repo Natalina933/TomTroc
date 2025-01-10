@@ -67,6 +67,7 @@ button:hover {
 
 /** * Styles pour les boutons * **/
 .btn {
+  padding: 10px;
   display: inline-block;
   border-radius: 10px;
   font-family: "Playfair Display", serif;
