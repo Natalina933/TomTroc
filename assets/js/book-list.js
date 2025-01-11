@@ -1,35 +1,4 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<body>
-    <main>
-        <div class="search-wrapper">
-            <h1>Nos Livres à l'échange</h1>
-            <form method="get" action="index.php">
-                <input type="hidden" name="action" value="books">
-                <div class="search-container">
-                    <div class="search-icon">
-                        <img src="../../assets/img/icons/Union.png" alt="Icone de recherche">
-                    </div>
-                    <input type="text" name="query" placeholder="Rechercher un livre">
-                </div>
-            </form>
-        </div>
-    
-        <section class="book-list">
-            <div class="books">
-                <?php if (!empty($books)) { ?>
-                    <?php foreach ($books as $book) { ?>
-                        <?php include 'include/book-card.php'; ?>
-                    <?php } ?>
-                <?php } else { ?>
-                    <p>Aucun livre disponible pour le moment.</p>
-                <?php } ?>
-            </div>
-        </section>
-    </main>
-</body>
-
-<script>
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Le DOM est chargé');
         const searchInput = document.querySelector('input[name="query"]');
@@ -91,4 +60,3 @@
         document.querySelector('.books').addEventListener('click', handleCardClick);
 
     });
-</script>

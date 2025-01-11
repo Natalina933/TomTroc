@@ -37,6 +37,49 @@
 /* .book-form-section {
   flex: 2;
 } */
+.book-detail {
+  display: flex;
+  width: 1440px; /* 720px * 2 */
+  height: 863px;
+  margin: 0 auto;
+}
+
+.book-image-container,
+.book-content {
+  width: 720px;
+  height: 863px;
+  overflow: auto;
+}
+
+.book-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--wrapperColor);
+}
+
+.book-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.book-content {
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: var(--whiteColor);
+}
+
+/* Ajustez les styles internes si nécessaire */
+.book-title,
+.book-author,
+.book-description-container,
+.owner-info {
+  margin-bottom: 20px;
+}
+
+/* Autres styles existants... */
+
 
 /* Styles pour l'image du livre */
 .book-image,
