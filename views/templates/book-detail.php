@@ -36,7 +36,7 @@
                     <?php endif; ?>
                     <p class="owner-name"><?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></p>
                 </a>
-                <button href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn">Envoyer un message</button>
+                <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn">Envoyer un message</a>
             <?php else : ?>
                 <p>Propriétaire inconnu</p>
             <?php endif; ?>

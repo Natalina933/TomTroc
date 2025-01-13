@@ -4,32 +4,36 @@
     </div>
 <?php endif; ?>
 
-<main class="messaging-container">
+<div class="messaging-container">
     <div class="messenger-container">
         <!-- Section 1 : Liste des conversations -->
         <section class="sidebar" aria-label="Liste des conversations">
             <h1>Messagerie</h1>
-            <ul class="conversations" role="list">
-                <?php if (empty($lastMessages)) : ?>
-                    <li>Aucune conversation trouvée.</li>
-                <?php else : ?>
-                    <?php foreach ($lastMessages as $message) : ?>
-                        <?php
-                        $otherUser = $message->getSender()->getId() != $_SESSION['user']['id'] ? $message->getSender() : $message->getReceiver();
-                        ?>
-                        <li class="conversation <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>">
-                            <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
-                                <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
-                                <div class="conversation-info">
-                                    <p class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></p>
-                                    <span class="description"><?= htmlspecialchars(substr($message->getContent(), 0, 30)) ?>...</span>
-                                    <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
-                                </div>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </ul>
+            <div class="conversation-container">
+                <ul class="conversations" role="list">
+                    <?php if (empty($lastMessages)) : ?>
+                        <li>Aucune conversation trouvée.</li>
+                    <?php else : ?>
+                        <?php foreach ($lastMessages as $message) : ?>
+                            <?php
+                            $otherUser = $message->getSender()->getId() != $_SESSION['user']['id'] ? $message->getSender() : $message->getReceiver();
+                            ?>
+                            <div class="conversation-wrapper">
+                                <li class="conversation <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>">
+                                    <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
+                                        <div class="conversation-info">
+                                            <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
+                                            <p class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></p>
+                                            <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
+                                        </div>
+                                        <span class="description"><?= htmlspecialchars(substr($message->getContent(), 0, 30)) ?>...</span>
+                                    </a>
+                                </li>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
         </section>
 
         <!-- Section 2 : Conversation active ou message par défaut -->
@@ -75,4 +79,4 @@
             <?php endif; ?>
         </section>
     </div>
-</main>
+    </main>

@@ -37,7 +37,7 @@ a {
 main {
     display: flex;
     flex-direction: column;
-    margin: 38px;
+    /* margin: 38px; */
     align-items: stretch;
 
 }

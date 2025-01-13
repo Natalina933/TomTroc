@@ -1,8 +1,6 @@
 /** * section messagerie * **/
 .messenger-container {
     display: flex;
-    justify-content: space-between;
-    height: 100vh;
     padding: 20px;
     background-color: var(--backgroundColor);
 }
@@ -10,10 +8,9 @@
 .sidebar {
     flex: 1;
     max-width: 350px;
-    background-color: var(--backgroundColor);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--wrapperColor);
     border-radius: 8px;
-    padding: 20px;
+    padding: 20px 0px 0px 30px;
     margin-right: 20px;
 }
 

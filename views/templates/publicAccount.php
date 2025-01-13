@@ -44,7 +44,7 @@
                     <!-- Affichage du nombre de livres -->
                     <?= htmlspecialchars($totalBooks, ENT_QUOTES, 'UTF-8') ?> livres
                 </div>
-                <button href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn view-all-books">Envoyer un message</button>
+                <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($user->getId(), ENT_QUOTES, 'UTF-8') ?>" class="btn view-all-books">Envoyer un message</a>
             </div>
         </div>
     </section>
