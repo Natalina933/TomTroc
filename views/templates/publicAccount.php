@@ -37,7 +37,7 @@
                     $memberSince = '1 mois';
                 }
                 ?>
-                <p class="public-member-since">Membre depuis<?= htmlspecialchars($memberSince, ENT_QUOTES, 'UTF-8') ?></p>
+                <p class="public-member-since">Membre depuis <?= htmlspecialchars($memberSince, ENT_QUOTES, 'UTF-8') ?></p>
                 <p class="public-bibliotheque">BIBLIOTHÈQUE</p>
                 <div class="public-library-info">
                     <img src="/assets/img/icon_books.svg" alt="Icône de livres">

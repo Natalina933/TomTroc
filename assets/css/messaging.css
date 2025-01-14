@@ -1,4 +1,4 @@
-/** * section messagerie * **/
+/** Section messagerie **/
 .messenger-container {
     display: flex;
     padding: 20px;
@@ -20,6 +20,9 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* Titre de la messagerie */
@@ -38,21 +41,28 @@
 
 .conversation {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     padding: 10px;
     margin-bottom: 15px;
     background-color: var(--lightGrayColor);
     border-radius: 6px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
     cursor: pointer;
 }
 
 .conversation:hover {
-    background-color: var(--lightGrayColor);
+    background-color: var(--backgroundColor);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Affichage de la photo de profil */
-.conversation img {
+.conversation-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.conversation-info img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -60,135 +70,36 @@
     object-fit: cover;
 }
 
-/* Informations sur l'expéditeur */
-.conversation-info {
-    display: flex;
-    flex-direction: column;
-}
-
 .conversation-info .name {
     font-weight: bold;
     font-size: 16px;
     color: var(--grayColor);
-    margin-bottom: 5px;
-}
-
-.conversation-info .description {
-    font-size: 14px;
-    color: var(--darkGrayColor);
 }
 
 .conversation-info .timestamp {
     font-size: 12px;
     color: var(--grayColor);
-    margin-top: 5px;
 }
 
-/* Section de chat instantané */
-.chat-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.chat-header {
-    border-bottom: 1px solid var(--lightGrayColor);
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    font-size: 20px;
-    color: var(--grayColor);
-}
-
-.chat-body {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background-color: var(--backgroundColor);
-    border-radius: 6px;
-}
-
-.chat-message {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.chat-message .message-sender {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: var(--grayColor);
-}
-
-.chat-message .message-content {
-    background-color: var(--backgroundColor);
-    padding: 10px;
-    border-radius: 5px;
-    max-width: 70%;
-}
-
-.chat-footer {
-    display: flex;
-    align-items: center;
-    padding-top: 10px;
-}
-
-.chat-footer input[type="text"] {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid var(--lightGrayColor);
-    border-radius: 5px;
-    margin-right: 10px;
-}
-
-.chat-footer button {
-    background-color: var(--buttonDefaultColor);
-    color: var(--whiteColor);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.chat-footer button:hover {
-    background-color: var(--buttonHoverColor);
-}
-
-/* Style pour la zone de messages avec une barre de défilement */
-.messages-container {
-    height: 400px;
-    overflow-y: auto;
-    padding: 10px;
-    border: 1px solid var(--lightGrayColor);
-    border-radius: 5px;
-}
-
-/* Optionnel : pour styliser la scrollbar */
-.messages-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.messages-container::-webkit-scrollbar-track {
-    background: var(--backgroundColor);
-}
-
-.messages-container::-webkit-scrollbar-thumb {
-    background-color: var(--grayColor);
-    border-radius: 10px;
-}
-
-.messages-container::-webkit-scrollbar-thumb:hover {
-    background: var(--darkGrayColor);
-}
-
-.conversation-info .description {
+.conversation .description {
+    font-size: 14px;
+    color: var(--darkGrayColor);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
-    display: block;
+    max-width: 100%;
 }
 
+/* Nouveau message */
+.unread-message {
+    background-color: var(--whiteColor);
+}
+
+.unread-message .timestamp {
+    font-weight: bold;
+}
+
+/* Section de chat */
 .chat-header {
     display: flex;
     align-items: center;
@@ -213,33 +124,33 @@
     font-size: 18px;
 }
 
+.messages-container {
+    padding: 3px 0 0 20px;
+}
+
 .messages {
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .message {
-    display: flex;
-    margin-bottom: 10px;
     max-width: 70%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
 }
 
 .message.sent {
-    justify-content: flex-end;
-    background-color: var(--backgroundColor);
-    padding: 10px;
-    border-radius: 10px;
-    text-align: right;
     align-self: flex-end;
+    background-color: var(--backgroundColor);
+    text-align: right;
 }
 
 .message.received {
-    justify-content: flex-start;
-    background-color: var(--backgroundColor);
-    padding: 10px;
-    border-radius: 10px;
-    text-align: left;
     align-self: flex-start;
-    position: relative;
+    background-color: var(--backgroundColor);
+    text-align: left;
 }
 
 .message.received img {
@@ -247,13 +158,12 @@
     height: 30px;
     border-radius: 50%;
     margin-right: 10px;
-    align-self: flex-start;
+    position: absolute;
+    top: -15px;
+    left: -15px;
 }
 
 .message-content {
-    padding: 8px;
-    background-color: inherit;
-    border-radius: 8px;
     word-wrap: break-word;
 }
 
@@ -261,35 +171,55 @@
     font-size: 0.75rem;
     color: var(--darkGrayColor);
     margin-top: 5px;
-    display: block;
 }
 
-.message.sent .message-footer {
-    text-align: right;
+.chat-footer {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
 }
 
-.message.received .message-footer {
-    text-align: left;
+.chat-footer input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--lightGrayColor);
+    border-radius: 5px;
+    margin-right: 10px;
 }
 
-.unread-message {
-    background-color: var(--backgroundColor);
-}
-
+.chat-footer button,
 .message-button {
-    display: inline-block;
-    padding: 10px 20px;
     background-color: var(--buttonDefaultColor);
     color: var(--whiteColor);
-    text-align: center;
-    font-size: 16px;
-    font-weight: 500;
     border: none;
+    padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    font-weight: 500;
     text-decoration: none;
 }
 
+.chat-footer button:hover,
 .message-button:hover {
     background-color: var(--buttonHoverColor);
+}
+
+/* Scrollbar personnalisée */
+.messages-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+    background: var(--backgroundColor);
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+    background-color: var(--grayColor);
+    border-radius: 10px;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+    background: var(--darkGrayColor);
 }

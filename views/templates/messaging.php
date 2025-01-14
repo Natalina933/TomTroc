@@ -17,27 +17,30 @@
                         <?php foreach ($lastMessages as $message) : ?>
                             <?php
                             $otherUser = $message->getSender()->getId() != $_SESSION['user']['id'] ? $message->getSender() : $message->getReceiver();
+                            $isUnread = $message->isUnread();
                             ?>
                             <div class="conversation-wrapper">
-                                <li class="conversation <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>">
+                                <li class="conversation <?= $isUnread ? 'unread-message' : '' ?> <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>">
                                     <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
                                         <div class="conversation-info">
-                                            <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
-                                            <p class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></p>
+                                            <div class="user-info">
+                                                <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
+                                                <span class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></span>
+                                            </div>
                                             <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
                                         </div>
-                                        <span class="description"><?= htmlspecialchars(substr($message->getContent(), 0, 30)) ?>...</span>
+                                        <div class="description"><span class="description"><?= htmlspecialchars(substr($message->getContent(), 0, 30)) ?>...</span></div>
                                     </a>
                                 </li>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                 </ul>
             </div>
         </section>
 
+
         <!-- Section 2 : Conversation active ou message par défaut -->
-        <section class="chat" aria-label="Conversation active">
+        <section class="chat-section" aria-label="Conversation active">
             <?php if (isset($activeConversation)) : ?>
                 <div class="chat-header">
                     <div class="chat-user-info">

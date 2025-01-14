@@ -1,7 +1,7 @@
 /** * public-account * **/
 .public-account-container {
   display: flex;
-  margin-top: 45px;
+  margin: 45px;
   gap: 20px;
   justify-content: center;
   align-items: flex-start;
@@ -11,13 +11,12 @@
   flex: 1;
   background-color: var(--whiteColor);
   width: 341px;
-  height: 579px;
-  padding: 60px 20px;
+  height: 430px;
   border-radius: 20px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-around;
   min-height: 451px;
 }
 
@@ -65,6 +64,7 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
+  margin-bottom: 10px;
 }
 
 .public-library-info img {
@@ -81,6 +81,7 @@
   line-height: 16.94px;
   text-align: center;
 }
+
 /** * Bibliothèque Title * **/
 
 .public-books-title {
@@ -89,6 +90,7 @@
   font-weight: 600;
   line-height: 9.68px;
 }
+
 /** * Books Section * **/
 .public-table-container {
   width: 771px;
@@ -110,12 +112,17 @@
   border-radius: 10px;
   overflow: hidden;
 }
+
 .public-table-books tr {
-  height: 130px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
+
 .public-table-books th,
 .public-table-books td {
-  padding: 5px;
+  height: 80px;
+
+  padding-left: 12px;
   text-align: left;
   font-size: 12px;
   vertical-align: middle;
@@ -134,6 +141,7 @@
   height: 50px;
   object-fit: cover;
 }
+
 .public-table-books tr:nth-child(even) {
   background-color: var(--lightblueColor);
 }

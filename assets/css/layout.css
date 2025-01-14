@@ -25,7 +25,7 @@
 /* Styles fond gris texte vert contour vert" */
 .btn.view-all-books {
   width: 227px;
-  height: 63px;
+  /* height: 63px; */
   border-radius: 10px;
   border: 1px solid var(--buttonDefaultColor);
   background-color: var(--backgroundColor);
