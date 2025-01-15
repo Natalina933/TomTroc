@@ -10,7 +10,7 @@
         <section class="sidebar" aria-label="Liste des conversations">
             <h1>Messagerie</h1>
             <div class="conversation-container">
-                <ul class="conversations" role="list">
+                <ul class="conversations">
                     <?php if (empty($lastMessages)) : ?>
                         <li>Aucune conversation trouvée.</li>
                     <?php else : ?>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
 
-                <div class="messages-container" role="log" aria-live="polite">
+                <div class="messages-container" aria-live="polite">
                     <div class="messages">
                         <?php foreach ($activeConversation['messages'] as $message) : ?>
                             <div class="message <?= $message->getSender()->getId() == $_SESSION['user']['id'] ? 'sent' : 'received' ?>">
@@ -81,3 +81,40 @@
         </section>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const conversations = document.querySelectorAll(".conversation");
+
+        conversations.forEach((conversation) => {
+            conversation.addEventListener("click", () => {
+                // Ajouter une classe indiquant que le message est lu
+                conversation.classList.remove("unread-message");
+
+                // Appeler le backend pour mettre à jour l'état is_read
+                const conversationId = conversation.dataset.id; // Supposons que tu as un data-id pour identifier chaque conversation
+                markAsRead(conversationId);
+            });
+        });
+
+        // Fonction pour marquer un message comme lu côté serveur
+        function markAsRead(conversationId) {
+            fetch(`/update-message-status.php`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: conversationId,
+                        is_read: true
+                    }),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Message marqué comme lu :", data);
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de la mise à jour de l'état :", error);
+                });
+        }
+    });
+</script>

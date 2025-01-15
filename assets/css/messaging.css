@@ -91,12 +91,13 @@
 }
 
 /* Nouveau message */
-.unread-message {
+.conversation.unread-message {
     background-color: var(--whiteColor);
-}
-
-.unread-message .timestamp {
     font-weight: bold;
+}
+.conversation.unread-message:hover {
+    background-color: var(--backgroundColor);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Section de chat */

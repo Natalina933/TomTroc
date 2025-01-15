@@ -72,6 +72,7 @@
         try {
             $stmt = $this->db->query($sql, ['id' => $userId]);
             $messages = [];
+
             while ($message = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $messages[] = new Message($message);
             }
@@ -181,7 +182,7 @@
             return false;
         }
     }
-    
+
 
     /**
      * Crée des objets Message à partir des résultats de la requête.
