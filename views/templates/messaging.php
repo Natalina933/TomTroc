@@ -19,25 +19,23 @@
                             $otherUser = $message->getSender()->getId() != $_SESSION['user']['id'] ? $message->getSender() : $message->getReceiver();
                             $isUnread = $message->isUnread();
                             ?>
-                            <div class="conversation-wrapper">
-                                <li class="conversation <?= $isUnread ? 'unread-message' : '' ?> <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>">
-                                    <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
-                                        <div class="conversation-info">
-                                            <div class="user-info">
-                                                <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
-                                                <span class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></span>
-                                            </div>
-                                            <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
+                            <li class="conversation <?= $isUnread ? 'unread-message' : '' ?> <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>">
+                                <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
+                                    <div class="conversation-info">
+                                        <div class="user-info">
+                                            <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
+                                            <span class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></span>
                                         </div>
-                                        <div class="description"><span class="description"><?= htmlspecialchars(substr($message->getContent(), 0, 30)) ?>...</span></div>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                                        <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
+                                    </div>
+                                    <div class="description"><?= htmlspecialchars(substr($message->getContent(), 0, 30)) ?></div>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </ul>
             </div>
         </section>
-
 
         <!-- Section 2 : Conversation active ou message par défaut -->
         <section class="chat-section" aria-label="Conversation active">
@@ -82,4 +80,4 @@
             <?php endif; ?>
         </section>
     </div>
-    </main>
+</div>

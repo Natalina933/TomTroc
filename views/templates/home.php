@@ -8,7 +8,7 @@
             <p class="intro-text">
                 Donnez une nouvelle vie à vos livres en les échangeant avec d'autres amoureux de la lecture. Nous croyons en la magie du partage de connaissances et d'histoires à travers les livres.
             </p>
-            <button href="index.php?action=books" class="btn" aria-label="Découvrir nos livres disponibles">Découvrir</a>
+            <a href="index.php?action=books" class="btn" aria-label="Découvrir nos livres disponibles">Découvrir</a>
         </div>
     </section>
 
@@ -24,7 +24,7 @@
                     <p>Aucun livre disponible pour le moment. Revenez bientôt pour découvrir notre sélection !</p>
                 <?php endif; ?>
             </div>
-            <button href="index.php?action=books" class="btn" aria-label="Voir tous les livres disponibles sur TomTroc">Voir tous les livres</button>
+            <a href="index.php?action=books" class="btn" aria-label="Voir tous les livres disponibles sur TomTroc">Voir tous les livres</a>
         </div>
     </section>
     <section class="how-it-works">
@@ -46,7 +46,7 @@
                 <p>Proposez un échange et discutez avec d'autres passionnés de lecture.</p>
             </li>
         </ol>
-        <button href="index.php?action=books" class="btn view-all-books" aria-label="Rejoindre la communauté TomTroc pour échanger des livres">Voir tous les livres</button>
+        <a href="index.php?action=books" class="btn view-all-books" aria-label="Rejoindre la communauté TomTroc pour échanger des livres">Voir tous les livres</a>
     </section>
 
     <section class="values-section">
