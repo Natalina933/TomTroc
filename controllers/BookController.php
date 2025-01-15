@@ -45,29 +45,38 @@ class BookController
             }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $img = filter_input(INPUT_POST, 'img');
                 $title = filter_input(INPUT_POST, 'title');
                 $description = filter_input(INPUT_POST, 'description');
                 $author = filter_input(INPUT_POST, 'author');
-                $available = isset($_POST['available']) ? 1 : 0;
+                $available = filter_input(INPUT_POST, 'available', FILTER_VALIDATE_INT);
 
                 $this->validateBookData([
+                    'img' => $img,
                     'title' => $title,
                     'author' => $author,
                     'description' => $description
                 ]);
-
+                $book->setImg($img);
                 $book->setTitle($title);
                 $book->setDescription($description);
                 $book->setAuthor($author);
                 $book->setAvailable($available);
                 $book->setUpdatedAt(date('Y-m-d H:i:s'));
                 // Gestion de l'upload d'image
-                if (isset($_FILES['img']) && $_FILES['img']['error'] == 0) {
+                if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
+                    // Une nouvelle image a été uploadée
                     $newImagePath = $this->handleImageUpload($_FILES['img']);
                     if ($newImagePath) {
                         $book->setImg($newImagePath);
+                    } else {
+                        throw new Exception("Erreur lors de l'upload de l'image");
                     }
+                } elseif (!$book->getImg()) {
+                    // Pas d'image existante, définir l'image par défaut
+                    $book->setImg('/assets/img/defaultBook.webp');
                 }
+
 
                 if ($this->bookManager->editBook($book)) {
                     Utils::redirect("myAccount", ["status" => "success", "message" => "Livre modifié avec succès"]);
@@ -135,43 +144,43 @@ class BookController
         }
     }
 
-    
+
 
     public function addBook()
     {
         $this->ensureUserIsConnected();
-        
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userId = $_SESSION['user']['id'] ?? null;
             if (!$userId) {
                 throw new Exception("Utilisateur non connecté.");
             }
-    
+
             // Validation des données
             $title = Utils::request('title');
             $author = Utils::request('author');
             $description = Utils::request('description');
             $available = Utils::request('available', 1);
-    
+
             if (empty($title) || empty($author) || empty($description)) {
                 Utils::redirect("addBook", ["status" => "error", "message" => "Veuillez remplir tous les champs obligatoires."]);
                 return;
             }
-    
+
             // Traitement de l'image
             $imagePath = $this->handleImageUpload($_FILES['image'] ?? null);
-    
+
             $newBook = new Book([
                 'user_id' => $userId,
                 'title' => $title,
                 'author' => $author,
-                'description' => $description,
-                'available' => $available,
                 'img' => $imagePath,
+                'description' => $description,
                 'createdAt' => date('Y-m-d H:i:s'),
-                'updatedAt' => date('Y-m-d H:i:s')
+                'updatedAt' => date('Y-m-d H:i:s'),
+                'available' => $available
             ]);
-    
+
             try {
                 if ($this->bookManager->addBook($newBook)) {
                     Utils::redirect("myAccount", ["status" => "success", "message" => "Livre ajouté avec succès."]);
@@ -186,17 +195,17 @@ class BookController
             $view->render('book-edit', ['book' => new Book()]);
         }
     }
-    
-    private function handleImageUpload($file): string
+
+    private function handleImageUpload($file): ?string
     {
         $imagePath = '/assets/img/defaultBook.webp'; // Image par défaut
-    
+
         if ($file && $file['error'] === UPLOAD_ERR_OK) {
             $uploadDir = 'assets/img/books/';
             $uploadFile = $uploadDir . uniqid() . '_' . basename($file['name']);
             $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
             $allowedTypes = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-    
+
             if (in_array($imageFileType, $allowedTypes)) {
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $imagePath = '/' . $uploadFile;
@@ -207,10 +216,10 @@ class BookController
                 throw new Exception("Le fichier téléchargé n'est pas une image valide.");
             }
         }
-    
+
         return $imagePath;
     }
-    
+
 
     public function deleteBook()
     {

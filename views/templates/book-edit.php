@@ -43,7 +43,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
                     <label for="available" class="form-label">Disponibilité</label>
                     <select id="available" name="available" class="form-select">
                         <option value="1" <?= $isEditing && $book->isAvailable() ? 'selected' : '' ?>>Disponible</option>
-                        <option value="0" <?= $isEditing && !$book->isAvailable() ? 'selected' : '' ?>>Non disponible</option>
+                        <option value="0" <?= $isEditing && !$book->isAvailable() ? 'selected' : '' ?>>Non dispo.</option>
                     </select>
                 </div>
 
@@ -64,7 +64,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
             `Titre: ${title}\n` +
             `Auteur: ${author}\n` +
             `Description: ${description}\n` +
-            `Disponibilité: ${available === '1' ? 'Disponible' : 'Non disponible'}\n\n` +
+            `Disponibilité: ${available === '1' ? 'Disponible' : 'Non dispo.'}\n\n` +
             `Confirmez-vous l'enregistrement ?`;
 
         return confirm(message);

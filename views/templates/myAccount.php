@@ -9,7 +9,7 @@
         <!-- Carré 1 : Profil -->
         <section class="account-card profile-card" aria-label="Informations du profil">
             <div class="account-profile">
-                <?php if (!empty($user['profilePicture'])) : ?>
+                <?php if (isset($user['profilePicture']) && !empty($user['profilePicture'])) : ?>
                     <img src="<?= htmlspecialchars($user['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>">
                 <?php else : ?>
                     <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
@@ -104,10 +104,7 @@
         </tbody>
     </table>
 
-
-
 </section>
-
 
 <script defer>
     document.getElementById('changePictureButton').addEventListener('click', () => {

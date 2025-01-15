@@ -38,7 +38,7 @@ $backUrl = "index.php?action=myAccount";
                     <label for="available" class="form-label">Disponibilité</label>
                     <select id="available" name="available" class="form-select">
                         <option value="1" selected>Disponible</option>
-                        <option value="0">Non disponible</option>
+                        <option value="0">Non dispo.</option>
                     </select>
                 </div>
 
