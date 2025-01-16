@@ -45,27 +45,24 @@ class BookController
             }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $img = filter_input(INPUT_POST, 'img');
                 $title = filter_input(INPUT_POST, 'title');
                 $description = filter_input(INPUT_POST, 'description');
                 $author = filter_input(INPUT_POST, 'author');
                 $available = filter_input(INPUT_POST, 'available', FILTER_VALIDATE_INT);
 
                 $this->validateBookData([
-                    'img' => $img,
                     'title' => $title,
                     'author' => $author,
                     'description' => $description
                 ]);
-                $book->setImg($img);
+
                 $book->setTitle($title);
                 $book->setDescription($description);
                 $book->setAuthor($author);
                 $book->setAvailable($available);
                 $book->setUpdatedAt(date('Y-m-d H:i:s'));
-                // Gestion de l'upload d'image
+
                 if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
-                    // Une nouvelle image a été uploadée
                     $newImagePath = $this->handleImageUpload($_FILES['img']);
                     if ($newImagePath) {
                         $book->setImg($newImagePath);
@@ -73,10 +70,8 @@ class BookController
                         throw new Exception("Erreur lors de l'upload de l'image");
                     }
                 } elseif (!$book->getImg()) {
-                    // Pas d'image existante, définir l'image par défaut
                     $book->setImg('/assets/img/defaultBook.webp');
                 }
-
 
                 if ($this->bookManager->editBook($book)) {
                     Utils::redirect("myAccount", ["status" => "success", "message" => "Livre modifié avec succès"]);
@@ -91,6 +86,8 @@ class BookController
             Utils::redirect("editBook", ["id" => $bookId, "status" => "error", "message" => $e->getMessage()]);
         }
     }
+
+
 
     public function updateBookImage($bookId): void
     {
@@ -198,28 +195,46 @@ class BookController
 
     private function handleImageUpload($file): ?string
     {
-        $imagePath = '/assets/img/defaultBook.webp'; // Image par défaut
+        error_log("Début de handleImageUpload");
+        var_dump($file);
+        // $imagePath = '/assets/img/defaultBook.webp'; // Image par défaut
+
+        // error_log("Image par défaut : " . $imagePath);
 
         if ($file && $file['error'] === UPLOAD_ERR_OK) {
+            error_log("Fichier uploadé avec succès");
+
             $uploadDir = 'assets/img/books/';
             $uploadFile = $uploadDir . uniqid() . '_' . basename($file['name']);
+            error_log("Chemin de destination : " . $uploadFile);
+
             $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
+            error_log("Type de fichier : " . $imageFileType);
+
             $allowedTypes = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            error_log("Types autorisés : " . implode(', ', $allowedTypes));
 
             if (in_array($imageFileType, $allowedTypes)) {
+                error_log("Type de fichier valide");
+
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     $imagePath = '/' . $uploadFile;
+                    error_log("Fichier déplacé avec succès. Nouveau chemin : " . $imagePath);
                 } else {
+                    error_log("Erreur lors du déplacement du fichier");
                     throw new Exception("Erreur lors du téléchargement de l'image.");
                 }
             } else {
+                error_log("Type de fichier non valide");
                 throw new Exception("Le fichier téléchargé n'est pas une image valide.");
             }
+        } else {
+            error_log("Aucun fichier uploadé ou erreur lors de l'upload");
         }
 
+        error_log("Fin de handleImageUpload. Chemin de l'image retourné : " . $imagePath);
         return $imagePath;
     }
-
 
     public function deleteBook()
     {

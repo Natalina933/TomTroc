@@ -4,7 +4,7 @@ TOM TROC est une plateforme web permettant aux utilisateurs d'échanger des livr
 **Installation**
 1-Clonez le dépôt du projet dans votre environnement local.
 2-Importez le fichier site_tom_troc (10).sql dans votre base de données MySQL via phpMyAdmin.
-3-Configurez les paramètres de connexion à la base de données dans le fichier de configuration PHP.
+3-Configurez les paramètres de connexion à la base de données dans le dossier config, le fichier de config.php
 
 **Configuration de la base de données**
     . Nom de la base de données: site_tom_troc
@@ -37,4 +37,4 @@ Serveur web (par exemple, Apache)
 Backend: PHP
 Base de données: MySQL
 Frontend: HTML/CSS/JavaScript (non inclus dans le dump SQL)
-Pour toute question ou problème lors de l'installation, n'hésitez pas à contacter l'équipe de développement.
+Pour toute problème lors de l'installation, n'hésitez pas à me contacter.
