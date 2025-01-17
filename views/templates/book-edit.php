@@ -11,7 +11,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
 
     <div class="book-edit-content">
         <div class="book-image-section">
-            <img id="bookImage" src="<?= htmlspecialchars($book->getImg(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre">
+            <img id="bookImage" src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/defaultBook.webp', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre">
             <div class="image-upload">
                 <label for="img" class="upload-label">Modifier la photo</label>
                 <input type="file" id="img" name="img" class="file-input" accept="image/*" onchange="previewImage(this);">
@@ -59,11 +59,6 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
         const author = document.getElementById('author').value;
         const description = document.getElementById('description').value;
         const available = document.getElementById('available').value;
-        const imgInput = document.getElementById('img');
-
-        if (imgInput.files && imgInput.files[0]) {
-            imagePath = '/assets/img/books/' + imgInput.files[0].name;
-        }
 
         // Récupérer le chemin de l'image
         const imgInput = document.getElementById('img');
@@ -79,8 +74,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
             `Auteur: ${author}\n` +
             `Photo: ${imagePath}\n` +
             `Description: ${description}\n` +
-            `Disponibilité: ${available === '1' ? 'Disponible' : 'Non dispo.'}\n` +
-            `Chemin de l'image: ${imagePath}\n\n` +
+            `Disponibilité: ${available === '1' ? 'Disponible' : 'Non dispo.'}\n\n` +
             `Confirmez-vous l'enregistrement ?`;
 
         return confirm(message);
