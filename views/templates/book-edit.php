@@ -60,9 +60,19 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
         const description = document.getElementById('description').value;
         const available = document.getElementById('available').value;
 
+        // Récupérer le chemin de l'image
+        const imgInput = document.getElementById('img');
+        let imagePath = document.getElementById('bookImage').getAttribute('src');
+
+        // Si une nouvelle image a été sélectionnée, utilisez son nom
+        if (imgInput.files && imgInput.files[0]) {
+            imagePath = '/assets/img/books/' + imgInput.files[0].name;
+        }
+
         const message = `Vous êtes sur le point d'enregistrer les informations suivantes :\n\n` +
             `Titre: ${title}\n` +
             `Auteur: ${author}\n` +
+            `Photo: ${imagePath}\n` +
             `Description: ${description}\n` +
             `Disponibilité: ${available === '1' ? 'Disponible' : 'Non dispo.'}\n\n` +
             `Confirmez-vous l'enregistrement ?`;

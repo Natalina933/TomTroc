@@ -82,7 +82,13 @@
             <?php if (!empty($books)) : ?>
                 <?php foreach ($books as $book) : ?>
                     <tr>
-                        <td><img src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/book-default.svg', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre"></td>
+                        <td>
+                            <?php if ($book->getImg() && !empty($book->getImg())) : ?>
+                                <img src="<?= htmlspecialchars($book->getImg(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre <?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?>">
+                            <?php else : ?>
+                                <img src="/assets/img/book-default.svg" alt="Image par défaut du livre">
+                            <?php endif; ?>
+                        </td>
                         <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($book->getAuthor(), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><em><?= htmlspecialchars($book->getDescription(), ENT_QUOTES, 'UTF-8') ?></em></td>

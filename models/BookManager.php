@@ -165,6 +165,24 @@ class bookManager extends AbstractEntityManager
             throw new Exception("Erreur générale lors de la mise à jour du livre : " . $e->getMessage());
         }
     }
+    public function updateBookImage(int $bookId, string $imagePath): bool
+    {
+        $sql = "UPDATE book SET img = :img, updatedAt = :updatedAt WHERE id = :id";
+
+        try {
+            $params = [
+                ':img' => $imagePath,
+                ':updatedAt' => date('Y-m-d H:i:s'),
+                ':id' => $bookId
+            ];
+
+            $result = $this->db->query($sql, $params);
+            return $result !== false;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour de l'image du livre : " . $e->getMessage());
+            return false;
+        }
+    }
 
     public function countUserBooks(int $userId): int
     {

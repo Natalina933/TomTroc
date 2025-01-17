@@ -9,6 +9,11 @@ class BookController
 
     private $bookManager;
 
+    /**
+     * BookController constructor.
+     *
+     * Instancie un nouveau gestionnaire de livres.
+     */
     public function __construct()
     {
         $this->bookManager = new BookManager();
