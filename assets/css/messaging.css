@@ -92,11 +92,16 @@
 
 /* Nouveau message */
 .conversation.unread-message {
-    background-color: var(--whiteColor);
+    background-color: #e6f2ff;
+    /* Couleur bleue claire */
+    border-left: 4px solid #007bff;
+    /* Bordure bleue à gauche */
     font-weight: bold;
 }
+
 .conversation.unread-message:hover {
-    background-color: var(--backgroundColor);
+    background-color: #d1e8ff;
+    /* Couleur bleue plus foncée au survol */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
