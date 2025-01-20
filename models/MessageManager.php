@@ -207,6 +207,12 @@
         error_log($message);
     }
 
+    /**
+     * Récupère les derniers messages de l'utilisateur $userId.
+     * La requête jointe permet de récupérer le dernier message de chaque conversation.
+     * @param int $userId
+     * @return array : un tableau d'objets Message.
+     */
     public function getLastMessagesByUserId(int $userId): array
     {
         $sql = "SELECT m.* FROM message m
@@ -226,6 +232,11 @@
         }
         return $messages;
     }
+    /**
+     * Marque les messages envoyés par l'utilisateur $senderId et destinés à l'utilisateur $userId comme lus.
+     * @param int $userId : l'id de l'utilisateur qui reçoit les messages.
+     * @param int $senderId : l'id de l'utilisateur qui envoie les messages.
+     */
     public function markMessagesAsRead(int $userId, int $senderId): void
     {
         $sql = "UPDATE message 
@@ -238,6 +249,12 @@
         }
     }
 
+    /**
+     * Renvoie le nombre de messages non lus par conversation pour l'utilisateur donné.
+     * @param int $userId : l'id de l'utilisateur.
+     * @return array : un tableau contenant le nombre de messages non lus pour chaque conversation.
+     *                La clé est l'id de l'expéditeur, la valeur est le nombre de messages non lus.
+     */
     public function getUnreadMessagesCountByConversation(int $userId): array
     {
         $sql = "SELECT sender_id, COUNT(*) as unread_count 
