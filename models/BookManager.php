@@ -5,6 +5,7 @@
  */
 class bookManager extends AbstractEntityManager
 {
+    private string $uploadDir = 'assets/img/books/';
     /**
      * Récupère tous les books.
      * @return array : un tableau d'objets book.
@@ -167,24 +168,38 @@ class bookManager extends AbstractEntityManager
             throw new Exception("Erreur générale lors de la mise à jour du livre : " . $e->getMessage());
         }
     }
-    public function updateBookImage(int $bookId, string $imagePath): bool
+    public function updateBookImage(int $bookId, string $newImagePath): bool
     {
-        $sql = "UPDATE book SET img = :img, updatedAt = :updatedAt WHERE id = :id";
-
         try {
+            // Récupérer l'ancien nom d'image
+            $oldImageQuery = "SELECT img FROM book WHERE id = :id";
+            $oldImageResult = $this->db->query($oldImageQuery, [':id' => $bookId]);
+            $oldImage = $oldImageResult->fetchColumn();
+
+            // Mettre à jour l'enregistrement avec la nouvelle image
+            $updateQuery = "UPDATE book SET img = :newImage, updatedAt = :updatedAt WHERE id = :id";
             $params = [
-                ':img' => $imagePath,
+                ':newImage' => $newImagePath,
                 ':updatedAt' => date('Y-m-d H:i:s'),
                 ':id' => $bookId
             ];
+            $result = $this->db->query($updateQuery, $params);
 
-            $result = $this->db->query($sql, $params);
+            // Supprimer l'ancienne image si elle existe
+            if ($oldImage && $oldImage !== $newImagePath) {
+                $oldImagePath = __DIR__ . '/../../assets/img/books/' . basename($oldImage);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
             return $result !== false;
         } catch (PDOException $e) {
             error_log("Erreur lors de la mise à jour de l'image du livre : " . $e->getMessage());
             return false;
         }
     }
+
 
     public function countUserBooks(int $userId): int
     {

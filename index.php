@@ -25,7 +25,7 @@ try {
             $bookController->showBooksList();
             break;
 
-        case 'bookDetail':
+        case 'book-detail':
             if ($bookId > 0) {
                 $bookController->showBookDetail($bookId);
             } else {
