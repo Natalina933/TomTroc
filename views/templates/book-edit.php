@@ -11,11 +11,19 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
 
     <div class="book-edit-content">
         <div class="book-image-section">
-            <img id="bookImage" src="<?= htmlspecialchars($book->getImg() ?: '/assets/img/defaultBook.webp', ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre">
-            <div class="image-upload">
-                <label for="img" class="upload-label">Modifier la photo</label>
-                <input type="file" id="img" name="img" class="file-input" accept="image/*" onchange="previewImage(this);">
-            </div>
+            <?php if (isset($book) && $book->getImg() && !empty($book->getImg())) : ?>
+                <img id="bookImage" src="<?= htmlspecialchars($book->getImg(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre <?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?>">
+            <?php else : ?>
+                <img id="bookImage" src="/assets/img/defaultBook.webp" alt="Image par défaut du livre">
+            <?php endif; ?>
+
+            <form action="index.php?action=updateBookImage&id=<?= htmlspecialchars($book->getId(), ENT_QUOTES) ?>" method="post" enctype="multipart/form-data">
+                <input type="file" id="bookImageInput" name="img" accept="image/*" style="display:none;">
+                <div class="btn-book-image">
+                    <a type="button" id="changeBookImageButton" class="book-image-link">Modifier la photo</a>
+                </div>
+                <input type="submit" id="submitBookImageForm" style="display:none;">
+            </form>
         </div>
 
         <div class="book-form-section">
@@ -60,8 +68,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
         const description = document.getElementById('description').value;
         const available = document.getElementById('available').value;
 
-        // Récupérer le chemin de l'image
-        const imgInput = document.getElementById('img');
+        const imgInput = document.getElementById('bookImageInput');
         let imagePath = document.getElementById('bookImage').getAttribute('src');
 
         // Si une nouvelle image a été sélectionnée, utilisez son nom
@@ -80,16 +87,34 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
         return confirm(message);
     }
 
+    // Prévisualisation de l'image
     function previewImage(input) {
         const bookImage = document.getElementById('bookImage');
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-
             reader.onload = function(e) {
                 bookImage.src = e.target.result;
-            }
-
+            };
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    // Gestionnaire pour afficher le sélecteur de fichier
+    document.getElementById('changeBookImageButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Empêche le comportement par défaut du clic
+        document.getElementById('bookImageInput').click();
+    });
+
+    // Prévisualisation et soumission automatique après sélection d'une image
+    document.getElementById('bookImageInput').addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('bookImage').src = e.target.result;
+            };
+            reader.readAsDataURL(this.files[0]);
+            // Soumet le formulaire pour mettre à jour l'image
+            document.getElementById('submitBookImageForm').click();
+        }
+    });
 </script>
