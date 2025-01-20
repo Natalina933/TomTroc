@@ -25,7 +25,7 @@ try {
             $bookController->showBooksList();
             break;
 
-        case 'book-detail':
+        case 'bookDetail':
             if ($bookId > 0) {
                 $bookController->showBookDetail($bookId);
             } else {
@@ -33,7 +33,7 @@ try {
             }
             break;
 
-        case 'editbook':
+        case 'editBook':
             if ($bookId > 0) {
                 $bookController->editBook($bookId);
             } else {

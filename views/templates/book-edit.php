@@ -27,7 +27,7 @@ $backUrl = $isEditing ? "index.php?action=book-detail&id=" . $book->getId() : "i
         </div>
 
         <div class="book-form-section">
-            <form id="bookForm" action="index.php?action=<?= $isEditing ? 'editbook&id=' . $book->getId() : 'addBook' ?>" method="post" enctype="multipart/form-data" class="edit-form" onsubmit="return confirmSubmission();">
+            <form id="bookForm" action="index.php?action=<?= $isEditing ? 'editBook&id=' . $book->getId() : 'addBook' ?>" method="post" enctype="multipart/form-data" class="edit-form" onsubmit="return confirmSubmission();">
                 <?php if ($isEditing): ?>
                     <input type="hidden" name="id" value="<?= $book->getId(); ?>">
                 <?php endif; ?>

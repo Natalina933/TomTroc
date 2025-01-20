@@ -136,7 +136,7 @@ class BookController
             if ($newImagePath) {
                 $book->setImg($newImagePath);
                 if ($this->bookManager->editBook($book)) {
-                    Utils::redirect("bookDetail", ["id" => $bookId, "status" => "success", "message" => "Image du livre mise à jour avec succès"]);
+                    Utils::redirect("editBook", ["id" => $bookId, "status" => "success", "message" => "Image du livre mise à jour avec succès"]);
                 } else {
                     throw new Exception("Erreur lors de la mise à jour de l'image du livre");
                 }
