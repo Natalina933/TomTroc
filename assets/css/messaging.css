@@ -53,6 +53,10 @@
 .conversation.unread-message:hover {
     background-color: #d1e8ff;
 }
+.message-read-animation {
+    transition: background-color 0.5s ease-out;
+    background-color: #e6f3ff;
+}
 
 .conversation-info {
     display: flex;

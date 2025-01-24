@@ -16,6 +16,7 @@
         }
     }
 
+
     /**
      * Récupère tous les messages reçus par un utilisateur.
      * @param int $userId
@@ -110,7 +111,6 @@
         }
     }
 
-
     /**
      * Récupère un utilisateur par son ID.
      * @param int $id
@@ -188,30 +188,6 @@
         }
     }
 
-
-    /**
-     * Crée des objets Message à partir des résultats de la requête.
-     * @param PDOStatement $result
-     * @return array
-     */
-    private function createMessageObjects($result): array
-    {
-        $messages = [];
-        while ($messageData = $result->fetch(PDO::FETCH_ASSOC)) {
-            $messages[] = new Message($messageData);
-        }
-        return $messages;
-    }
-
-    /**
-     * Journalise les erreurs.
-     * @param string $message
-     */
-    private function logError(string $message): void
-    {
-        error_log($message);
-    }
-
     /**
      * Récupère les derniers messages de l'utilisateur $userId.
      * La requête jointe permet de récupérer le dernier message de chaque conversation.
@@ -245,10 +221,15 @@
      */
     public function markAsRead(int $messageId): bool
     {
-        $sql = "UPDATE message SET is_read = 1 WHERE id = :messageId";
+        if ($messageId <= 0) {
+            error_log("ID de message invalide : $messageId");
+            return false;
+        }
+
+        $sql = "UPDATE message SET is_read = 1 WHERE id = :messageId AND is_read = 0";
         try {
-            $this->db->query($sql, ['messageId' => $messageId]);
-            return true;
+            $stmt = $this->db->query($sql, ['messageId' => $messageId]);
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             error_log("Erreur lors de la mise à jour du message : " . $e->getMessage());
             return false;
@@ -313,5 +294,26 @@
             error_log("Erreur lors de la suppression du message : " . $e->getMessage());
             return false;
         }
+    }
+    /**
+     * Crée des objets Message à partir des résultats de la requête.
+     * @param PDOStatement $result
+     * @return array
+     */
+    private function createMessageObjects($result): array
+    {
+        $messages = [];
+        while ($messageData = $result->fetch(PDO::FETCH_ASSOC)) {
+            $messages[] = new Message($messageData);
+        }
+        return $messages;
+    }
+    /**
+     * Journalise les erreurs.
+     * @param string $message
+     */
+    private function logError(string $message): void
+    {
+        error_log($message);
     }
 }

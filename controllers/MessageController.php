@@ -80,8 +80,8 @@ class MessageController
         $receiverId = filter_input(INPUT_POST, 'receiver_id', FILTER_VALIDATE_INT);
         $content = htmlspecialchars(trim($_POST['content']), ENT_QUOTES, 'UTF-8');
 
-        if (!$receiverId || empty($content) || strlen($content) > 1000) {
-            $_SESSION['error'] = 'Message invalide. Assurez-vous que le contenu est valide et ne dépasse pas 1000 caractères.';
+        if (!$receiverId || empty($content)) {
+            $_SESSION['error'] = 'Message ou destinataire invalide.';
             Utils::redirect('messaging');
             exit;
         }
@@ -124,42 +124,31 @@ class MessageController
     }
     public function updateMessageStatus()
     {
-        try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new Exception("Méthode non autorisée.");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            if (isset($data['id']) && isset($data['is_read'])) {
+                $messageId = (int)$data['id'];
+                $isRead = (bool)$data['is_read'];
+
+                if ($isRead) {
+                    $result = $this->messageManager->markAsRead($messageId);
+
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => $result]);
+                    exit();
+                } else {
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'error' => 'Invalid status value.']);
+                    exit();
+                }
+            } else {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Invalid input data.']);
+                exit();
             }
-
-            $jsonData = file_get_contents('php://input');
-            $data = json_decode($jsonData, true);
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception("Erreur de décodage JSON : " . json_last_error_msg());
-            }
-
-            if (!isset($data['id']) || !isset($data['is_read'])) {
-                throw new Exception("Données d'entrée invalides.");
-            }
-
-            $messageId = (int)$data['id'];
-            $isRead = (bool)$data['is_read'];
-
-            if (!$isRead) {
-                throw new Exception("Valeur de statut invalide.");
-            }
-
-            $result = $this->messageManager->markAsRead($messageId);
-
-            $response = ['success' => $result];
-        } catch (Exception $e) {
-            http_response_code(400);
-            $response = ['success' => false, 'error' => $e->getMessage()];
-        } finally {
-            header('Content-Type: application/json');
-            echo json_encode($response);
-            exit();
         }
     }
-
 
     private function getCommonViewData(int $userId): array
     {
