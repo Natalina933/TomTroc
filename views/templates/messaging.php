@@ -20,7 +20,7 @@
                             $isUnread = $message->isUnread();
                             ?>
                             <li class="conversation <?= $isUnread ? 'unread-message' : '' ?> <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>"
-                                <?= $isUnread ? 'aria-label="Message non lu de ' . htmlspecialchars($otherUser->getUsername()) . '"' : '' ?>> <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
+                                data-id="<?= htmlspecialchars($message->getId()) ?>" <?= $isUnread ? 'aria-label="Message non lu de ' . htmlspecialchars($otherUser->getUsername()) . '"' : '' ?>> <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
                                     <div class="conversation-info">
                                         <div class="user-info">
                                             <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
@@ -86,35 +86,37 @@
         const conversations = document.querySelectorAll(".conversation");
 
         conversations.forEach((conversation) => {
-            conversation.addEventListener("click", () => {
-                // Ajouter une classe indiquant que le message est lu
-                conversation.classList.remove("unread-message");
+            conversation.addEventListener("click", async () => {
+                const conversationId = conversation.dataset.id;
+                if (!conversationId) return;
 
-                // Appeler le backend pour mettre à jour l'état is_read
-                const conversationId = conversation.dataset.id; // Supposons que tu as un data-id pour identifier chaque conversation
-                markAsRead(conversationId);
+                try {
+                    const response = await fetch("index.php?action=updateMessageStatus", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            id: conversationId,
+                            is_read: true
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Erreur HTTP : ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        conversation.classList.remove("unread-message");
+                    } else {
+                        console.error("Erreur côté serveur :", result.error);
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la requête :", error.message);
+                }
             });
         });
-
-        // Fonction pour marquer un message comme lu côté serveur
-        function markAsRead(conversationId) {
-            fetch(`/update-message-status.php`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: conversationId,
-                        is_read: true
-                    }),
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log("Message marqué comme lu :", data);
-                })
-                .catch((error) => {
-                    console.error("Erreur lors de la mise à jour de l'état :", error);
-                });
-        }
     });
 </script>

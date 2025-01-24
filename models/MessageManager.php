@@ -4,6 +4,18 @@
  * Classe qui gère les messages.
  */ class MessageManager extends AbstractEntityManager
 {
+    private function getMessages(string $whereClause, array $params): array
+    {
+        $sql = "SELECT * FROM message WHERE $whereClause ORDER BY created_at DESC";
+        try {
+            $result = $this->db->query($sql, $params);
+            return $this->createMessageObjects($result);
+        } catch (PDOException $e) {
+            $this->logError("Erreur dans la requête SQL : " . $e->getMessage());
+            return [];
+        }
+    }
+
     /**
      * Récupère tous les messages reçus par un utilisateur.
      * @param int $userId
@@ -11,14 +23,7 @@
      */
     public function getAllMessagesByUserId(int $userId): array
     {
-        $sql = "SELECT * FROM message WHERE receiver_id = :userId ORDER BY created_at DESC";
-        try {
-            $result = $this->db->query($sql, ['userId' => $userId]);
-            return $this->createMessageObjects($result);
-        } catch (PDOException $e) {
-            $this->logError("Erreur dans la requête SQL : " . $e->getMessage());
-            return [];
-        }
+        return $this->getMessages('receiver_id = :userId', ['userId' => $userId]);
     }
 
     /**
@@ -232,10 +237,29 @@
         }
         return $messages;
     }
+
     /**
-     * Marque les messages envoyés par l'utilisateur $senderId et destinés à l'utilisateur $userId comme lus.
-     * @param int $userId : l'id de l'utilisateur qui reçoit les messages.
-     * @param int $senderId : l'id de l'utilisateur qui envoie les messages.
+     * Met à jour le statut de lecture d'un message.
+     * @param int $messageId : l'id du message.
+     * @return bool : true si la mise à jour a réussi, false sinon.
+     */
+    public function markAsRead(int $messageId): bool
+    {
+        $sql = "UPDATE message SET is_read = 1 WHERE id = :messageId";
+        try {
+            $this->db->query($sql, ['messageId' => $messageId]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour du message : " . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    /**
+     * Marque comme lus tous les messages envoyés par $senderId et reçus par $userId.
+     * @param int $userId : l'id de l'utilisateur destinataire.
+     * @param int $senderId : l'id de l'utilisateur expéditeur.
      */
     public function markMessagesAsRead(int $userId, int $senderId): void
     {
@@ -279,13 +303,15 @@
      * @param int $id : l'id du message à supprimer.
      * @return void
      */
-    public function deleteMessage(int $id): void
+    public function deleteMessage(int $id): bool
     {
         $sql = "DELETE FROM message WHERE id = :id";
         try {
             $this->db->query($sql, ['id' => $id]);
+            return true;
         } catch (PDOException $e) {
-            echo "Erreur lors de la suppression du message : " . $e->getMessage();
+            error_log("Erreur lors de la suppression du message : " . $e->getMessage());
+            return false;
         }
     }
 }

@@ -149,11 +149,11 @@ class BookController
     }
     private function validateBookImage(array $file): void
     {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         $maxSize = 5 * 1024 * 1024; // 5 MB
 
         if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception("Type de fichier non autorisé. Utilisez JPG, PNG ou GIF.");
+            throw new Exception("Type de fichier non autorisé. Utilisez JPG, PNG, WebP ou GIF.");
         }
 
         if ($file['size'] > $maxSize) {
