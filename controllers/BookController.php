@@ -6,7 +6,13 @@ error_reporting(E_ALL);
 class BookController
 {
     private const ERROR_BOOK_NOT_FOUND = "Livre non trouvé.";
+    // Constantes pour les chemins de fichiers
+    const UPLOAD_DIR = '/../assets/img/books/';
+    const DEFAULT_IMAGE = '/../assets/img/defaultBook.webp';
 
+    // Constantes pour les messages d'erreur
+    const ERROR_UNAUTHORIZED = "Vous devez être connecté pour effectuer cette action.";
+    const ERROR_INVALID_FILE = "Le fichier téléchargé n'est pas une image valide.";
     private $bookManager;
 
     /**
