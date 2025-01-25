@@ -33,7 +33,35 @@ class UserManager extends AbstractEntityManager
             return null;
         }
     }
+/**
+     * Récupère le chemin de la photo de profil d'un utilisateur.
+     * @param string|null $profilePicturePath
+     * @return string
+     */
+    public function getProfilePicture(?string $profilePicturePath): string
+    {
+        $defaultImage = '/assets/img/users/profile-default.svg';
+        if (empty($profilePicturePath)) {
+            return $defaultImage;
+        }
+        $fullPath = $_SERVER['DOCUMENT_ROOT'] . $profilePicturePath;
+        return file_exists($fullPath) ? $profilePicturePath : $defaultImage;
+    }
 
+    /**
+     * Récupère un utilisateur par son ID avec sa photo de profil.
+     * @param int $id
+     * @return ?User
+     */
+    public function getUserByIdWithProfilePicture(int $id): ?User
+    {
+        $user = $this->getUserById($id);
+        if ($user) {
+            $profilePicture = $this->getProfilePicture($user->getProfilePicture());
+            $user->setProfilePicture($profilePicture);
+        }
+        return $user;
+    }
     /**
      * Récupère un utilisateur par son email.
      * @param string $email

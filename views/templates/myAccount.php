@@ -9,31 +9,30 @@
         <!-- Carré 1 : Profil -->
         <section class="account-card profile-card" aria-label="Informations du profil">
             <div class="account-profile">
-                <?php if (isset($user['profilePicture']) && !empty($user['profilePicture'])) : ?>
-                    <img src="<?= htmlspecialchars($user['profilePicture'], ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil de <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>">
-                <?php else : ?>
-                    <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
-                <?php endif; ?>
+                <?php
+                $profilePicture = isset($user['profilePicture']) && !empty($user['profilePicture']) && file_exists(__DIR__ . $user['profilePicture']) ? htmlspecialchars($user['profilePicture'], ENT_QUOTES, 'UTF-8') : '/assets/img/users/profile-default.svg';
+                ?>
+                <img src="<?= $profilePicture ?>" alt="Photo de profil de <?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?>">
 
                 <form id="profilePictureForm" action="index.php?action=updateProfilePicture" method="post" enctype="multipart/form-data">
                     <input type="file" id="profilePictureInput" name="profilePicture" accept="image/*" style="display:none;">
                     <div class="btn-profile">
-                        <a type="button" id="changePictureButton" class="profile-link">modifier</a>
+                        <a type="button" id="changePictureButton" class="profile-link">Modifier</a>
                     </div>
                     <input type="submit" id="submitForm" style="display:none;">
                 </form>
-
             </div>
             <div class="info-member">
                 <p class="info-name"><?= htmlspecialchars($user['username'], ENT_QUOTES, 'UTF-8') ?></p>
-                <p class="member">Membre depuis <?php
-                                                if (isset($user['createdAt']) && isset($dateFormatter)) {
-                                                    $createdAtDateTime = new DateTime($user['createdAt']);
-                                                    echo htmlspecialchars($dateFormatter->formatMemberSince($createdAtDateTime), ENT_QUOTES, 'UTF-8');
-                                                } else {
-                                                    echo 'Date inconnue';
-                                                }
-                                                ?>
+                <p class="member">Membre depuis
+                    <?php
+                    if (isset($user['createdAt']) && isset($dateFormatter)) {
+                        $createdAtDateTime = new DateTime($user['createdAt']);
+                        echo htmlspecialchars($dateFormatter->formatMemberSince($createdAtDateTime), ENT_QUOTES, 'UTF-8');
+                    } else {
+                        echo 'Date inconnue';
+                    }
+                    ?>
                 </p>
                 <p class="bibliotheque-title">BIBLIOTHÈQUE</p>
                 <div class="library-info">
@@ -42,6 +41,8 @@
                 </div>
             </div>
         </section>
+
+
 
         <!-- Carré 2 : Informations personnelles -->
         <section class="account-card info-card" aria-label="Informations personnelles">
@@ -86,7 +87,7 @@
                             <?php if ($book->getImg() && !empty($book->getImg())) : ?>
                                 <img src="<?= htmlspecialchars($book->getImg(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre <?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?>">
                             <?php else : ?>
-                                <img src="/assets/img/book-default.svg" alt="Image par défaut du livre">
+                                <img src="/../assets/img/book-default.svg" alt="Image par défaut du livre">
                             <?php endif; ?>
                         </td>
                         <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>

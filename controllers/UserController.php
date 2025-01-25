@@ -4,9 +4,20 @@ class UserController
 {
     const ROLE_ADMIN = 'admin';
     const ROLE_USER = 'user';
-    const UPLOAD_DIR = '/assets/img/users/';
+    const UPLOAD_DIR = '/../assets/img/users/';
+    const DEFAULT_PROFILE_PICTURE = '/../assets/img/users/profile-default.svg';
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 Mo
+    const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'svg'];
 
+    const UPLOAD_ERRORS = [
+        UPLOAD_ERR_INI_SIZE => "Le fichier est trop volumineux.",
+        UPLOAD_ERR_FORM_SIZE => "Le fichier est trop volumineux.",
+        UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement téléchargé.",
+        UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été téléchargé.",
+        UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant.",
+        UPLOAD_ERR_CANT_WRITE => "Erreur d'écriture du fichier sur le disque.",
+        UPLOAD_ERR_EXTENSION => "Téléchargement de fichier arrêté par une extension PHP.",
+    ];
     private $userManager;
 
     public function __construct()
@@ -118,34 +129,6 @@ class UserController
         $view->render("addBookForm");
     }
 
-    private function renderView(string $viewName, string $pageTitle, array $data = []): void
-    {
-        $view = new View($pageTitle);
-        $view->render($viewName, $data);
-    }
-
-    private function validateRequiredFields(array $fields): void
-    {
-        foreach ($fields as $field) {
-            if (empty($field)) {
-                throw new Exception("Tous les champs sont obligatoires.");
-            }
-        }
-    }
-
-    private function setUserSession(User $user): void
-    {
-        $_SESSION['user'] = [
-            'id' => $user->getId(),
-            "role" => $user->getRole(),
-            "email" => $user->getEmail(),
-            "username" => $user->getUsername(),
-            "createdAt" => $user->getCreatedAt(),
-            "profilePicture" => $user->getProfilePicture()
-        ];
-        $_SESSION['idUser'] = $user->getId();
-    }
-
     private function updateUserSession(User $user): void
     {
         $_SESSION['user'] = [
@@ -185,59 +168,79 @@ class UserController
             Utils::redirect("myAccount", ["error" => $e->getMessage()]);
         }
     }
-    // private function ensureUserHasRole(string $role): void 
-    // {
-    //     if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== $role) {
-    //         throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
-    //     }
-    // }
+
     private function validateProfilePicture(array $file): void
     {
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
-        $maxFileSize = 5 * 1024 * 1024; // 5 Mo
         $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-        if (!in_array($fileExtension, $allowedExtensions)) {
-            Utils::redirect("myAccount", ["error" => "Type de fichier non autorisé."]);
+        if (!in_array($fileExtension, self::ALLOWED_EXTENSIONS)) {
+            throw new Exception("Type de fichier non autorisé.");
         }
-        if ($file['size'] > $maxFileSize) {
-            Utils::redirect("myAccount", ["error" => "Le fichier est trop volumineux."]);
+
+        if ($file['size'] > self::MAX_FILE_SIZE) {
+            throw new Exception("Le fichier est trop volumineux.");
         }
     }
 
     private function moveUploadedFile(array $file): string
     {
-        $uploadDir = '/assets/img/users/';
         $newFileName = uniqid('profile_', true) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
-        $destPath = $uploadDir . $newFileName;
+        $destPath = __DIR__ . self::UPLOAD_DIR . $newFileName;
 
-        if (!move_uploaded_file($file['tmp_name'], __DIR__ . "/.." . $destPath)) {
-            Utils::redirect("myAccount", ["error" => "Erreur lors du déplacement du fichier."]);
+        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+            throw new Exception("Erreur lors du déplacement du fichier.");
         }
-        return $destPath;
+
+        return self::UPLOAD_DIR . $newFileName;
     }
 
     private function updateUserProfilePicture(string $newFileName): void
     {
         $userId = $_SESSION['user']['id'];
-        if (!$this->userManager->updateProfilePicture($userId, $newFileName)) {
-            Utils::redirect("myAccount", ["error" => "Erreur lors de la mise à jour de la base de données."]);
+
+        // Vérifie si l'image existe
+        $destPath = __DIR__ . self::UPLOAD_DIR . $newFileName;
+        if (!file_exists($destPath)) {
+            throw new Exception("Erreur lors du téléchargement de l'image de profil.");
         }
+
+        if (!$this->userManager->updateProfilePicture($userId, $newFileName)) {
+            throw new Exception("Erreur lors de la mise à jour de la base de données.");
+        }
+
         $_SESSION['user']['profilePicture'] = $newFileName;
     }
 
+
     private function handleUploadError(int $errorCode): void
     {
-        $errorMessages = [
-            UPLOAD_ERR_INI_SIZE => "Le fichier est trop volumineux.",
-            UPLOAD_ERR_FORM_SIZE => "Le fichier est trop volumineux.",
-            UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement téléchargé.",
-            UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été téléchargé.",
-            UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant.",
-            UPLOAD_ERR_CANT_WRITE => "Erreur d'écriture du fichier sur le disque.",
-            UPLOAD_ERR_EXTENSION => "Téléchargement de fichier arrêté par une extension PHP.",
+        throw new Exception(self::UPLOAD_ERRORS[$errorCode] ?? "Erreur inconnue lors du téléchargement.");
+    }
+
+    private function validateRequiredFields(array $fields): void
+    {
+        foreach ($fields as $field) {
+            if (empty($field)) {
+                throw new Exception("Tous les champs sont obligatoires.");
+            }
+        }
+    }
+
+    private function setUserSession(User $user): void
+    {
+        $_SESSION['user'] = [
+            'id' => $user->getId(),
+            'role' => $user->getRole(),
+            'email' => $user->getEmail(),
+            'username' => $user->getUsername(),
+            'createdAt' => $user->getCreatedAt(),
+            'profilePicture' => $user->getProfilePicture(),
         ];
-        $errorMessage = $errorMessages[$errorCode] ?? "Erreur inconnue lors du téléchargement.";
-        Utils::redirect("myAccount", ["error" => $errorMessage]);
+        $_SESSION['idUser'] = $user->getId();
+    }
+    private function renderView(string $viewName, string $pageTitle, array $data = []): void
+    {
+        $view = new View($pageTitle);
+        $view->render($viewName, $data);
     }
 }

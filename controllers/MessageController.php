@@ -1,6 +1,12 @@
 <?php
 class MessageController
 {
+    private const ERROR_USER_NOT_FOUND = "Utilisateur non trouvé.";
+    private const ERROR_UNAUTHORIZED = "Vous devez être connecté pour effectuer cette action.";
+    private const ERROR_INVALID_MESSAGE = "Message ou destinataire invalide.";
+    private const ERROR_SENDING_MESSAGE = "Erreur lors de l'envoi du message : ";
+    private const ERROR_INVALID_INPUT = "Données d'entrée invalides.";
+    private const ERROR_INVALID_STATUS = "Valeur de statut invalide.";
     private $messageManager;
 
     public function __construct()
@@ -11,8 +17,7 @@ class MessageController
     private function ensureUserIsConnected(): void
     {
         if (!isset($_SESSION['user'])) {
-            Utils::redirect("connectionForm");
-            exit;
+            throw new Exception(self::ERROR_UNAUTHORIZED);
         }
     }
 
@@ -30,7 +35,7 @@ class MessageController
                 $receiver = $this->messageManager->getUserById($receiverId);
 
                 if (!$receiver) {
-                    throw new Exception("Utilisateur non trouvé");
+                    throw new Exception(self::ERROR_USER_NOT_FOUND);
                 }
 
                 $conversation = $this->messageManager->getConversationBetweenUsers($userId, $receiverId);
@@ -81,7 +86,7 @@ class MessageController
         $content = htmlspecialchars(trim($_POST['content']), ENT_QUOTES, 'UTF-8');
 
         if (!$receiverId || empty($content)) {
-            $_SESSION['error'] = 'Message ou destinataire invalide.';
+            $_SESSION['error'] = self::ERROR_INVALID_MESSAGE;
             Utils::redirect('messaging');
             exit;
         }
@@ -101,11 +106,10 @@ class MessageController
 
             $this->renderView('messaging', $viewData);
         } catch (Exception $e) {
-            $_SESSION['error'] = 'Erreur lors de l\'envoi du message : ' . $e->getMessage();
+            $_SESSION['error'] = self::ERROR_SENDING_MESSAGE . $e->getMessage();
             Utils::redirect('messaging');
         }
     }
-
     public function showConversation(): void
     {
         $this->ensureUserIsConnected();
@@ -139,17 +143,16 @@ class MessageController
                     exit();
                 } else {
                     http_response_code(400);
-                    echo json_encode(['success' => false, 'error' => 'Invalid status value.']);
+                    echo json_encode(['success' => false, 'error' => self::ERROR_INVALID_STATUS]);
                     exit();
                 }
             } else {
                 http_response_code(400);
-                echo json_encode(['success' => false, 'error' => 'Invalid input data.']);
+                echo json_encode(['success' => false, 'error' => self::ERROR_INVALID_INPUT]);
                 exit();
             }
         }
     }
-
     private function getCommonViewData(int $userId): array
     {
         return [

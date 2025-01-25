@@ -1,7 +1,7 @@
 <main>
     <section class="intro-container">
         <div class="img-container">
-            <img src="../../assets/img/hero.webp" alt="Échange de livres entre lecteurs passionnés">
+            <img src="../../assets/img/hero.webp" alt="Échange de livres entre lecteurs passionnés" loading="lazy">
         </div>
         <div class="intro-wrapper">
             <h1 class="title">Rejoignez nos lecteurs passionnés</h1>
