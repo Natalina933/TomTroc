@@ -42,6 +42,13 @@ class BookController
     public function showBookDetail(int $id): void
     {
         $book = $this->bookManager->getBookById($id);
+        if (!$book) {
+            // Livre non trouvé, afficher un message d'erreur
+            $view = new View('Erreur');
+            $view->render('error', ['message' => self::ERROR_BOOK_NOT_FOUND]);
+            return;
+        }
+
         $view = new View('Book Detail');
         $view->render('book-detail', ['book' => $book]);
     }
@@ -50,41 +57,53 @@ class BookController
     {
         try {
             $this->ensureUserIsConnected();
+            error_log("Début de la méthode editBook pour bookId: $bookId");
+            var_dump($_POST, $_FILES); // Affiche les données soumises
             $book = $this->bookManager->getBookById($bookId);
+            error_log("Livre récupéré : " . print_r($book, true));
             if (!$book) {
                 throw new Exception(self::ERROR_BOOK_NOT_FOUND);
             }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                error_log("Méthode POST détectée, traitement des données.");
+
+                // Vérifiez les données du formulaire
                 $title = filter_input(INPUT_POST, 'title');
                 $description = filter_input(INPUT_POST, 'description');
                 $author = filter_input(INPUT_POST, 'author');
                 $available = filter_input(INPUT_POST, 'available', FILTER_VALIDATE_INT);
+                error_log("Données reçues : Titre - $title, Auteur - $author, Description - $description");
 
                 $this->validateBookData([
                     'title' => $title,
                     'author' => $author,
                     'description' => $description
                 ]);
-
+                // Mise à jour des données
                 $book->setTitle($title);
                 $book->setDescription($description);
                 $book->setAuthor($author);
                 $book->setAvailable($available);
                 $book->setUpdatedAt(date('Y-m-d H:i:s'));
-
+                // Gestion de l'image
                 if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
                     $newImagePath = $this->handleImageUpload($_FILES['img']);
+                    error_log("Nouvelle image téléchargée : $newImagePath");
+
                     if ($newImagePath) {
                         $book->setImg($newImagePath);
                     } else {
                         throw new Exception("Erreur lors de l'upload de l'image");
                     }
                 } elseif (!$book->getImg()) {
+                    error_log("Aucune image téléchargée. Utilisation de l'image par défaut.");
+
                     $book->setImg('/assets/img/defaultBook.webp');
                 }
 
                 if ($this->bookManager->editBook($book)) {
+                    error_log("Livre modifié avec succès. ID: $bookId");
                     Utils::redirect("myAccount", ["status" => "success", "message" => "Livre modifié avec succès"]);
                 } else {
                     throw new Exception("Erreur lors de la modification du livre");
@@ -94,6 +113,7 @@ class BookController
             $view = new View('Book Edit');
             $view->render('book-edit', ['book' => $book]);
         } catch (Exception $e) {
+            error_log("Erreur dans editBook : " . $e->getMessage());
             Utils::redirect("editBook", ["id" => $bookId, "status" => "error", "message" => $e->getMessage()]);
         }
     }
@@ -111,6 +131,9 @@ class BookController
             if (!$book) {
                 throw new Exception(self::ERROR_BOOK_NOT_FOUND);
             }
+            error_log("Données POST : " . print_r($_POST, true));
+            error_log("Données FILES : " . print_r($_FILES, true));
+
             if (!isset($_FILES['img']) || $_FILES['img']['error'] !== UPLOAD_ERR_OK) {
                 throw new Exception("Aucun fichier n'a été téléchargé.");
             }
@@ -119,7 +142,7 @@ class BookController
             if ($newImagePath) {
                 $book->setImg($newImagePath);
                 if ($this->bookManager->editBook($book)) {
-                    Utils::redirect("bookDetail", ["id" => $bookId, "status" => "success", "message" => "Image du livre mise à jour avec succès"]);
+                    Utils::redirect("editBook", ["id" => $bookId, "status" => "success", "message" => "Image du livre mise à jour avec succès"]);
                 } else {
                     throw new Exception("Erreur lors de la mise à jour de l'image du livre");
                 }
@@ -132,11 +155,11 @@ class BookController
     }
     private function validateBookImage(array $file): void
     {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         $maxSize = 5 * 1024 * 1024; // 5 MB
 
         if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception("Type de fichier non autorisé. Utilisez JPG, PNG ou GIF.");
+            throw new Exception("Type de fichier non autorisé. Utilisez JPG, PNG, WebP ou GIF.");
         }
 
         if ($file['size'] > $maxSize) {

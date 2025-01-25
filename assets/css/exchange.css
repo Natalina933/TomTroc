@@ -25,7 +25,6 @@
 
 .search-container input[type="text"] {
     border: none;
-    color: var(--whiteColor);
 }
 
 .search-container input[type="text"]::placeholder {

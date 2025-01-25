@@ -18,38 +18,38 @@ class MessageController
 
     public function showMessaging(int $receiverId = null): void
     {
-        $this->ensureUserIsConnected();
-        $userId = $_SESSION['user']['id'];
+        try {
+            $this->ensureUserIsConnected();
+            $userId = $_SESSION['user']['id'];
 
-        $viewData = $this->getCommonViewData($userId);
+            $viewData = $this->getCommonViewData($userId);
+            $viewData['conversations'] = $this->messageManager->getLastMessagesByUserId($userId);
 
-        // Toujours récupérer la liste des conversations
-        $viewData['conversations'] = $this->messageManager->getLastMessagesByUserId($userId);
+            if (isset($_GET['receiver_id'])) {
+                $receiverId = (int) $_GET['receiver_id'];
+                $receiver = $this->messageManager->getUserById($receiverId);
 
-        if (isset($_GET['receiver_id'])) {
-            $receiverId = (int) $_GET['receiver_id'];
-            $receiver = $this->messageManager->getUserById($receiverId);
+                if (!$receiver) {
+                    throw new Exception("Utilisateur non trouvé");
+                }
 
-            if (!$receiver) {
-                Utils::redirect('messaging?error=Utilisateur non trouvé');
-                exit;
+                $conversation = $this->messageManager->getConversationBetweenUsers($userId, $receiverId);
+
+                $viewData['activeConversation'] = [
+                    'receiver' => $receiver,
+                    'messages' => $conversation
+                ];
+
+                $this->messageManager->markMessagesAsRead($userId, $receiverId);
             }
 
-            // Récupérer la conversation complète
-            $conversation = $this->messageManager->getConversationBetweenUsers($userId, $receiverId);
+            $_SESSION['unreadCount'] = $this->messageManager->getUnreadMessagesCount($userId);
 
-            $viewData['activeConversation'] = [
-                'receiver' => $receiver,
-                'messages' => $conversation
-            ];
-
-            // Marquer les messages comme lus
-            $this->messageManager->markMessagesAsRead($userId, $receiverId);
+            $view = new View('Messagerie');
+            $view->render('messaging', $viewData);
+        } catch (Exception $e) {
+            Utils::redirect('messaging', ['error' => $e->getMessage()]);
         }
-        $_SESSION['unreadCount'] = $this->messageManager->getUnreadMessagesCount($userId);
-
-        $view = new View('Messagerie');
-        $view->render('messaging', $viewData);
     }
 
     /**
@@ -121,6 +121,33 @@ class MessageController
         $viewData['receiverId'] = $receiverId;
 
         $this->renderView('messaging', $viewData);
+    }
+    public function updateMessageStatus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            if (isset($data['id']) && isset($data['is_read'])) {
+                $messageId = (int)$data['id'];
+                $isRead = (bool)$data['is_read'];
+
+                if ($isRead) {
+                    $result = $this->messageManager->markAsRead($messageId);
+
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => $result]);
+                    exit();
+                } else {
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'error' => 'Invalid status value.']);
+                    exit();
+                }
+            } else {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'Invalid input data.']);
+                exit();
+            }
+        }
     }
 
     private function getCommonViewData(int $userId): array

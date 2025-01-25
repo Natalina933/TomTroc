@@ -4,6 +4,19 @@
  * Classe qui gère les messages.
  */ class MessageManager extends AbstractEntityManager
 {
+    private function getMessages(string $whereClause, array $params): array
+    {
+        $sql = "SELECT * FROM message WHERE $whereClause ORDER BY created_at DESC";
+        try {
+            $result = $this->db->query($sql, $params);
+            return $this->createMessageObjects($result);
+        } catch (PDOException $e) {
+            $this->logError("Erreur dans la requête SQL : " . $e->getMessage());
+            return [];
+        }
+    }
+
+
     /**
      * Récupère tous les messages reçus par un utilisateur.
      * @param int $userId
@@ -11,14 +24,7 @@
      */
     public function getAllMessagesByUserId(int $userId): array
     {
-        $sql = "SELECT * FROM message WHERE receiver_id = :userId ORDER BY created_at DESC";
-        try {
-            $result = $this->db->query($sql, ['userId' => $userId]);
-            return $this->createMessageObjects($result);
-        } catch (PDOException $e) {
-            $this->logError("Erreur dans la requête SQL : " . $e->getMessage());
-            return [];
-        }
+        return $this->getMessages('receiver_id = :userId', ['userId' => $userId]);
     }
 
     /**
@@ -105,7 +111,6 @@
         }
     }
 
-
     /**
      * Récupère un utilisateur par son ID.
      * @param int $id
@@ -183,30 +188,12 @@
         }
     }
 
-
     /**
-     * Crée des objets Message à partir des résultats de la requête.
-     * @param PDOStatement $result
-     * @return array
+     * Récupère les derniers messages de l'utilisateur $userId.
+     * La requête jointe permet de récupérer le dernier message de chaque conversation.
+     * @param int $userId
+     * @return array : un tableau d'objets Message.
      */
-    private function createMessageObjects($result): array
-    {
-        $messages = [];
-        while ($messageData = $result->fetch(PDO::FETCH_ASSOC)) {
-            $messages[] = new Message($messageData);
-        }
-        return $messages;
-    }
-
-    /**
-     * Journalise les erreurs.
-     * @param string $message
-     */
-    private function logError(string $message): void
-    {
-        error_log($message);
-    }
-
     public function getLastMessagesByUserId(int $userId): array
     {
         $sql = "SELECT m.* FROM message m
@@ -226,6 +213,35 @@
         }
         return $messages;
     }
+
+    /**
+     * Met à jour le statut de lecture d'un message.
+     * @param int $messageId : l'id du message.
+     * @return bool : true si la mise à jour a réussi, false sinon.
+     */
+    public function markAsRead(int $messageId): bool
+    {
+        if ($messageId <= 0) {
+            error_log("ID de message invalide : $messageId");
+            return false;
+        }
+
+        $sql = "UPDATE message SET is_read = 1 WHERE id = :messageId AND is_read = 0";
+        try {
+            $stmt = $this->db->query($sql, ['messageId' => $messageId]);
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour du message : " . $e->getMessage());
+            return false;
+        }
+    }
+
+
+    /**
+     * Marque comme lus tous les messages envoyés par $senderId et reçus par $userId.
+     * @param int $userId : l'id de l'utilisateur destinataire.
+     * @param int $senderId : l'id de l'utilisateur expéditeur.
+     */
     public function markMessagesAsRead(int $userId, int $senderId): void
     {
         $sql = "UPDATE message 
@@ -238,6 +254,12 @@
         }
     }
 
+    /**
+     * Renvoie le nombre de messages non lus par conversation pour l'utilisateur donné.
+     * @param int $userId : l'id de l'utilisateur.
+     * @return array : un tableau contenant le nombre de messages non lus pour chaque conversation.
+     *                La clé est l'id de l'expéditeur, la valeur est le nombre de messages non lus.
+     */
     public function getUnreadMessagesCountByConversation(int $userId): array
     {
         $sql = "SELECT sender_id, COUNT(*) as unread_count 
@@ -262,13 +284,36 @@
      * @param int $id : l'id du message à supprimer.
      * @return void
      */
-    public function deleteMessage(int $id): void
+    public function deleteMessage(int $id): bool
     {
         $sql = "DELETE FROM message WHERE id = :id";
         try {
             $this->db->query($sql, ['id' => $id]);
+            return true;
         } catch (PDOException $e) {
-            echo "Erreur lors de la suppression du message : " . $e->getMessage();
+            error_log("Erreur lors de la suppression du message : " . $e->getMessage());
+            return false;
         }
+    }
+    /**
+     * Crée des objets Message à partir des résultats de la requête.
+     * @param PDOStatement $result
+     * @return array
+     */
+    private function createMessageObjects($result): array
+    {
+        $messages = [];
+        while ($messageData = $result->fetch(PDO::FETCH_ASSOC)) {
+            $messages[] = new Message($messageData);
+        }
+        return $messages;
+    }
+    /**
+     * Journalise les erreurs.
+     * @param string $message
+     */
+    private function logError(string $message): void
+    {
+        error_log($message);
     }
 }

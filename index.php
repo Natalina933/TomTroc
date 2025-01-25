@@ -33,7 +33,7 @@ try {
             }
             break;
 
-        case 'editbook':
+        case 'editBook':
             if ($bookId > 0) {
                 $bookController->editBook($bookId);
             } else {

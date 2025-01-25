@@ -96,7 +96,7 @@
                             <?= $book->isAvailable() ? 'Disponible' : 'Non dispo.' ?>
                         </td>
                         <td>
-                            <a href="index.php?action=editbook&id=<?= (int)$book->getId() ?>" class="edit-link">Éditer</a>
+                            <a href="index.php?action=editBook&id=<?= (int)$book->getId() ?>" class="edit-link">Éditer</a>
                             <a href="index.php?action=deleteBook&id=<?= (int)$book->getId() ?>" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce livre ?')">Supprimer</a>
                         </td>
                     </tr>

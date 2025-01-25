@@ -6,7 +6,7 @@ class UserController
     const ROLE_USER = 'user';
     const UPLOAD_DIR = '/assets/img/users/';
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 Mo
-   
+
     private $userManager;
 
     public function __construct()
@@ -48,6 +48,11 @@ class UserController
         }
 
         $this->setUserSession($user);
+        // Mettre à jour le nombre de messages non lus
+        $messageManager = new MessageManager();
+        $_SESSION['unreadCount'] = $messageManager->getUnreadMessagesCount($user->getId());
+
+        // Rediriger vers la page "Mon compte"
         Utils::redirect("myAccount");
     }
 
@@ -186,7 +191,7 @@ class UserController
     //         throw new Exception("Vous n'avez pas les droits nécessaires pour accéder à cette page.");
     //     }
     // }
-    private function validateProfilePicture(array $file): void 
+    private function validateProfilePicture(array $file): void
     {
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
         $maxFileSize = 5 * 1024 * 1024; // 5 Mo
@@ -200,7 +205,7 @@ class UserController
         }
     }
 
-    private function moveUploadedFile(array $file): string 
+    private function moveUploadedFile(array $file): string
     {
         $uploadDir = '/assets/img/users/';
         $newFileName = uniqid('profile_', true) . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
@@ -212,7 +217,7 @@ class UserController
         return $destPath;
     }
 
-    private function updateUserProfilePicture(string $newFileName): void 
+    private function updateUserProfilePicture(string $newFileName): void
     {
         $userId = $_SESSION['user']['id'];
         if (!$this->userManager->updateProfilePicture($userId, $newFileName)) {
@@ -221,18 +226,18 @@ class UserController
         $_SESSION['user']['profilePicture'] = $newFileName;
     }
 
-        private function handleUploadError(int $errorCode): void 
-        {
-            $errorMessages = [
-                UPLOAD_ERR_INI_SIZE => "Le fichier est trop volumineux.",
-                UPLOAD_ERR_FORM_SIZE => "Le fichier est trop volumineux.",
-                UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement téléchargé.",
-                UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été téléchargé.",
-                UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant.",
-                UPLOAD_ERR_CANT_WRITE => "Erreur d'écriture du fichier sur le disque.",
-                UPLOAD_ERR_EXTENSION => "Téléchargement de fichier arrêté par une extension PHP.",
-            ];
-            $errorMessage = $errorMessages[$errorCode] ?? "Erreur inconnue lors du téléchargement.";
-            Utils::redirect("myAccount", ["error" => $errorMessage]);
-        }
+    private function handleUploadError(int $errorCode): void
+    {
+        $errorMessages = [
+            UPLOAD_ERR_INI_SIZE => "Le fichier est trop volumineux.",
+            UPLOAD_ERR_FORM_SIZE => "Le fichier est trop volumineux.",
+            UPLOAD_ERR_PARTIAL => "Le fichier n'a été que partiellement téléchargé.",
+            UPLOAD_ERR_NO_FILE => "Aucun fichier n'a été téléchargé.",
+            UPLOAD_ERR_NO_TMP_DIR => "Dossier temporaire manquant.",
+            UPLOAD_ERR_CANT_WRITE => "Erreur d'écriture du fichier sur le disque.",
+            UPLOAD_ERR_EXTENSION => "Téléchargement de fichier arrêté par une extension PHP.",
+        ];
+        $errorMessage = $errorMessages[$errorCode] ?? "Erreur inconnue lors du téléchargement.";
+        Utils::redirect("myAccount", ["error" => $errorMessage]);
+    }
 }

@@ -39,15 +39,15 @@
 } */
 .book-detail {
   display: flex;
-  width: 1440px; /* 720px * 2 */
-  height: 863px;
+  /* width: 1440px; 
+  height: 863px; */
   margin: 0 auto;
 }
 
 .book-image-container,
 .book-content {
-  width: 720px;
-  height: 863px;
+  /* width: 720px;
+  height: 863px; */
   overflow: auto;
 }
 
@@ -107,6 +107,7 @@
   margin-bottom: 20px;
   color: var(--grayColor);
 }
+
 .book-author::after {
   content: "";
   display: block;
@@ -114,6 +115,7 @@
   border: 1px solid var(--grayColor);
   margin-top: 20px;
 }
+
 .book-description-title {
   font-size: 18px;
   font-weight: 600;
