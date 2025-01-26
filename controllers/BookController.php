@@ -6,8 +6,8 @@ error_reporting(E_ALL);
 class BookController
 {
     private const ERROR_BOOK_NOT_FOUND = "Livre non trouvé.";
-    const UPLOAD_DIR = '/../assets/img/books/';
-    const DEFAULT_IMAGE = 'assets/img/defaultBook.webp';
+    const UPLOAD_DIR = '/assets/img/books/';
+    const DEFAULT_IMAGE = '/../assets/img/defaultBook.webp';
     const ERROR_UNAUTHORIZED = "Vous devez être connecté pour effectuer cette action.";
     const ERROR_INVALID_FILE = "Le fichier téléchargé n'est pas une image valide.";
     private $bookManager;
@@ -238,8 +238,9 @@ class BookController
         if ($file && $file['error'] === UPLOAD_ERR_OK) {
             error_log("Fichier uploadé avec succès");
 
-            $uploadDir = __DIR__ . self::UPLOAD_DIR;
-            $uploadFile = $uploadDir . uniqid() . '_' . basename($file['name']);
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . self::UPLOAD_DIR;
+            $fileName = uniqid() . '_' . basename($file['name']);
+            $uploadFile = $uploadDir . $fileName;
             error_log("Chemin de destination : " . $uploadFile);
 
             $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
@@ -252,7 +253,7 @@ class BookController
                 error_log("Type de fichier valide");
 
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
-                    $imagePath = str_replace(__DIR__, '', $uploadFile);
+                    $imagePath = self::UPLOAD_DIR . $fileName;
                     error_log("Fichier déplacé avec succès. Nouveau chemin : " . $imagePath);
                 } else {
                     error_log("Erreur lors du déplacement du fichier");
