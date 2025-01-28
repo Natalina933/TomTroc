@@ -26,6 +26,16 @@ class MessageController
         }
     }
 
+    /**
+     * Affiche la page de messagerie.
+     * Vérifie si l'utilisateur est connecté et le redirige vers la page de connexion si ce n'est pas le cas.
+     * Récupère la liste des conversations de l'utilisateur et la conversation active si un destinataire est spécifié.
+     * Met à jour le nombre de messages non lus.
+     * Affiche la page de messagerie avec les données récupérées.
+     * @param int $receiverId L'id du destinataire si une conversation est spécifiée.
+     * @throws Exception si une erreur survient.
+     * @return void
+     */
     public function showMessaging(int $receiverId = null): void
     {
         try {
@@ -129,6 +139,13 @@ class MessageController
             Utils::redirect('messaging');
         }
     }
+    /**
+     * Affiche la conversation entre l'utilisateur connecté et le destinataire.
+     * Vérifie que l'utilisateur est connecté et que le destinataire est spécifié.
+     * Récupère la conversation entre l'utilisateur et le destinataire, puis affiche
+     * la vue 'messaging' avec les données de la conversation.
+     * @return void
+     */
     public function showConversation(): void
     {
         $this->ensureUserIsConnected();
@@ -179,6 +196,11 @@ class MessageController
             }
         }
     }
+    /**
+     * Renvoie les données communes à la page de messagerie.
+     * @param int $userId L'ID de l'utilisateur.
+     * @return array Un tableau contenant les clés 'messages', 'unreadCount' et 'lastMessages'.
+     */
     private function getCommonViewData(int $userId): array
     {
         return [

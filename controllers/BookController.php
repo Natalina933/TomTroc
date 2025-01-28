@@ -22,6 +22,11 @@ class BookController
         $this->bookManager = new BookManager();
     }
 
+    /**
+     * Affiche la page d'accueil.
+     *
+     * Récupère les livres à l'échange et les envoie à la vue pour affichage.
+     */
     public function showHome(): void
     {
         $books = $this->bookManager->getBooks();
@@ -29,6 +34,11 @@ class BookController
         $view->render("home", ['books' => $books]);
     }
 
+    /**
+     * Affiche la page qui liste tous les livres.
+     *
+     * Récupère tous les livres à l'échange et les envoie à la vue pour affichage.
+     */
     public function showBooksList(): void
     {
         $books = $this->bookManager->getAllBooks();
@@ -36,6 +46,13 @@ class BookController
         $view->render("books-list", ['books' => $books]);
     }
 
+    /**
+     * Affiche la page qui montre les détails d'un livre.
+     *
+     * Récupère le livre par son ID et l'envoie à la vue pour affichage.
+     *
+     * @param int $id L'ID du livre
+     */
     public function showBookDetail(int $id): void
     {
         $book = $this->bookManager->getBookById($id);
@@ -50,6 +67,14 @@ class BookController
         $view->render('book-detail', ['book' => $book]);
     }
 
+    /**
+     * Affiche la page qui permet de modifier les informations d'un livre.
+     *
+     * Récupère le livre par son ID et l'envoie à la vue pour affichage.
+     * Si la méthode est POST, traite les données du formulaire et met à jour le livre.
+     *
+     * @param int $bookId L'ID du livre
+     */
     public function editBook($bookId): void
     {
         try {
@@ -117,6 +142,22 @@ class BookController
 
 
 
+/**
+ * Updates the image of a book.
+ *
+ * This function ensures the user is connected and handles the image upload process
+ * for a specified book. It validates the request method, checks for file upload errors,
+ * and updates the book's image in the database. If successful, it redirects to the edit page
+ * with a success message; otherwise, it throws an appropriate exception and redirects to the
+ * book detail page with an error message.
+ *
+ * @param int $bookId The ID of the book whose image is to be updated.
+ *
+ * @throws Exception If the user is not connected, the request method is not POST,
+ *                   the book is not found, no file is uploaded, or there is an error
+ *                   in image upload or database update.
+ */
+
     public function updateBookImage($bookId): void
     {
         try {
@@ -150,6 +191,15 @@ class BookController
             Utils::redirect("bookDetail", ["id" => $bookId, "status" => "error", "message" => $e->getMessage()]);
         }
     }
+    /**
+     * Vérifie si le fichier téléchargé est une image valide.
+     *
+     * Vérifie que le type de fichier est autorisé et que la taille n'excède pas 5 Mo.
+     *
+     * @param array $file Les données du fichier téléchargé
+     *
+     * @throws Exception Si le fichier n'est pas une image valide
+     */
     private function validateBookImage(array $file): void
     {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -164,12 +214,29 @@ class BookController
         }
     }
 
+    /**
+     * Vérifie si l'utilisateur est connecté
+     *
+     * Lève une exception si l'utilisateur n'est pas connecté
+     *
+     * @throws Exception Si l'utilisateur n'est pas connecté
+     */
     private function ensureUserIsConnected(): void
     {
         if (!isset($_SESSION['user'])) {
             throw new Exception(self::ERROR_UNAUTHORIZED);
         }
     }
+
+/**
+ * Validates the provided book data.
+ *
+ * Ensures that the title, author, and description fields are not empty.
+ *
+ * @param array $data The book data to validate
+ *
+ * @throws Exception If any of the required fields are empty
+ */
 
     private function validateBookData(array $data): void
     {
@@ -180,6 +247,14 @@ class BookController
 
 
 
+    /**
+     * Affiche le formulaire d'ajout de livre si la requête est de type GET, ou traite le formulaire si la requête est de type POST.
+     *
+     * Vérifie si l'utilisateur est connecté, puis valide les données du formulaire.
+     * Si les données sont valides, ajoute le livre à la base de données.
+     *
+     * @throws Exception Si l'utilisateur n'est pas connecté, ou si une erreur se produit lors de l'ajout du livre.
+     */
     public function addBook()
     {
         $this->ensureUserIsConnected();
@@ -230,6 +305,18 @@ class BookController
         }
     }
 
+    /**
+     * Gère l'upload d'une image pour un livre.
+     *
+     * Vérifie si un fichier a été uploadé, puis si le type de fichier est autorisé.
+     * Si le type de fichier est valide, déplace le fichier uploadé vers le répertoire
+     * défini par la constante UPLOAD_DIR.
+     *
+     * @param array $file Les données du fichier uploadé
+     * @return string|null Le chemin de l'image, ou null si l'upload a échoué
+     * @throws Exception Si le type de fichier n'est pas valide, ou si une erreur se produit
+     *                  lors du déplacement du fichier.
+     */
     private function handleImageUpload($file): ?string
     {
         error_log("Début de handleImageUpload");
@@ -272,6 +359,15 @@ class BookController
         return $imagePath;
     }
 
+    /**
+     * Supprime un ou plusieurs livres en fonction des IDs fournis.
+     * Récupère les IDs des livres à supprimer depuis la requête.
+     * Si aucun ID n'est fourni, redirige vers "myAccount" avec un message d'erreur.
+     * Appelle la méthode deleteBook du BookManager pour supprimer les livres.
+     * Redirige vers "myAccount" avec un message de succès si la suppression réussit,
+     * sinon redirige avec un message d'erreur.
+     */
+
     public function deleteBook()
     {
         $bookIds = Utils::request('bookIds');
@@ -291,6 +387,11 @@ class BookController
     }
 
 
+    /**
+     * Affiche la page "Mon compte" avec le nombre de livres détenus par l'utilisateur.
+     *
+     * @return void
+     */
     public function displayBooksSection(): void
     {
         $userId = $_SESSION['user']['id'];
@@ -301,6 +402,15 @@ class BookController
         ]);
     }
 
+    /**
+     * Affiche la page "Édition d'un Livre" pour le livre identifié par l'ID fourni
+     * dans la requête.
+     *
+     * Vérifie que l'utilisateur est connecté et possède le rôle "admin".
+     * Si ce n'est pas le cas, redirige vers la page de connexion.
+     *
+     * @return void
+     */
     public function showUpdateBookForm(): void
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== UserController::ROLE_ADMIN) {
@@ -312,6 +422,14 @@ class BookController
         $view = new View('Édition d\'un Livre');
         $view->render('updateBookForm', ['book' => $book]);
     }
+    /**
+     * Displays the form for adding a new book.
+     *
+     * Renders the 'book-edit' view with a new Book instance.
+     * This method sets up the view for adding a book, allowing
+     * users to input book details.
+     */
+
     public function displayAddBookForm()
     {
         $view = new View('Ajouter un livre');

@@ -14,6 +14,17 @@ class PublicAccountController
         $this->bookManager = new BookManager();
     }
 
+    /**
+     * Affiche la page de compte public pour un utilisateur spécifique.
+     *
+     * Récupère l'ID de l'utilisateur à partir de la requête GET, obtient les détails de l'utilisateur
+     * et ses livres depuis la base de données, et prépare les données pour le rendu de la vue.
+     * Si l'utilisateur n'est pas trouvé, une exception est levée et l'utilisateur est redirigé
+     * vers une page d'erreur.
+     *
+     * @throws Exception si l'utilisateur n'est pas trouvé.
+     */
+
     public function showPublicAccount()
     {
         try {
@@ -39,10 +50,18 @@ class PublicAccountController
             // Inclusion de la vue
             $this->renderView(self::VIEW_PUBLIC_ACCOUNT, "Profil de {$user->getUsername()}", $data);
         } catch (Exception $e) {
-          
+
             Utils::redirect('error', ['message' => $e->getMessage()]);
         }
     }
+
+    /**
+     * Rend une vue avec un titre de page et des données spécifiés.
+     *
+     * @param string $viewName Le nom de la vue à rendre
+     * @param string $pageTitle Le titre de la page
+     * @param array $data Les données à passer à la vue (optionnel)
+     */
 
     private function renderView(string $viewName, string $pageTitle, array $data = []): void
     {
