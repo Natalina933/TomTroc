@@ -4,6 +4,12 @@
  * Classe qui gère les messages.
  */ class MessageManager extends AbstractEntityManager
 {
+    /**
+     * Récupère les messages selon une clause WHERE spécifiée.
+     * @param string $whereClause La clause WHERE de la requête SQL
+     * @param array $params Les paramètres pour la requête préparée
+     * @return array Un tableau d'objets Message
+     */
     private function getMessages(string $whereClause, array $params): array
     {
         $sql = "SELECT * FROM message WHERE $whereClause ORDER BY created_at DESC";
@@ -19,8 +25,8 @@
 
     /**
      * Récupère tous les messages reçus par un utilisateur.
-     * @param int $userId
-     * @return array : un tableau d'objets Message.
+     * @param int $userId L'ID de l'utilisateur
+     * @return array Un tableau d'objets Message
      */
     public function getAllMessagesByUserId(int $userId): array
     {
@@ -29,8 +35,8 @@
 
     /**
      * Récupère tous les messages envoyés par un utilisateur.
-     * @param int $userId
-     * @return array : un tableau d'objets Message.
+     * @param int $userId L'ID de l'utilisateur
+     * @return array Un tableau d'objets Message
      */
     public function getSentMessages(int $userId): array
     {
@@ -49,8 +55,8 @@
     }
     /**
      * Récupère un message par son ID.
-     * @param int $id
-     * @return Message|null
+     * @param int $id L'ID du message
+     * @return Message|null Le message trouvé ou null si non trouvé
      */
     public function getMessageById(int $id): ?Message
     {
@@ -65,9 +71,9 @@
         }
     }
     /**
-     * Récupère les messages reçus par un utilisateur avec les informations des expéditeurs.
-     * @param int $userId
-     * @return array
+     * Récupère les messages reçus ou envoyés par un utilisateur, groupés par conversation.
+     * @param int $userId L'ID de l'utilisateur
+     * @return array Un tableau d'objets Message représentant les derniers messages de chaque conversation
      */
     public function getMessagesByUserId(int $userId): array
     {
@@ -88,6 +94,18 @@
             return [];
         }
     }
+
+/**
+ * Récupère la conversation entre deux utilisateurs.
+ * 
+ * Cette fonction retourne tous les messages échangés entre l'utilisateur
+ * spécifié par $userId et l'utilisateur spécifié par $receiverId.
+ * Les messages sont triés par ordre croissant de date de création.
+ * 
+ * @param int $userId L'ID de l'utilisateur courant.
+ * @param int $receiverId L'ID de l'autre utilisateur dans la conversation.
+ * @return array Un tableau d'objets Message représentant la conversation.
+ */
 
     public function getConversationBetweenUsers(int $userId, int $receiverId): array
     {
@@ -128,6 +146,11 @@
             return null;
         }
     }
+    /**
+     * Renvoie le nombre de messages non lus pour un utilisateur.
+     * @param int $userId L'ID de l'utilisateur
+     * @return int Le nombre de messages non lus
+     */
     public function getUnreadMessagesCount(int $userId): int
     {
         $sql = "SELECT COUNT(*) FROM message WHERE receiver_id = :userId AND is_read = 0";
@@ -145,6 +168,12 @@
     }
 
 
+    /**
+     * Crée une nouvelle conversation entre deux utilisateurs.
+     * @param int $userId L'ID de l'utilisateur qui initie la conversation.
+     * @param int $receiverId L'ID de l'utilisateur destinataire.
+     * @return void
+     */
     public function createNewConversation(int $userId, int $receiverId): void
     {
         // Vérifier si une conversation existe déjà
@@ -225,7 +254,6 @@
             error_log("ID de message invalide : $messageId");
             return false;
         }
-
         $sql = "UPDATE message SET is_read = 1 WHERE id = :messageId AND is_read = 0";
         try {
             $stmt = $this->db->query($sql, ['messageId' => $messageId]);

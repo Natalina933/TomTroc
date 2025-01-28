@@ -8,6 +8,11 @@ class MessageController
         $this->messageManager = new MessageManager();
     }
 
+    /**
+     * Vérifie si l'utilisateur est connecté et le redirige vers la page de connexion si ce n'est pas le cas.
+     * @return void
+     * @throws Exception si une erreur survient
+     */
     private function ensureUserIsConnected(): void
     {
         if (!isset($_SESSION['user'])) {
@@ -16,6 +21,14 @@ class MessageController
         }
     }
 
+    /**
+     * Affiche la page de messagerie.
+     * Si l'ID d'un destinataire est fourni, charge la conversation correspondante.
+     * Marque les messages de la conversation comme lus.
+     * @param int $receiverId ID du destinataire
+     * @return void
+     * @throws Exception si une erreur survient
+     */
     public function showMessaging(int $receiverId = null): void
     {
         try {
@@ -64,6 +77,14 @@ class MessageController
         $this->renderView('sentMessages', ['messages' => $sentMessages]);
     }
 
+/**
+     * Affiche la liste de tous les messages pour l'utilisateur connecté.
+     * Vérifie que l'utilisateur est authentifié avant de récupérer les messages.
+     * Récupère tous les messages associés à l'ID de l'utilisateur et rend
+     * la vue 'messagesList' avec les données des messages récupérés.
+     *
+     * @return void
+     */
     public function showMessagesList(): void
     {
         $this->ensureUserIsConnected();
@@ -72,6 +93,12 @@ class MessageController
         $this->renderView('messagesList', ['messages' => $messages]);
     }
 
+    /**
+     * Envoie un message à un destinataire spécifié.
+     * Vérifie que l'utilisateur est connecté et que les données du message sont valides.
+     * Crée et envoie le message, puis affiche la conversation mise à jour.
+     * @return void
+     */
     public function sendMessage(): void
     {
         $this->ensureUserIsConnected();
@@ -106,6 +133,14 @@ class MessageController
         }
     }
 
+    /**
+     * Affiche la conversation entre l'utilisateur actuel et le destinataire spécifié.
+     * Vérifie que l'utilisateur est authentifié avant de procéder.
+     * Récupère et prépare les données de la conversation pour l'affichage.
+     * Redirige vers la page de messagerie si aucun ID de destinataire n'est fourni.
+     * @return void
+     */
+
     public function showConversation(): void
     {
         $this->ensureUserIsConnected();
@@ -122,6 +157,13 @@ class MessageController
 
         $this->renderView('messaging', $viewData);
     }
+    /**
+     * Met à jour le statut d'un message comme lu si une requête POST valide est reçue.
+     * Attend une charge utile JSON avec les champs 'id' et 'is_read'.
+     * Renvoie une réponse JSON indiquant le succès ou l'échec.
+     * Répond avec un code de statut HTTP 400 et un message d'erreur pour une entrée invalide.
+     */
+
     public function updateMessageStatus()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -149,7 +191,11 @@ class MessageController
             }
         }
     }
-
+ /**
+     * Récupère les données communes pour les vues de messagerie.
+     * @param int $userId ID de l'utilisateur
+     * @return array Données communes pour les vues
+     */
     private function getCommonViewData(int $userId): array
     {
         return [
@@ -158,7 +204,12 @@ class MessageController
             'lastMessages' => $this->messageManager->getLastMessagesByUserId($userId)
         ];
     }
-
+/**
+     * Rend une vue avec les données spécifiées.
+     * @param string $viewName Nom de la vue à rendre
+     * @param array $data Données à passer à la vue
+     * @return void
+     */
     private function renderView(string $viewName, array $data): void
     {
         $view = new View('Messagerie');
