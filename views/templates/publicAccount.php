@@ -64,9 +64,9 @@
                     <tr>
                         <td>
                             <?php
-                            $bookImg = !empty($book->getImg()) && file_exists(__DIR__ . $book->getImg()) ? htmlspecialchars($book->getImg(), ENT_QUOTES, 'UTF-8') : '/../assets/img/defaultBook.webp';
+                            $bookImg = $book->getImg() ? $book->getImg() : '/assets/img/defaultBook.webp';
                             ?>
-                            <img src="<?= $bookImg ?>" alt="Photo du livre" width="50">
+                            <img src="<?= htmlspecialchars($bookImg) ?>" alt="Photo du livre <?= htmlspecialchars($book->getTitle()) ?>" width="50" onerror="this.src='/assets/img/defaultBook.webp';">
                         </td>
                         <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($book->getAuthor(), ENT_QUOTES, 'UTF-8') ?></td>
