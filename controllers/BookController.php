@@ -6,7 +6,10 @@ error_reporting(E_ALL);
 class BookController
 {
     private const ERROR_BOOK_NOT_FOUND = "Livre non trouvé.";
-
+    const UPLOAD_DIR = '/assets/img/books/';
+    const DEFAULT_IMAGE = '/../assets/img/defaultBook.webp';
+    const ERROR_UNAUTHORIZED = "Vous devez être connecté pour effectuer cette action.";
+    const ERROR_INVALID_FILE = "Le fichier téléchargé n'est pas une image valide.";
     private $bookManager;
 
     /**
@@ -153,7 +156,7 @@ class BookController
         $maxSize = 5 * 1024 * 1024; // 5 MB
 
         if (!in_array($file['type'], $allowedTypes)) {
-            throw new Exception("Type de fichier non autorisé. Utilisez JPG, PNG, WebP ou GIF.");
+            throw new Exception(self::ERROR_INVALID_FILE);
         }
 
         if ($file['size'] > $maxSize) {
@@ -161,6 +164,12 @@ class BookController
         }
     }
 
+    private function ensureUserIsConnected(): void
+    {
+        if (!isset($_SESSION['user'])) {
+            throw new Exception(self::ERROR_UNAUTHORIZED);
+        }
+    }
 
     private function validateBookData(array $data): void
     {
@@ -225,15 +234,13 @@ class BookController
     {
         error_log("Début de handleImageUpload");
         var_dump($file);
-        // $imagePath = '/assets/img/defaultBook.webp'; // Image par défaut
-
-        // error_log("Image par défaut : " . $imagePath);
 
         if ($file && $file['error'] === UPLOAD_ERR_OK) {
             error_log("Fichier uploadé avec succès");
 
-            $uploadDir = 'assets/img/books/';
-            $uploadFile = $uploadDir . uniqid() . '_' . basename($file['name']);
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . self::UPLOAD_DIR;
+            $fileName = uniqid() . '_' . basename($file['name']);
+            $uploadFile = $uploadDir . $fileName;
             error_log("Chemin de destination : " . $uploadFile);
 
             $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
@@ -246,7 +253,7 @@ class BookController
                 error_log("Type de fichier valide");
 
                 if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
-                    $imagePath = '/' . $uploadFile;
+                    $imagePath = self::UPLOAD_DIR . $fileName;
                     error_log("Fichier déplacé avec succès. Nouveau chemin : " . $imagePath);
                 } else {
                     error_log("Erreur lors du déplacement du fichier");
@@ -254,10 +261,11 @@ class BookController
                 }
             } else {
                 error_log("Type de fichier non valide");
-                throw new Exception("Le fichier téléchargé n'est pas une image valide.");
+                throw new Exception(self::ERROR_INVALID_FILE);
             }
         } else {
             error_log("Aucun fichier uploadé ou erreur lors de l'upload");
+            $imagePath = self::DEFAULT_IMAGE;
         }
 
         error_log("Fin de handleImageUpload. Chemin de l'image retourné : " . $imagePath);
@@ -308,11 +316,5 @@ class BookController
     {
         $view = new View('Ajouter un livre');
         $view->render('book-edit', ['book' => new Book()]);
-    }
-    private function ensureUserIsConnected(): void
-    {
-        if (!isset($_SESSION['user'])) {
-            Utils::redirect("login");
-        }
     }
 }

@@ -12,11 +12,10 @@
             <div class="public-profile-wrapper">
                 <div class="public-profile">
                     <!-- Vérification et affichage de la photo de profil -->
-                    <?php if ($user->getProfilePicture() && !empty($user->getProfilePicture())) : ?>
-                        <img src="<?= htmlspecialchars($user->getProfilePicture(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo de profil">
-                    <?php else : ?>
-                        <img src="/assets/img/users/profile-default.svg" alt="Photo par défaut">
-                    <?php endif; ?>
+                    <?php
+                    $profilePicture = !empty($user->getProfilePicture()) && file_exists(__DIR__ . $user->getProfilePicture()) ? htmlspecialchars($user->getProfilePicture(), ENT_QUOTES, 'UTF-8') : '/assets/img/users/profile-default.svg';
+                    ?>
+                    <img src="<?= $profilePicture ?>" alt="Photo de profil de <?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?>">
                 </div>
                 <h2 class="public-username"><?= htmlspecialchars($user->getUsername(), ENT_QUOTES, 'UTF-8') ?></h2>
                 <?php
@@ -63,7 +62,12 @@
             <?php if (!empty($books)) : ?>
                 <?php foreach ($books as $book) : ?>
                     <tr>
-                        <td><img src="<?= htmlspecialchars($book->getImg(), ENT_QUOTES, 'UTF-8') ?>" alt="Photo du livre" width="50"></td>
+                        <td>
+                            <?php
+                            $bookImg = !empty($book->getImg()) && file_exists(__DIR__ . $book->getImg()) ? htmlspecialchars($book->getImg(), ENT_QUOTES, 'UTF-8') : '/../assets/img/defaultBook.webp';
+                            ?>
+                            <img src="<?= $bookImg ?>" alt="Photo du livre" width="50">
+                        </td>
                         <td><?= htmlspecialchars($book->getTitle(), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($book->getAuthor(), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($book->getDescription(), ENT_QUOTES, 'UTF-8') ?></td>

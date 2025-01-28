@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 27 déc. 2024 à 10:05
+-- Généré le : dim. 26 jan. 2025 à 13:50
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.3.6
 
@@ -40,32 +40,34 @@ CREATE TABLE IF NOT EXISTS `book` (
   `user_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `book`
 --
 
 INSERT INTO `book` (`id`, `title`, `author`, `img`, `description`, `createdAt`, `updatedAt`, `available`, `user_id`) VALUES
-(1, 'Esther D.fff', 'Gabriel Garcia Marquez', '/assets/img/books/book_673deafc24a422.42607440.webp', 'A story that chronicles several generations of the Buendía family.', '2024-08-05 10:00:00', '2024-11-20 17:35:00', 1, 0),
-(2, 'The Kinfolk Tablefffff', 'Jane Austen', '/assets/img/books/The Kinfolk Table.png', 'A romantic novel that charts the emotional development of the protagonist Elizabeth Bennet.', '2024-08-05 10:00:00', NULL, 1, 0),
+(1, 'Esther D.fff', 'Gabriel Garcia Marquez', '/assets/img/books/Wabi Sabi.png', 'A story that chronicles several generations of the Buendía family.', '2024-08-05 10:00:00', '2024-11-20 17:35:00', 1, 6),
+(2, 'The Kinfolk Tablefffff', 'Jane Austen', '/assets/img/books/The Kinfolk Table.png', 'J\'ai récemment plongé dans les pages de \'The Kinfolk Table\' et j\'ai été enchanté par cette œuvre captivante. Ce livre va bien au-delà d\'une simple collection de recettes ; il célèbre l\'art de partager des moments authentiques autour de la table. \n\nLes photographies magnifiques et le ton chaleureux captivent dès le départ, transportant le lecteur dans un voyage à travers des recettes et des histoires qui mettent en avant la beauté de la simplicité et de la convivialité. \n\nChaque page est une invitation à ralentir, à savourer et à créer des souvenirs durables avec les êtres chers. \n\n\'The Kinfolk Table\' incarne parfaitement l\'esprit de la cuisine et de la camaraderie, et il est certain que ce livre trouvera une place spéciale dans le cœur de tout amoureux de la cuisine et des rencontres inspirantes.', '2024-08-05 10:00:00', NULL, 1, 6),
 (6, 'Wabi Sabiccc', 'Mark Twain', '/assets/img/books/Wabi Sabi.png', 'A novel about a young boy who travels down the Mississippi River on a raft with a runaway slave.gg', '2024-08-05 10:00:00', '2024-10-24 15:02:05', 1, 6),
 (4, 'Milk & honey', 'Haruki Murakami', '/assets/img/books/Milk & honey.png', 'A metaphysical novel that blends reality and fantasy, featuring two distinct, yet interrelated plots.', '2024-08-05 10:00:00', NULL, 1, 4),
-(5, 'Delight!', 'Chimamanda Ngozi Adichie', '/assets/img/books/Delight!.png', 'A story about a young Nigerian woman who moves to the United States for university.', '2024-08-05 10:00:00', NULL, 1, 5),
-(7, 'Title Example', 'Author Example', '/assets/img/defaultBook.webp', 'Description Example', '2024-11-28 17:33:57', '2024-11-28 17:33:57', 1, 1),
-(8, 'fffff', 'ffff', '/assets/img/defaultBook.webp', 'fffff', '2024-12-09 12:17:34', '2024-12-09 12:17:34', 1, 6),
-(9, 'adddd', 'dddd', '/assets/img/defaultBook.webp', 'ddddddd', '2024-12-11 14:13:29', '2024-12-11 14:13:29', 1, 0),
-(10, 'ffrrrr', 'jtn<bnnq', '/assets/img/defaultBook.webp', 's<bb', '2024-12-11 14:39:07', '2024-12-11 14:39:07', 1, 0),
-(11, 'ggggg', 'ggggggg', '/assets/img/defaultBook.webp', 'gggggggggg', '2024-12-11 15:06:59', '2024-12-11 15:06:59', 1, 0),
-(12, 'vvvvv', 'vvvvvvvvvvvv', '/assets/img/defaultBook.webp', 'vvvvvvvvv', '2024-12-11 15:27:38', '2024-12-11 15:27:38', 1, 0),
-(13, 'Titre exemple', 'Auteur exemple', '/assets/img/defaultBook.webp', 'Description exemple', '2024-12-11 11:00:00', '2024-12-11 11:00:00', 1, 1),
-(14, 'kkkk', 'mmmmm', '/assets/img/defaultBook.webp', 'jjjjjj', '2024-12-11 15:49:29', '2024-12-11 15:49:29', 1, 0),
-(15, 'eeeeeeeeeee', 'eeeeeeeeeee', '/assets/img/defaultBook.webp', 'eeeeeeeeeeeeeee', '2024-12-11 15:56:53', '2024-12-11 15:56:53', 1, 0),
-(16, 'ggggg', 'ggggg', '/assets/img/defaultBook.webp', 'ggggg', '2024-12-12 09:25:42', '2024-12-12 16:04:43', 1, 7),
-(17, 'livre', 'MARTHE', '/assets/img/defaultBook.webp', 'KFMQKFPJFP', '2024-12-12 16:28:19', '2024-12-12 16:28:19', 1, 7),
-(18, 'Curie', 'MARTHE', '/assets/img/defaultBook.webp', 'ohhh le curie', '2024-12-18 14:20:52', '2024-12-18 14:20:52', 1, 9),
+(5, 'Delight!', 'Chimamanda Ngozi Adichie', '/assets/img/books/A Book Full Of Hope.png', 'A story about a young Nigerian woman who moves to the United States for university.', '2024-08-05 10:00:00', NULL, 1, 5),
+(7, 'Title Example', 'Author Example', '/assets/img/books/Company Of One.png', 'Description Example', '2024-11-28 17:33:57', '2024-11-28 17:33:57', 1, 1),
+(8, 'fffff', 'ffff', '/assets/img/books/Delight!.png', 'fffff', '2024-12-09 12:17:34', '2024-12-09 12:17:34', 1, 6),
+(9, 'adddd', 'dddd', '/assets/img/books/Esther.png', 'ddddddd', '2024-12-11 14:13:29', '2024-12-11 14:13:29', 1, 0),
+(10, 'ffrrrr', 'jtn<bnnq', '/assets/img/books/Hygge.png', 's<bb', '2024-12-11 14:39:07', '2024-12-11 14:39:07', 1, 0),
+(11, 'ggggg', 'ggggggg', '/assets/img/books/Innovation.png', 'gggggggggg', '2024-12-11 15:06:59', '2024-12-11 15:06:59', 1, 0),
+(12, 'vvvvv', 'vvvvvvvvvvvv', '/assets/img/books/Milk & honey.png', 'vvvvvvvvv', '2024-12-11 15:27:38', '2024-12-11 15:27:38', 1, 0),
+(13, 'Titre exemple', 'Auteur exemple', '/assets/img/books/Milwaukee Mission.png', 'Description exemple', '2024-12-11 11:00:00', '2024-12-11 11:00:00', 1, 1),
+(14, 'kkkk', 'mmmmm', '/assets/img/books/Minimalist Graphics.png', 'jjjjjj', '2024-12-11 15:49:29', '2024-12-11 15:49:29', 1, 0),
+(15, 'eeeeeeeeeee', 'eeeeeeeeeee', '/assets\\img\\books\\Narnia.png', 'eeeeeeeeeeeeeee', '2024-12-11 15:56:53', '2024-12-11 15:56:53', 1, 0),
+(16, 'ggggg', 'ggggg', '/assets/img/books/Psalms.png', 'ggggg', '2024-12-12 09:25:42', '2024-12-12 16:04:43', 1, 7),
+(17, 'livre', 'MARTHE', '/assets/img/books/The Kinfolk Table.png', 'KFMQKFPJFP', '2024-12-12 16:28:19', '2024-12-12 16:28:19', 1, 7),
+(18, 'Curie', 'MARTHE', '/assets/img/books/The Subtle Art Of....png', 'ohhh le curie', '2024-12-18 14:20:52', '2024-12-18 14:20:52', 1, 9),
 (19, 'frigot', 'moi', '/assets/img/defaultBook.webp', 'fffffff', '2024-12-18 14:52:14', '2024-12-18 14:52:14', 1, 9),
-(20, 'jhg', 'bdxwb', '/assets/img/defaultBook.webp', 'nsnsd', '2024-12-27 08:38:43', '2024-12-27 08:38:43', 1, 10);
+(20, 'jhgjjjj', 'bdxwbjjjj', '/assets/img/books/The Two Towers.png', 'nsnsd,,,,,', '2024-12-27 08:38:43', '2025-01-26 12:09:46', 0, 10),
+(21, 'fsgw', 'bxcb', '/assets/img/books/67955b5365601_678e4df27ffd1_Narnia.png', 'sfbxb', '2025-01-04 15:30:32', '2025-01-25 20:44:55', 1, 10),
+(22, 'mpljkjhgfgfd', 'mmmmm,jhhgfdsdsqqwq', '/assets/img/books/Thinking, Fast & Slow.png', 'mmmmm,jhhgfdsdsqqwq', '2025-01-16 17:42:07', '2025-01-25 20:45:09', 1, 10);
 
 -- --------------------------------------------------------
 
@@ -84,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   PRIMARY KEY (`id`),
   KEY `sender_id` (`sender_id`),
   KEY `receiver_id` (`receiver_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=95 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `message`
@@ -158,7 +160,18 @@ INSERT INTO `message` (`id`, `sender_id`, `receiver_id`, `content`, `created_at`
 (82, 6, 1, 'hola', '2024-12-26 17:33:34', 0),
 (80, 6, 10, 'gggggg', '2024-12-26 17:24:59', 1),
 (81, 6, 10, 'gggggg', '2024-12-26 17:25:46', 1),
-(83, 10, 6, ',,,,,wfb', '2024-12-27 09:51:28', 0);
+(83, 10, 6, ',,,,,wfb', '2024-12-27 09:51:28', 0),
+(84, 10, 9, 'mmmmm', '2025-01-04 14:53:09', 0),
+(85, 10, 4, 'homla', '2025-01-11 11:56:44', 0),
+(86, 10, 9, 'grlll', '2025-01-11 11:57:12', 0),
+(87, 10, 9, 'jue  mks&lt;kvsvùm^lll^^ mmmm m^$vsdvl&lt;k;ùklb^dqn^^ppllllfllflflflflflflflflsdùdf*m', '2025-01-14 19:21:09', 0),
+(88, 10, 10, 'vbvb', '2025-01-25 12:07:02', 1),
+(89, 10, 6, 'bghdhsh', '2025-01-25 12:07:24', 0),
+(90, 10, 6, 'cxbxb b', '2025-01-25 12:07:32', 0),
+(91, 10, 4, 'bdwfbw', '2025-01-25 12:07:38', 0),
+(92, 10, 5, 'fgdhsw', '2025-01-25 12:08:52', 0),
+(93, 10, 5, 'fgdhsw', '2025-01-25 12:25:16', 0),
+(94, 10, 5, 'fgdhsw', '2025-01-25 12:30:06', 0);
 
 -- --------------------------------------------------------
 
@@ -190,11 +203,11 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`, `profilePicture`, `ro
 (3, 'marksmith', 'mark.smith@example.com', '7d347cf0ee68174a3588f6cba31b8a67', '/assets/img/users/marksmith.png', 'moderator', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),
 (4, 'emilyjones', 'emily.jones@example.com', '34819d7beeabb9260a5c854bc85b3e44', '/assets/img/users/emilyjones.png', 'user', 1, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),
 (5, 'davidsmith', 'david.smith@example.com', 'b0439fae31f8cbba6294af86234d5a28', '/assets/img/users/davidsmith.png', 'user', 0, '2024-08-13 16:01:14', '2024-08-20 14:30:00'),
-(6, 'Emilieea', 'Emiliee123@free.fr', '$2y$10$AJxoxMLeZWAPaSwc4PQr9uZS/uNvhpRDGkf.wcjBkRWE/htn1uL4C', '/assets/img/users/profile_67571469ceaf46.48123359.jpeg', 'user', 1, '2024-08-23 11:54:56', '2024-12-09 17:01:45'),
-(7, 'nat123@free', 'nat123@free', '$2y$10$ZGbesW7apJ68YZ9Kd24zH.0hPXM8DXWppkn4Ngb.LO/7pBay5asQ6', '', 'user', 1, '2024-09-14 10:24:04', '2024-09-14 12:24:04'),
+(6, 'Nathalire', '123@free.fr', '$2y$10$AJxoxMLeZWAPaSwc4PQr9uZS/uNvhpRDGkf.wcjBkRWE/htn1uL4C', '/assets/img/users/profile_67571469ceaf46.48123359.jpeg', 'user', 1, '2024-08-23 11:54:56', '2025-01-11 21:10:03'),
+(7, 'nat123@free', 'nat123@free', '$2y$10$ZGbesW7apJ68YZ9Kd24zH.0hPXM8DXWppkn4Ngb.LO/7pBay5asQ6', '/assets/img/users/profile_67794ace150da6.61064622.jpeg', 'user', 1, '2024-09-14 10:24:04', '2025-01-04 15:50:54'),
 (22, 'natouxf', 'natouxf123@free.fr', '$2y$10$ijYCBueGVkrBB7.z6aBMPeoXtQfFSSeY6kPRqiFJMrmwNaM6i7qrO', '', 'user', 1, '2024-11-25 12:56:14', '2024-11-25 12:56:14'),
 (9, 'aa', '1230@free.fr', '$2y$10$DbCjgo/agVyD0Wrk1Mx85.SeLZJS36H7wNF/21H1HwAuN5reYUK1K', '/assets/img/users/profile_673dd2975ae3a2.26109803.png', 'user', 1, '2024-09-14 10:28:05', '2024-11-20 13:14:15'),
-(10, 'nath', '020202@gh.fr', '$2y$10$DAMZC/jTEvvcyp.ckdWE4OXgC2kYOjkwN2eUmpiTmOc8tNSNkT.Ia', '/assets/img/users/profile_676552f2ace592.67002472.jpeg', 'user', 1, '2024-09-21 14:34:54', '2024-12-20 12:20:18'),
+(10, 'Poulette', '020202@gh.fr', '$2y$10$DAMZC/jTEvvcyp.ckdWE4OXgC2kYOjkwN2eUmpiTmOc8tNSNkT.Ia', '/assets/img/users/profile_67796072625d94.20132558.png', 'user', 1, '2024-09-21 14:34:54', '2025-01-11 14:13:13'),
 (11, 'popo', '0212345@free.fr', '$2y$10$YfP5ClzmeWsu/COEO0vPGexg4NCuUS8ia8xbrvzC83XSQVe/pQLRe', '', 'user', 1, '2024-09-21 14:38:39', '2024-10-18 11:05:59'),
 (15, 'oioi', '741@fre.fr', '$2y$10$sLBJz3dRYib.st260IXwLukeICw2lM7U/xe89sCraqR719WIywT/.', '', 'user', 1, '2024-09-21 15:26:12', '2024-09-21 15:26:12'),
 (16, 'totot', '123456789@gm.fr', '$2y$10$b87ZUspDMkq7NIaSqmTGR.kph4SkhG.3rBW2SubnEiDZ28Gc.djj2', '', 'user', 1, '2024-09-21 16:00:38', '2024-09-21 16:00:38'),

@@ -20,10 +20,14 @@
                             $isUnread = $message->isUnread();
                             ?>
                             <li class="conversation <?= $isUnread ? 'unread-message' : '' ?> <?= isset($activeConversation) && $activeConversation['receiver']['id'] == $otherUser->getId() ? 'active' : '' ?>"
-                                data-id="<?= htmlspecialchars($message->getId()) ?>" <?= $isUnread ? 'aria-label="Message non lu de ' . htmlspecialchars($otherUser->getUsername()) . '"' : '' ?>> <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
+                                data-id="<?= htmlspecialchars($message->getId()) ?>" <?= $isUnread ? 'aria-label="Message non lu de ' . htmlspecialchars($otherUser->getUsername()) . '"' : '' ?>>
+                                <a href="index.php?action=showMessaging&receiver_id=<?= htmlspecialchars($otherUser->getId()) ?>">
                                     <div class="conversation-info">
                                         <div class="user-info">
-                                            <img src="<?= htmlspecialchars($otherUser->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>" class="profile-picture">
+                                            <img src="<?= htmlspecialchars($otherUser->getProfilePicture()) ?>"
+                                                onerror="this.src='/assets/img/users/profile-default.svg';"
+                                                alt="Photo de profil de <?= htmlspecialchars($otherUser->getUsername()) ?>"
+                                                class="profile-picture">
                                             <span class="name"><?= htmlspecialchars($otherUser->getUsername()) ?></span>
                                         </div>
                                         <span class="timestamp"><?= htmlspecialchars($message->getCreatedAt()->format('H:i')) ?></span>
@@ -42,7 +46,10 @@
             <?php if (isset($activeConversation)) : ?>
                 <div class="chat-header">
                     <div class="chat-user-info">
-                        <img src="<?= htmlspecialchars($activeConversation['receiver']['profilePicture'] ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil" class="profile-picture">
+                        <img src="<?= htmlspecialchars($activeConversation['receiver']['profilePicture']) ?>"
+                            onerror="this.src='/assets/img/users/profile-default.svg';"
+                            alt="Photo de profil"
+                            class="profile-picture">
                         <span class="chat-title"><?= htmlspecialchars($activeConversation['receiver']['username']) ?></span>
                     </div>
                 </div>
@@ -52,7 +59,10 @@
                         <?php foreach ($activeConversation['messages'] as $message) : ?>
                             <div class="message <?= $message->getSender()->getId() == $_SESSION['user']['id'] ? 'sent' : 'received' ?>">
                                 <?php if ($message->getSender()->getId() != $_SESSION['user']['id']) : ?>
-                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture() ?? 'assets/img/users/default-profile.png') ?>" alt="Photo de profil" class="profile-picture">
+                                    <img src="<?= htmlspecialchars($message->getSender()->getProfilePicture()) ?>"
+                                        onerror="this.src='/assets/img/users/profile-default.svg';"
+                                        alt="Photo de profil"
+                                        class="profile-picture">
                                 <?php endif; ?>
                                 <div class="message-content">
                                     <?= htmlspecialchars($message->getContent()) ?>

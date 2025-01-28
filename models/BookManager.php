@@ -187,7 +187,7 @@ class bookManager extends AbstractEntityManager
 
             // Supprimer l'ancienne image si elle existe
             if ($oldImage && $oldImage !== $newImagePath) {
-                $oldImagePath = __DIR__ . '/../../assets/img/books/' . basename($oldImage);
+                $oldImagePath = __DIR__ . '/assets/img/books/' . basename($oldImage);
                 if (file_exists($oldImagePath)) {
                     unlink($oldImagePath);
                 }
