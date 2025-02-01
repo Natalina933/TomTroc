@@ -90,7 +90,7 @@ class BookController
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 error_log("Méthode POST détectée, traitement des données.");
 
-                // Vérifiez les données du formulaire
+                // Vérifie les données du formulaire
                 $title = filter_input(INPUT_POST, 'title');
                 $description = filter_input(INPUT_POST, 'description');
                 $author = filter_input(INPUT_POST, 'author');
@@ -140,24 +140,21 @@ class BookController
         }
     }
 
-
-
-/**
- * Updates the image of a book.
- *
- * This function ensures the user is connected and handles the image upload process
- * for a specified book. It validates the request method, checks for file upload errors,
- * and updates the book's image in the database. If successful, it redirects to the edit page
- * with a success message; otherwise, it throws an appropriate exception and redirects to the
- * book detail page with an error message.
- *
- * @param int $bookId The ID of the book whose image is to be updated.
- *
- * @throws Exception If the user is not connected, the request method is not POST,
- *                   the book is not found, no file is uploaded, or there is an error
- *                   in image upload or database update.
- */
-
+    /**
+     * Updates the image of a book.
+     *
+     * This function ensures the user is connected and handles the image upload process
+     * for a specified book. It validates the request method, checks for file upload errors,
+     * and updates the book's image in the database. If successful, it redirects to the edit page
+     * with a success message; otherwise, it throws an appropriate exception and redirects to the
+     * book detail page with an error message.
+     *
+     * @param int $bookId The ID of the book whose image is to be updated.
+     *
+     * @throws Exception If the user is not connected, the request method is not POST,
+     *                   the book is not found, no file is uploaded, or there is an error
+     *                   in image upload or database update.
+     */
     public function updateBookImage($bookId): void
     {
         try {
@@ -191,6 +188,7 @@ class BookController
             Utils::redirect("bookDetail", ["id" => $bookId, "status" => "error", "message" => $e->getMessage()]);
         }
     }
+
     /**
      * Vérifie si le fichier téléchargé est une image valide.
      *
@@ -228,24 +226,21 @@ class BookController
         }
     }
 
-/**
- * Validates the provided book data.
- *
- * Ensures that the title, author, and description fields are not empty.
- *
- * @param array $data The book data to validate
- *
- * @throws Exception If any of the required fields are empty
- */
-
+    /**
+     * Validates the provided book data.
+     *
+     * Ensures that the title, author, and description fields are not empty.
+     *
+     * @param array $data The book data to validate
+     *
+     * @throws Exception If any of the required fields are empty
+     */
     private function validateBookData(array $data): void
     {
         if (empty($data['title']) || empty($data['author']) || empty($data['description'])) {
             throw new Exception("Tous les champs sont obligatoires.");
         }
     }
-
-
 
     /**
      * Affiche le formulaire d'ajout de livre si la requête est de type GET, ou traite le formulaire si la requête est de type POST.
@@ -367,7 +362,6 @@ class BookController
      * Redirige vers "myAccount" avec un message de succès si la suppression réussit,
      * sinon redirige avec un message d'erreur.
      */
-
     public function deleteBook()
     {
         $bookIds = Utils::request('bookIds');
@@ -385,7 +379,6 @@ class BookController
             Utils::redirect("myAccount", ["status" => "error", "message" => $message]);
         }
     }
-
 
     /**
      * Affiche la page "Mon compte" avec le nombre de livres détenus par l'utilisateur.
@@ -429,7 +422,6 @@ class BookController
      * This method sets up the view for adding a book, allowing
      * users to input book details.
      */
-
     public function displayAddBookForm()
     {
         $view = new View('Ajouter un livre');
